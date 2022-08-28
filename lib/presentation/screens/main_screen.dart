@@ -1,9 +1,14 @@
-import 'package:amond/qr_scanner.dart';
+import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+
+import 'qr_scanner.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
+
+  static const String routeName = '/main-screen';
 
   @override
   _MainScreenState createState() => _MainScreenState();
@@ -15,6 +20,16 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            ListTile(
+              title: Text('로그아웃'),
+              onTap: () async => _logout(),
+            )
+          ],
+        ),
+      ),
       appBar: AppBar(),
       floatingActionButton: SizedBox(
         height: 80,
@@ -52,5 +67,15 @@ class _MainScreenState extends State<MainScreen> {
   void _toQrScanner() async {
     await _getStatuses();
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => QrScanner()));
+  }
+
+  Future<void> _logout() async {
+    try {
+      await UserApi.instance.logout();
+      print('로그아웃 성공, SDK에서 토큰 삭제');
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => AuthScreen()));
+    } catch (error) {
+      print('로그아웃 실패, SDK에서 토큰 삭제 $error');
+    }
   }
 }
