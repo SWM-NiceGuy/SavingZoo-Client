@@ -63,7 +63,7 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   void _navigateToMainScreen() {
-    Navigator.of(context).pushNamed(MainScreen.routeName);
+    Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
   }
 
   void _showLoginFailDialog(BuildContext context) {
