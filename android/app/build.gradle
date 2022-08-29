@@ -6,6 +6,10 @@ if (localPropertiesFile.exists()) {
     }
 }
 
+def kakao_Sdk_Appkey = localProperties.getProperty('kakao.sdk.appkey')
+
+def min_Sdk_Version = localProperties.getProperty('flutter.minSdkVersion')
+
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
     throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
@@ -47,10 +51,11 @@ android {
         applicationId "com.example.amond"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
-        minSdkVersion 20
+        minSdkVersion min_Sdk_Version
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        manifestPlaceholders += [kakaoSdkAppkey: kakao_Sdk_Appkey]
     }
 
     buildTypes {
