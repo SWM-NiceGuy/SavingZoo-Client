@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const AuthScreen(),
+      home: const MainScreen(),
       routes: {
         AuthScreen.routeName: (context) => const AuthScreen(),
         MainScreen.routeName: (context) => const MainScreen(),

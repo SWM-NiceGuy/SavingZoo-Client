@@ -1,4 +1,6 @@
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
+import 'package:amond/presentation/screens/grow/grow_screen.dart';
+import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -15,8 +17,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  var _qrString = "Empty Scan Code";
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,22 +30,16 @@ class _MainScreenState extends State<MainScreen> {
           ],
         ),
       ),
-      appBar: AppBar(),
-      floatingActionButton: SizedBox(
-        height: 80,
-        width: 80,
-        child: FittedBox(
-          child: FloatingActionButton(
-            onPressed: () => _toQrScanner(),
-            child: const Icon(
-              Icons.qr_code_scanner,
-              size: 28,
-            ),
-          ),
-        ),
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: backgroundColor,
+        iconTheme: const IconThemeData(color: Color(0xFF96CE5F)),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      body: Center(child: Text(_qrString)),
+      backgroundColor: backgroundColor,
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: GrowScreen(),
+      ),
     );
   }
 
@@ -73,7 +67,8 @@ class _MainScreenState extends State<MainScreen> {
     try {
       await UserApi.instance.logout();
       print('로그아웃 성공, SDK에서 토큰 삭제');
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => AuthScreen()));
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (_) => AuthScreen()));
     } catch (error) {
       print('로그아웃 실패, SDK에서 토큰 삭제 $error');
     }
