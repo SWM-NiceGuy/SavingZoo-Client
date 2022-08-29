@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:amond/presentation/screens/auth/components/apple_login_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/screens/main_screen.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import 'components/kakao_login_container.dart';
 
@@ -21,15 +23,6 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   @override
-  void initState() {
-    super.initState();
-    // 토큰이 존재하면 MainScreen으로 이동
-    if (context.read<AuthController>().isTokenExists) {
-      _navigateToMainScreen();
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final authController = context.read<AuthController>();
     return Scaffold(
@@ -37,6 +30,7 @@ class _AuthScreenState extends State<AuthScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // 카카오 로그인 버튼
             GestureDetector(
               onTap: () async {
                 try {
@@ -56,16 +50,37 @@ class _AuthScreenState extends State<AuthScreen> {
               },
               child: const KakaoLoginContainer(),
             ),
+            const SizedBox(height: 24),
+            // 애플 로그인 버튼
+            if (Platform.isIOS)
+              GestureDetector(
+                onTap: () async {
+                  try {
+                    // 로그인 시도 후 성공하면 MainScreen으로 이동
+                    await authController.loginWithApple();
+                    _navigateToMainScreen();
+                  } catch (error) {
+                    // 의도적인 로그인 취소로 보고 애플 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
+                    if (error is SignInWithAppleAuthorizationException && error.code == AuthorizationErrorCode.canceled) {
+                      return;
+                    }
+                    _showLoginFailDialog(context);
+                  }
+                },
+                child: const AppleLoginContainer(),
+              ),
           ],
         ),
       ),
     );
   }
 
+  /// MainScreen으로 pushReplacement하는 함수
   void _navigateToMainScreen() {
     Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
   }
 
+  /// 로그인 실패시 Dialog를 보여주는 함수
   void _showLoginFailDialog(BuildContext context) {
     if (Platform.isIOS) {
       showCupertinoDialog(
@@ -102,5 +117,3 @@ class _AuthScreenState extends State<AuthScreen> {
     }
   }
 }
-
-
