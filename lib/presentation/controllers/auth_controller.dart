@@ -1,11 +1,14 @@
+import 'dart:convert';
+
+import 'package:amond/utils/apple_client_secret.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_talk.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 enum LoginType { kakao, apple }
 
@@ -23,7 +26,7 @@ class AuthController with ChangeNotifier {
   bool get isTokenExists => _accessToken != null;
 
   /// 앱 시작시 토큰 설정 (자동로그인)
-  /// 
+  ///
   /// 토큰 설정이 성공하면 [true]를 반환
   /// 실패하면 [false]를 반환
   Future<bool> setToken() async {
@@ -44,12 +47,12 @@ class AuthController with ChangeNotifier {
   Future<bool> isTokenValid() async {
     if (_loginType == null) return false;
 
+    // 카카오 로그인
     if (_loginType == LoginType.kakao) {
-      // 카카오 로그인일때
       if (await AuthApi.instance.hasToken()) {
         try {
+          await UserApi.instance.accessTokenInfo();
           // 토큰 유효성 체크 성공
-          AccessTokenInfo? tokenInfo = await UserApi.instance.accessTokenInfo();
           return true;
         } catch (error) {
           if (error is KakaoException && error.isInvalidTokenError()) {
@@ -61,8 +64,9 @@ class AuthController with ChangeNotifier {
           }
         }
       }
-    } else if (_loginType == LoginType.apple) {
-      // 애플 로그인일때
+    }
+    // 애플 로그인
+    else if (_loginType == LoginType.apple) {
       _accessToken = await FirebaseAuth.instance.currentUser?.getIdToken();
       if (_accessToken == null) return false;
       return true;
@@ -120,13 +124,15 @@ class AuthController with ChangeNotifier {
           AppleIDAuthorizationScopes.fullName,
         ],
       );
+
       final oauthCredential = OAuthProvider("apple.com").credential(
         idToken: appleCredential.identityToken,
         accessToken: appleCredential.authorizationCode,
       );
 
       await FirebaseAuth.instance.signInWithCredential(oauthCredential);
-      // print('애플로 로그인 성공');
+
+      // 로그인/회원가입 로직
       await prefs.setString('loginType', 'apple');
       await setToken();
       // print(authResult);
@@ -137,6 +143,8 @@ class AuthController with ChangeNotifier {
     }
   }
 
+
+  /// SharedPreferences에서 가져온 loginType의 [String]값을 [LoginType]으로 변환하여 반환
   LoginType? _getLoginTypeFromString(String? str) {
     if (str == null) return null;
     switch (str) {
@@ -173,6 +181,76 @@ class AuthController with ChangeNotifier {
         await prefs.remove('loginType');
       } catch (error) {
         // print('애플 로그아웃 실패 $error');
+        rethrow;
+      }
+    }
+  }
+
+  /// 회원 탈퇴 함수
+  ///
+  /// 카카오는 자체 skd의 [UserApi.instance.unlink] 함수를 호출
+  /// 애플은 [FirebaseAuth.instance.currentUser?.delete] 함수를 호출
+  ///
+  /// 각각 회원 탈퇴후 sharedPreferences에서 login정보를 제거
+  Future<void> resign() async {
+    final prefs = await this.prefs;
+    if (_loginType == LoginType.kakao) {
+      try {
+        await UserApi.instance.unlink();
+        // print('카카오 탈퇴 성공, SDK에서 토큰 삭제');
+        await prefs.remove('loginType');
+      } catch (error) {
+        // print('연결 끊기 실패 $error');
+        rethrow;
+      }
+    } else if (_loginType == LoginType.apple) {
+      try {
+        // revoke Endpoint
+        Uri revokeUri = Uri.parse('https://appleid.apple.com/auth/revoke');
+        Uri tokenUri = Uri.parse('https://appleid.apple.com/auth/token');
+
+        // 애플 로그인 재진행우 Authorization code 재발급
+        final AuthorizationCredentialAppleID appleCredential =
+            await SignInWithApple.getAppleIDCredential(
+          scopes: [
+            AppleIDAuthorizationScopes.email,
+            AppleIDAuthorizationScopes.fullName,
+          ],
+        );
+
+        final oauthCredential = OAuthProvider("apple.com").credential(
+          idToken: appleCredential.identityToken,
+          accessToken: appleCredential.authorizationCode,
+        );
+
+        await FirebaseAuth.instance.signOut();
+        await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+
+        // Access Token 가져오기
+        final atResponse = await http.post(tokenUri, body: {
+          'client_id': 'com.amond.amondApp',
+          'code': appleCredential.authorizationCode,
+          'client_secret': Utils.appleClientSecret(),
+          'grant_type': 'authorization_code'
+        });
+        final accessToken = jsonDecode(atResponse.body)['access_token'];
+
+        // 가져온 Access Token으로 Revoke 시도
+        final response = await http.post(revokeUri, body: {
+          'client_id': 'com.amond.amondApp',
+          'client_secret': Utils.appleClientSecret(),
+          'token': accessToken,
+        });
+
+        // Revoke api 프로세스가 실패하면 에러 발생
+        if (response.statusCode >= 400) {
+          throw Exception('Revoke Failed');
+        }
+
+        await FirebaseAuth.instance.currentUser?.delete();
+        await prefs.remove('loginType');
+      } catch (error) {
+        // print('애플 탈퇴 실패 $error');
         rethrow;
       }
     }

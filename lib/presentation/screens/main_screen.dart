@@ -38,6 +38,17 @@ class _MainScreenState extends State<MainScreen> {
                   _showLogoutFailDialog(context);
                 }
               },
+            ),
+            ListTile(
+              title: Text('회원탈퇴'),
+              onTap: () async {
+                try {
+                await authController.resign();
+                Navigator.of(context).pushReplacementNamed(AuthScreen.routeName);
+                } catch (error) {
+                  _showLogoutFailDialog(context);
+                }
+              },
             )
           ],
         ),
