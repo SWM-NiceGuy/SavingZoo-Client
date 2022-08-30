@@ -8,4 +8,4 @@ const expBarColor1 = Color(0xFF96CE5F);
 const expBarColor2 = Color(0xFFA7E25D);
 const blackColor = Color(0xFF343434);
 const darkShadowColor = Color(0xFFC6CEDA);
-const whiteShadowColor = Color(0xCDFFFFFF);
+const lightShadowColor = Color(0xCDFFFFFF);
