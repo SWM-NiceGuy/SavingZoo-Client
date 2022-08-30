@@ -9,7 +9,7 @@ class GrowScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mainController = context.watch<GrowController>();
+    final growController = context.watch<GrowController>();
     final width = MediaQuery.of(context).size.width;
 
     return Column(
@@ -17,14 +17,27 @@ class GrowScreen extends StatelessWidget {
         LevelSystem(
           width: width,
           height: 12.0,
-          currentExp: mainController.currentExp,
-          maxExp: mainController.maxExp,
-          percentage: mainController.expPercentage,
+          level: growController.level,
+          currentExp: growController.currentExp,
+          maxExp: growController.maxExp,
+          percentage: growController.expPercentage,
+        ),
+        const SizedBox(height: 24.0),
+        AnimatedOpacity(
+          opacity: growController.avatarIsVisible ? 1.0 : 0.0,
+          duration: Duration(milliseconds: growController.fadeDuration),
+          child: Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: Image.asset(
+              growController.avatarPath,
+              height: 180.0,
+            ),
+          ),
         ),
         const SizedBox(height: 24.0),
         Align(
           child: ElevatedButton(
-            onPressed: () => mainController.increaseExp(10),
+            onPressed: () => growController.increaseExp(10),
             style: ElevatedButton.styleFrom(primary: expBarColor1),
             child: const Center(child: Text('성장포인트 10 증가')),
           ),

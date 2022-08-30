@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class LevelSystem extends StatelessWidget {
   final double width;
   final double height;
+  final int level;
   final int currentExp;
   final int maxExp;
   final double percentage;
@@ -11,6 +12,7 @@ class LevelSystem extends StatelessWidget {
   const LevelSystem({
     required this.width,
     required this.height,
+    required this.level,
     required this.currentExp,
     required this.maxExp,
     required this.percentage,
@@ -28,7 +30,7 @@ class LevelSystem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'LV1',
+                'LV$level',
                 style: TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.w500,
