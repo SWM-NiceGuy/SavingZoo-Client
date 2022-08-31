@@ -33,7 +33,7 @@ class _ShadowButtonState extends State<ShadowButton> {
         widget.borderRadius ?? min(widget.width, widget.height) / 5;
 
     return Padding(
-      padding: EdgeInsets.all(minSize / 10),
+      padding: EdgeInsets.all(minSize / 5),
       child: GestureDetector(
         onTapUp: (details) {
           widget.onPress();

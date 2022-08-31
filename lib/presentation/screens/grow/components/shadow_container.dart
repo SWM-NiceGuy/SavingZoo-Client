@@ -26,7 +26,7 @@ class ShadowContainer extends StatelessWidget {
     final minSize = min(width, height);
 
     return Padding(
-      padding: EdgeInsets.all(minSize / 10),
+      padding: EdgeInsets.all(minSize / 5),
       child: Container(
         width: width,
         height: height,

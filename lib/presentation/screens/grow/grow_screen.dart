@@ -70,7 +70,7 @@ class GrowScreen extends StatelessWidget {
           children: [
             Padding(
               padding:
-                  EdgeInsets.symmetric(vertical: 8.0, horizontal: screenMargin),
+                  EdgeInsets.fromLTRB(screenMargin, 8.0, screenMargin, 0.0),
               child: LevelSystem(
                 width: width,
                 height: 12.0,
@@ -82,10 +82,8 @@ class GrowScreen extends StatelessWidget {
             ),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(
-                vertical: 0.0,
-                horizontal: screenMargin,
-              ),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
               child: Row(
                 children: [
                   MissionBox(
@@ -139,7 +137,7 @@ class GrowScreen extends StatelessWidget {
               // height: 100.0,
             ),
             Padding(
-              padding: const EdgeInsets.all(screenMargin).copyWith(top: 8.0),
+              padding: const EdgeInsets.all(screenMargin).copyWith(top: 0.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
