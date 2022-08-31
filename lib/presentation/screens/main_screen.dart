@@ -26,33 +26,50 @@ class _MainScreenState extends State<MainScreen> {
     final authController = context.read<AuthController>();
     return Scaffold(
       drawer: Drawer(
-        child: ListView(
-          children: [
-            ListTile(
-              title: Text('로그아웃'),
-              onTap: () async {
-                try {
-                  await authController.logout();
-                  Navigator.of(context)
-                      .pushReplacementNamed(AuthScreen.routeName);
-                } catch (error) {
-                  _showLogoutFailDialog(context);
-                }
-              },
-            ),
-            ListTile(
-              title: Text('회원탈퇴'),
-              onTap: () async {
-                try {
-                  await authController.resign();
-                  Navigator.of(context)
-                      .pushReplacementNamed(AuthScreen.routeName);
-                } catch (error) {
-                  _showLogoutFailDialog(context);
-                }
-              },
-            )
-          ],
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ListTile(
+                leading: const Icon(
+                  Icons.logout,
+                  color: blackColor,
+                ),
+                title: const Text(
+                  '로그아웃',
+                  style: TextStyle(color: blackColor),
+                ),
+                onTap: () async {
+                  try {
+                    await authController.logout();
+                    Navigator.of(context)
+                        .pushReplacementNamed(AuthScreen.routeName);
+                  } catch (error) {
+                    _showLogoutFailDialog(context);
+                  }
+                },
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.delete_forever,
+                  color: blackColor,
+                ),
+                title: const Text(
+                  'AMOND 탈퇴',
+                  style: TextStyle(color: blackColor),
+                ),
+                onTap: () async {
+                  try {
+                    await authController.resign();
+                    Navigator.of(context)
+                        .pushReplacementNamed(AuthScreen.routeName);
+                  } catch (error) {
+                    _showLogoutFailDialog(context);
+                  }
+                },
+              )
+            ],
+          ),
         ),
       ),
       appBar: AppBar(
