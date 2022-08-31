@@ -30,6 +30,7 @@ class GrowController with ChangeNotifier {
   int get level => _avatar.level;
   int currentExp = 0; // 현재 경험치
   int get maxExp => _avatar.maxExp; // 최대 경험치
+  int _extraExp = 0; // 증가한 경험치가 최대 경험치를 넘었을 때의 잔여 경험치
   double expPercentage = 0.0; // 경험치 게이지 채워짐 정도 (0.0 ~ 1.0)
 
   String get avatarPath => _avatar.imagePath; // 아바타 이미지 경로
@@ -78,6 +79,7 @@ class GrowController with ChangeNotifier {
     currentExp += point;
 
     if (currentExp > maxExp) {
+      _extraExp = currentExp - maxExp;
       currentExp = maxExp;
     }
 
@@ -108,6 +110,10 @@ class GrowController with ChangeNotifier {
       if (_avatar == Avatar.adult) return;
 
       resetExp();
+
+      if (_extraExp > 0) {
+        increaseExp(_extraExp);
+      }
     });
   }
 

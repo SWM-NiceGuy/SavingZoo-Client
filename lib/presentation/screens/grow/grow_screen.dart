@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 
 class GrowScreen extends StatelessWidget {
   bool isNewUser;
+  int completedMission = 0;
 
   GrowScreen({
     Key? key,
@@ -102,7 +103,19 @@ class GrowScreen extends StatelessWidget {
                 ShadowButton(
                   width: buttonHeight,
                   height: buttonHeight,
-                  onPress: () {},
+                  onPress: () {
+                    final title =
+                        completedMission == 0 ? 'Mission 1 성공' : 'Mission 2 성공';
+                    final content = completedMission == 0
+                        ? 'Mission 2를 이어서 완수하시면 경험치를 획득하여 레벨업 하고 선구자 뱃지를 획득하실 수 있습니다!'
+                        : '모든 미션을 완수하셨습니다. 감사의 의미로 선구자 뱃지를 드립니다';
+                    completedMission++;
+
+                    showMissionCompletePopup(
+                        context, width, height, title, 30, content, () {
+                      growController.increaseExp(30);
+                    });
+                  },
                   child: Icon(
                     Icons.qr_code_scanner,
                     size: buttonHeight / 2,

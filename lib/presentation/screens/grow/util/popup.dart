@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:word_break_text/word_break_text.dart';
 
 import '../../../../ui/colors.dart';
 import '../components/shadow_button.dart';
@@ -53,14 +54,14 @@ void showMissionCompletePopup(
                     ),
                   ],
                 ),
-                Text(
+                WordBreakText(
                   content,
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.w400,
                     color: blackColor,
                   ),
-                  textAlign: TextAlign.center,
+                  wrapAlignment: WrapAlignment.center,
                 ),
                 ShadowButton(
                   width: minSize / 2,
