@@ -82,13 +82,12 @@ class GrowScreen extends StatelessWidget {
             ),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              padding:
-                  const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
               child: Row(
                 children: [
                   MissionBox(
                     width: width * 0.75,
                     height: missionBoxHeight,
+                    padding: EdgeInsets.all(screenMargin),
                     isComplete: completedMissions.contains(1),
                     title: 'Mission 1',
                     content: '공원 한바퀴',
@@ -97,6 +96,12 @@ class GrowScreen extends StatelessWidget {
                   MissionBox(
                     width: width * 0.75,
                     height: missionBoxHeight,
+                    padding: EdgeInsets.fromLTRB(
+                      0.0,
+                      screenMargin,
+                      screenMargin,
+                      screenMargin,
+                    ),
                     isComplete: completedMissions.contains(2),
                     title: 'Mission 2',
                     content: '플로깅',
@@ -122,7 +127,7 @@ class GrowScreen extends StatelessWidget {
             growController.heartsIsVisible
                 ? Lottie.asset(
                     'assets/lotties/lottie-hearts.json',
-                    height: avatarHeight * 1.5,
+                    height: avatarHeight * 1.2,
                     repeat: false,
                   )
                 : const SizedBox(),
@@ -137,13 +142,17 @@ class GrowScreen extends StatelessWidget {
               // height: 100.0,
             ),
             Padding(
-              padding: const EdgeInsets.all(screenMargin).copyWith(top: 0.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: screenMargin,
+                vertical: screenMargin / 2,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ShadowButton(
                     width: buttonHeight,
                     height: buttonHeight,
+                    padding: EdgeInsets.zero,
                     onPress: growController.showHearts,
                     child: Image.asset(
                       'assets/images/heart_icon.png',
@@ -154,6 +163,7 @@ class GrowScreen extends StatelessWidget {
                   ShadowButton(
                     width: buttonHeight,
                     height: buttonHeight,
+                    padding: EdgeInsets.zero,
                     onPress: executeMissionComplete,
                     child: Image.asset(
                       'assets/images/barcode_icon.png',
@@ -164,6 +174,7 @@ class GrowScreen extends StatelessWidget {
                   ShadowButton(
                     width: buttonHeight,
                     height: buttonHeight,
+                    padding: EdgeInsets.zero,
                     onPress: growController.changeComment,
                     child: Image.asset(
                       'assets/images/comment_icon.png',

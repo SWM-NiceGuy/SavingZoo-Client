@@ -7,6 +7,7 @@ class ShadowButton extends StatefulWidget {
   final VoidCallback onPress;
   final double width;
   final double height;
+  final EdgeInsets? padding;
   final Widget? child;
   final double? borderRadius;
 
@@ -15,6 +16,7 @@ class ShadowButton extends StatefulWidget {
     required this.width,
     required this.height,
     required this.onPress,
+    this.padding,
     this.child,
     this.borderRadius,
   }) : super(key: key);
@@ -33,7 +35,7 @@ class _ShadowButtonState extends State<ShadowButton> {
         widget.borderRadius ?? min(widget.width, widget.height) / 5;
 
     return Padding(
-      padding: EdgeInsets.all(minSize / 5),
+      padding: widget.padding ?? EdgeInsets.all(minSize / 5),
       child: GestureDetector(
         onTapUp: (details) {
           widget.onPress();

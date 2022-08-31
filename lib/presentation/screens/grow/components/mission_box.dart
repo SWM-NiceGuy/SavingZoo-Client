@@ -8,6 +8,7 @@ class MissionBox extends StatelessWidget {
   final String content;
   final String imagePath;
   final bool isComplete;
+  final EdgeInsets? padding;
 
   const MissionBox({
     Key? key,
@@ -17,6 +18,7 @@ class MissionBox extends StatelessWidget {
     required this.content,
     required this.imagePath,
     this.isComplete = false,
+    this.padding,
   }) : super(key: key);
 
   @override
@@ -24,6 +26,7 @@ class MissionBox extends StatelessWidget {
     return ShadowContainer(
       width: width,
       height: height,
+      padding: padding,
       backgroundColor: isComplete ? Colors.grey.shade400 : null,
       child: Stack(
         children: [

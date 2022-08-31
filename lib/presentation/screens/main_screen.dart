@@ -78,7 +78,9 @@ class _MainScreenState extends State<MainScreen> {
         iconTheme: const IconThemeData(color: Color(0xFF96CE5F)),
       ),
       backgroundColor: backgroundColor,
-      body: GrowScreen(isNewUser: true),
+      body: SafeArea(
+        child: GrowScreen(isNewUser: true),
+      ),
     );
   }
 
