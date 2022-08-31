@@ -5,6 +5,7 @@ import 'package:amond/presentation/screens/grow/components/mission_box.dart';
 import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
 import 'package:amond/presentation/screens/grow/util/popup.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 class GrowScreen extends StatelessWidget {
@@ -28,6 +29,20 @@ class GrowScreen extends StatelessWidget {
     final avatarHeight = height * 0.2;
     final commentBoxHeight = height * 0.12;
     final buttonHeight = height * 0.09;
+
+    void executeMissionComplete() {
+      final title =
+          !completedMissions.contains(1) ? 'Mission 1 성공' : 'Mission 2 성공';
+      final content = !completedMissions.contains(1)
+          ? 'Mission 2를 이어서 완수하시면 경험치를 획득하여 레벨업 하고 선구자 뱃지를 획득하실 수 있습니다!'
+          : '모든 미션을 완수하셨습니다. 감사의 의미로 선구자 뱃지를 드립니다';
+
+      completedMissions.add(!completedMissions.contains(1) ? 1 : 2);
+
+      showMissionCompletePopup(context, width, height, title, 30, content, () {
+        growController.increaseExp(30);
+      });
+    }
 
     if (isNewUser) {
       isNewUser = false;
@@ -94,14 +109,26 @@ class GrowScreen extends StatelessWidget {
             ),
           ],
         ),
-        AnimatedOpacity(
-          opacity: growController.avatarIsVisible ? 1.0 : 0.0,
-          duration: Duration(milliseconds: growController.fadeDuration),
-          child: Image.asset(
-            growController.avatarPath,
-            height: avatarHeight,
-            // height: 180.0,
-          ),
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            AnimatedOpacity(
+              opacity: growController.avatarIsVisible ? 1.0 : 0.0,
+              duration: Duration(milliseconds: growController.fadeDuration),
+              child: Image.asset(
+                growController.avatarPath,
+                height: avatarHeight,
+                // height: 180.0,
+              ),
+            ),
+            growController.heartsIsVisible
+                ? Lottie.asset(
+                    'assets/lotties/lottie-hearts.json',
+                    height: avatarHeight * 1.5,
+                    repeat: false,
+                  )
+                : const SizedBox(),
+          ],
         ),
         Column(
           children: [
@@ -119,7 +146,7 @@ class GrowScreen extends StatelessWidget {
                   ShadowButton(
                     width: buttonHeight,
                     height: buttonHeight,
-                    onPress: () => growController.increaseExp(10),
+                    onPress: growController.showHearts,
                     child: Icon(
                       Icons.heart_broken,
                       size: buttonHeight / 2,
@@ -129,22 +156,7 @@ class GrowScreen extends StatelessWidget {
                   ShadowButton(
                     width: buttonHeight,
                     height: buttonHeight,
-                    onPress: () {
-                      final title = !completedMissions.contains(1)
-                          ? 'Mission 1 성공'
-                          : 'Mission 2 성공';
-                      final content = !completedMissions.contains(1)
-                          ? 'Mission 2를 이어서 완수하시면 경험치를 획득하여 레벨업 하고 선구자 뱃지를 획득하실 수 있습니다!'
-                          : '모든 미션을 완수하셨습니다. 감사의 의미로 선구자 뱃지를 드립니다';
-
-                      completedMissions
-                          .add(!completedMissions.contains(1) ? 1 : 2);
-
-                      showMissionCompletePopup(
-                          context, width, height, title, 30, content, () {
-                        growController.increaseExp(30);
-                      });
-                    },
+                    onPress: executeMissionComplete,
                     child: Icon(
                       Icons.qr_code_scanner,
                       size: buttonHeight / 2,
