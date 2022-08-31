@@ -3,11 +3,17 @@ import 'package:amond/presentation/screens/grow/components/comment_box.dart';
 import 'package:amond/presentation/screens/grow/components/level_system.dart';
 import 'package:amond/presentation/screens/grow/components/mission_box.dart';
 import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
+import 'package:amond/presentation/screens/grow/util/popup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class GrowScreen extends StatelessWidget {
-  const GrowScreen({Key? key}) : super(key: key);
+  bool isNewUser;
+
+  GrowScreen({
+    Key? key,
+    required this.isNewUser,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +25,25 @@ class GrowScreen extends StatelessWidget {
     final avatarHeight = height * 0.2;
     final commentBoxHeight = height * 0.12;
     final buttonHeight = height * 0.09;
+
+    if (isNewUser) {
+      isNewUser = false;
+      Future.delayed(Duration(seconds: 2), () {
+        if (!Navigator.of(context).canPop()) {
+          showMissionCompletePopup(
+            context,
+            width,
+            height,
+            '환경 보호를 위한 첫걸음',
+            10,
+            '환경을 지키겠다는 마음들이 모여 건강한 지구를 만들어가고 있어요!',
+            () {
+              growController.increaseExp(10);
+            },
+          );
+        }
+      });
+    }
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,

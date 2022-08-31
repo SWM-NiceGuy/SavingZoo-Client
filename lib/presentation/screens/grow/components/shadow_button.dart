@@ -8,6 +8,7 @@ class ShadowButton extends StatefulWidget {
   final double width;
   final double height;
   final Widget? child;
+  final double? borderRadius;
 
   const ShadowButton({
     Key? key,
@@ -15,6 +16,7 @@ class ShadowButton extends StatefulWidget {
     required this.height,
     required this.onPress,
     this.child,
+    this.borderRadius,
   }) : super(key: key);
 
   @override
@@ -27,6 +29,8 @@ class _ShadowButtonState extends State<ShadowButton> {
   @override
   Widget build(BuildContext context) {
     final minSize = min(widget.width, widget.height);
+    final borderRadius =
+        widget.borderRadius ?? min(widget.width, widget.height) / 5;
 
     return Padding(
       padding: EdgeInsets.all(minSize / 10),
@@ -46,8 +50,7 @@ class _ShadowButtonState extends State<ShadowButton> {
           height: widget.height,
           decoration: BoxDecoration(
             color: bgColor,
-            borderRadius:
-                BorderRadius.circular(min(widget.width, widget.height) / 5),
+            borderRadius: BorderRadius.circular(borderRadius),
             boxShadow: [
               BoxShadow(
                 color: darkShadowColor,

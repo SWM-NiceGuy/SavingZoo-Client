@@ -38,7 +38,7 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: backgroundColor,
       body: Padding(
         padding: const EdgeInsets.all(24.0),
-        child: GrowScreen(),
+        child: GrowScreen(isNewUser: true),
       ),
     );
   }
