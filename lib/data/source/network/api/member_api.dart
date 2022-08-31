@@ -7,12 +7,15 @@ import 'package:http/http.dart' as http;
 class MemberApi {
   Future<http.Response> signUp(MemberEntity me) async {
     final url = Uri.parse('$baseUrl/v1/signin');
-    final response = await http.post(url, body: jsonEncode(me.toJson()), headers: {
-  'Content-type' : 'application/json', 
-  'Accept': 'application/json',
-});
+    final response =
+        await http.post(url, body: jsonEncode(me.toJson()), headers: {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+    });
     return response;
   }
 
-  
+  Future<void> deleteAccount(MemberEntity me) async {
+    
+  }
 }

@@ -27,12 +27,23 @@ class _QrScannerState extends State<QrScanner> {
 
   @override
   Widget build(BuildContext context) {
+    var scanArea = (MediaQuery.of(context).size.width < 400 ||
+            MediaQuery.of(context).size.height < 400)
+        ? 150.0
+        : 300.0;
+
     return Scaffold(
       body: Column(
         children: <Widget>[
           Expanded(
             flex: 5,
             child: QRView(
+              overlay: QrScannerOverlayShape(
+                  borderColor: Colors.red,
+                  borderRadius: 10,
+                  borderLength: 30,
+                  borderWidth: 10,
+                  cutOutSize: scanArea),
               key: qrKey,
               onQRViewCreated: _onQRViewCreated,
             ),
@@ -52,9 +63,9 @@ class _QrScannerState extends State<QrScanner> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
       if (!_read) {
+        controller.pauseCamera();
         _readData(scanData);
         Future.delayed(const Duration(seconds: 2))
             .then((_) => Navigator.of(context).pop());
@@ -75,7 +86,9 @@ class _QrScannerState extends State<QrScanner> {
           child: PlatformBasedIndicator(),
         ),
       );
-      _read = true;
+      setState(() {
+        _read = true;
+      });
     }
     return;
   }
