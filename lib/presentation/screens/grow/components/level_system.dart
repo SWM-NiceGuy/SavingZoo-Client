@@ -1,6 +1,8 @@
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 
+import '../util/popup.dart';
+
 class LevelSystem extends StatelessWidget {
   final double width;
   final double height;
@@ -37,19 +39,22 @@ class LevelSystem extends StatelessWidget {
                   color: blackColor,
                 ),
               ),
-              Row(
-                children: [
-                  Text(
-                    '${currentExp}xp / ${maxExp}xp',
-                    style: TextStyle(color: blackColor),
-                  ),
-                  SizedBox(width: 4.0),
-                  Icon(
-                    Icons.info_outline,
-                    color: Color(0xff919191),
-                    size: 18.0,
-                  ),
-                ],
+              GestureDetector(
+                onTap: () => showExpGuidePopup(context),
+                child: Row(
+                  children: [
+                    Text(
+                      '${currentExp}xp / ${maxExp}xp',
+                      style: TextStyle(color: blackColor),
+                    ),
+                    SizedBox(width: 4.0),
+                    Icon(
+                      Icons.info_outline,
+                      color: Color(0xff919191),
+                      size: 18.0,
+                    ),
+                  ],
+                ),
               )
             ],
           ),
