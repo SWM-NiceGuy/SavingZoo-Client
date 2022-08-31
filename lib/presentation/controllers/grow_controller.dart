@@ -37,13 +37,17 @@ class GrowController with ChangeNotifier {
   int fadeDuration = 2000; // Fade 애니메이션 지속시간
   bool avatarIsVisible = true; // 아바타 보임 유무
 
+  bool heartsIsVisible = false; // 하트 애니메이션 보임 유무
+  final heartComment = '사랑을 받으니 무엇이든\n할 수 있을 것만 같아요!';
+
   final _comments = [
     '저를 키워주신\n첫번째 아몬더에요!',
     '주인님의 미션 수행으로\n제가 성장할수 있어요',
     '환경을 생각하는 마음이\n아름다워요!',
   ];
   int _commentOrder = 0;
-  String get comment => _comments[_commentOrder];
+  String get comment =>
+      heartsIsVisible ? heartComment : _comments[_commentOrder];
 
   void _increaseExpBar(double from, double to) {
     int durationSeconds = 1; // 경험치 변화 애니메이션 시간
@@ -120,5 +124,18 @@ class GrowController with ChangeNotifier {
   void changeComment() {
     _commentOrder = (_commentOrder + 1) % _comments.length;
     notifyListeners();
+  }
+
+  void showHearts() {
+    if (heartsIsVisible) {
+      return;
+    }
+
+    heartsIsVisible = true;
+    notifyListeners();
+    Future.delayed(Duration(seconds: 6), () {
+      heartsIsVisible = false;
+      notifyListeners();
+    });
   }
 }
