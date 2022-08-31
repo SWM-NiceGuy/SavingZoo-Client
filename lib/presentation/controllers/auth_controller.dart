@@ -131,21 +131,22 @@ class AuthController {
           // print('카카오계정으로 로그인 성공');
 
           // 카카오 계정으로 처음 로그인하면
-          final userMe = await UserApi.instance.me();
+        final userMe = await UserApi.instance.me();
+        final createdAt = userMe.connectedAt;
 
-          print(userMe.hasSignedUp);
-          if (userMe.hasSignedUp == null || userMe.hasSignedUp == false) {
-            final responseStautsCode =
-                await _memberUseCases.signUp(MemberEntity(
-              provider: 'KAKAO',
-              uid: userMe.id.toString(),
-              nickname: userMe.kakaoAccount?.profile?.nickname,
-            ));
-            if (responseStautsCode >= 300) {
-              throw Exception('회원가입에 실패했습니다.');
-            }
-            userMe.hasSignedUp = true;
+        // 현재 로그인 시간과 계정 생성 시각 차이가 2초 미만이면 새로운 회원이라고 인지하고 계정생성
+        bool isFirst =
+            DateTime.now().toUtc().difference(createdAt!).inSeconds < 2;
+        if (isFirst) {
+          final responseStatusCode = await _memberUseCases.signUp(MemberEntity(
+            provider: 'KAKAO',
+            uid: userMe.id.toString(),
+            nickname: userMe.kakaoAccount?.profile?.nickname,
+          ));
+          if (responseStatusCode >= 300) {
+            throw Exception('회원가입에 실패했습니다.');
           }
+        }
           await prefs.setString('loginType', 'kakao');
           await setToken();
         } catch (error) {
@@ -160,24 +161,24 @@ class AuthController {
 
         // 카카오 계정으로 처음 로그인하면
         final userMe = await UserApi.instance.me();
+        final createdAt = userMe.connectedAt;
 
-        print(userMe.hasSignedUp);
-        if (userMe.hasSignedUp == null || userMe.hasSignedUp == false) {
+        // 현재 로그인 시간과 계정 생성 시각 차이가 2초 미만이면 새로운 회원이라고 인지하고 계정생성
+        bool isFirst =
+            DateTime.now().toUtc().difference(createdAt!).inSeconds < 2;
+        if (isFirst) {
           final responseStatusCode = await _memberUseCases.signUp(MemberEntity(
             provider: 'KAKAO',
             uid: userMe.id.toString(),
             nickname: userMe.kakaoAccount?.profile?.nickname,
           ));
           if (responseStatusCode >= 300) {
-            UserApi.instance.unlink();
             throw Exception('회원가입에 실패했습니다.');
           }
-          userMe.hasSignedUp = true;
         }
         await prefs.setString('loginType', 'kakao');
         await setToken();
       } catch (error) {
-        // print('카카오계정으로 로그인 실패 $error');
         rethrow;
       }
     }
@@ -205,7 +206,6 @@ class AuthController {
 
       // App 내의 로그인/회원가입 로직
       // 애플 계정의 첫번째 로그인이라면 서버에 회원가입 처리
-      print(appleCredential.email);
       if (appleCredential.email != null) {
         _memberUseCases.signUp(MemberEntity(
             provider: 'APPLE',

@@ -8,14 +8,14 @@ class MemberEntity {
   final String provider;
   final String uid;
   final String? nickname;
-  final String? gender;
+  final String? genderGroup;
   final int? age;
 
   MemberEntity({
     required this.provider,
     required this.uid,
     this.nickname,
-    this.gender,
+    this.genderGroup,
     this.age
   });
 
