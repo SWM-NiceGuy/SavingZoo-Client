@@ -145,30 +145,30 @@ class GrowScreen extends StatelessWidget {
                     width: buttonHeight,
                     height: buttonHeight,
                     onPress: growController.showHearts,
-                    child: Icon(
-                      Icons.heart_broken,
-                      size: buttonHeight / 2,
-                      color: Color(0xFFEFAFA6),
+                    child: Image.asset(
+                      'assets/images/heart_icon.png',
+                      width: buttonHeight / 2,
+                      height: buttonHeight / 2,
                     ),
                   ),
                   ShadowButton(
                     width: buttonHeight,
                     height: buttonHeight,
                     onPress: executeMissionComplete,
-                    child: Icon(
-                      Icons.qr_code_scanner,
-                      size: buttonHeight / 2,
-                      color: Color(0xFF757679),
+                    child: Image.asset(
+                      'assets/images/barcode_icon.png',
+                      width: buttonHeight / 2,
+                      height: buttonHeight / 2,
                     ),
                   ),
                   ShadowButton(
                     width: buttonHeight,
                     height: buttonHeight,
                     onPress: growController.changeComment,
-                    child: Icon(
-                      Icons.chat_bubble,
-                      size: buttonHeight / 2,
-                      color: Color(0xFFC4D96F),
+                    child: Image.asset(
+                      'assets/images/comment_icon.png',
+                      width: buttonHeight / 2,
+                      height: buttonHeight / 2,
                     ),
                   ),
                 ],

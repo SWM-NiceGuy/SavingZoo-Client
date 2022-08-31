@@ -41,8 +41,8 @@ class GrowController with ChangeNotifier {
   final heartComment = '사랑을 받으니 무엇이든\n할 수 있을 것만 같아요!';
 
   final _comments = [
-    '저를 키워주신\n첫번째 아몬더에요!',
-    '주인님의 미션 수행으로\n제가 성장할수 있어요',
+    '미션을 수행해 주시면\n제가 성장할 수 있어요',
+    '저도 커서 멋진\n어른이 될 수 있을까요?',
     '환경을 생각하는 마음이\n아름다워요!',
   ];
   int _commentOrder = 0;
