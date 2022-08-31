@@ -9,7 +9,9 @@ import 'package:provider/provider.dart';
 
 class GrowScreen extends StatelessWidget {
   bool isNewUser;
-  int completedMission = 0;
+  List<int> completedMissions = [];
+
+  static const screenMargin = 24.0;
 
   GrowScreen({
     Key? key,
@@ -29,7 +31,7 @@ class GrowScreen extends StatelessWidget {
 
     if (isNewUser) {
       isNewUser = false;
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(Duration(seconds: 1), () {
         if (!Navigator.of(context).canPop()) {
           showMissionCompletePopup(
             context,
@@ -51,21 +53,44 @@ class GrowScreen extends StatelessWidget {
       children: [
         Column(
           children: [
-            LevelSystem(
-              width: width,
-              height: 12.0,
-              level: growController.level,
-              currentExp: growController.currentExp,
-              maxExp: growController.maxExp,
-              percentage: growController.expPercentage,
+            Padding(
+              padding:
+                  EdgeInsets.symmetric(vertical: 8.0, horizontal: screenMargin),
+              child: LevelSystem(
+                width: width,
+                height: 12.0,
+                level: growController.level,
+                currentExp: growController.currentExp,
+                maxExp: growController.maxExp,
+                percentage: growController.expPercentage,
+              ),
             ),
-            const SizedBox(height: 8.0),
-            MissionBox(
-              width: width,
-              height: missionBoxHeight,
-              title: 'Mission 1',
-              content: '공원 한바퀴',
-              imagePath: 'assets/images/shoes.png',
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(
+                vertical: 0.0,
+                horizontal: screenMargin,
+              ),
+              child: Row(
+                children: [
+                  MissionBox(
+                    width: width * 0.75,
+                    height: missionBoxHeight,
+                    isComplete: completedMissions.contains(1),
+                    title: 'Mission 1',
+                    content: '공원 한바퀴',
+                    imagePath: 'assets/images/shoes.png',
+                  ),
+                  MissionBox(
+                    width: width * 0.75,
+                    height: missionBoxHeight,
+                    isComplete: completedMissions.contains(2),
+                    title: 'Mission 2',
+                    content: '플로깅',
+                    imagePath: 'assets/images/plogging.png',
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -86,53 +111,58 @@ class GrowScreen extends StatelessWidget {
               height: commentBoxHeight,
               // height: 100.0,
             ),
-            const SizedBox(height: 8.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ShadowButton(
-                  width: buttonHeight,
-                  height: buttonHeight,
-                  onPress: () => growController.increaseExp(10),
-                  child: Icon(
-                    Icons.heart_broken,
-                    size: buttonHeight / 2,
-                    color: Color(0xFFEFAFA6),
+            Padding(
+              padding: const EdgeInsets.all(screenMargin).copyWith(top: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ShadowButton(
+                    width: buttonHeight,
+                    height: buttonHeight,
+                    onPress: () => growController.increaseExp(10),
+                    child: Icon(
+                      Icons.heart_broken,
+                      size: buttonHeight / 2,
+                      color: Color(0xFFEFAFA6),
+                    ),
                   ),
-                ),
-                ShadowButton(
-                  width: buttonHeight,
-                  height: buttonHeight,
-                  onPress: () {
-                    final title =
-                        completedMission == 0 ? 'Mission 1 성공' : 'Mission 2 성공';
-                    final content = completedMission == 0
-                        ? 'Mission 2를 이어서 완수하시면 경험치를 획득하여 레벨업 하고 선구자 뱃지를 획득하실 수 있습니다!'
-                        : '모든 미션을 완수하셨습니다. 감사의 의미로 선구자 뱃지를 드립니다';
-                    completedMission++;
+                  ShadowButton(
+                    width: buttonHeight,
+                    height: buttonHeight,
+                    onPress: () {
+                      final title = !completedMissions.contains(1)
+                          ? 'Mission 1 성공'
+                          : 'Mission 2 성공';
+                      final content = !completedMissions.contains(1)
+                          ? 'Mission 2를 이어서 완수하시면 경험치를 획득하여 레벨업 하고 선구자 뱃지를 획득하실 수 있습니다!'
+                          : '모든 미션을 완수하셨습니다. 감사의 의미로 선구자 뱃지를 드립니다';
 
-                    showMissionCompletePopup(
-                        context, width, height, title, 30, content, () {
-                      growController.increaseExp(30);
-                    });
-                  },
-                  child: Icon(
-                    Icons.qr_code_scanner,
-                    size: buttonHeight / 2,
-                    color: Color(0xFF757679),
+                      completedMissions
+                          .add(!completedMissions.contains(1) ? 1 : 2);
+
+                      showMissionCompletePopup(
+                          context, width, height, title, 30, content, () {
+                        growController.increaseExp(30);
+                      });
+                    },
+                    child: Icon(
+                      Icons.qr_code_scanner,
+                      size: buttonHeight / 2,
+                      color: Color(0xFF757679),
+                    ),
                   ),
-                ),
-                ShadowButton(
-                  width: buttonHeight,
-                  height: buttonHeight,
-                  onPress: growController.changeComment,
-                  child: Icon(
-                    Icons.chat_bubble,
-                    size: buttonHeight / 2,
-                    color: Color(0xFFC4D96F),
+                  ShadowButton(
+                    width: buttonHeight,
+                    height: buttonHeight,
+                    onPress: growController.changeComment,
+                    child: Icon(
+                      Icons.chat_bubble,
+                      size: buttonHeight / 2,
+                      color: Color(0xFFC4D96F),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

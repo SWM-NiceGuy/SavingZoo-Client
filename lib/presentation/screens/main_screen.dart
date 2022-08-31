@@ -36,10 +36,7 @@ class _MainScreenState extends State<MainScreen> {
         iconTheme: const IconThemeData(color: Color(0xFF96CE5F)),
       ),
       backgroundColor: backgroundColor,
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: GrowScreen(isNewUser: true),
-      ),
+      body: GrowScreen(isNewUser: true),
     );
   }
 

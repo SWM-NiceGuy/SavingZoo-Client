@@ -7,6 +7,7 @@ class MissionBox extends StatelessWidget {
   final String title;
   final String content;
   final String imagePath;
+  final bool isComplete;
 
   const MissionBox({
     Key? key,
@@ -15,6 +16,7 @@ class MissionBox extends StatelessWidget {
     required this.title,
     required this.content,
     required this.imagePath,
+    this.isComplete = false,
   }) : super(key: key);
 
   @override
@@ -22,21 +24,38 @@ class MissionBox extends StatelessWidget {
     return ShadowContainer(
       width: width,
       height: height,
-      child: Row(
+      backgroundColor: isComplete ? Colors.grey.shade400 : null,
+      child: Stack(
         children: [
-          Padding(
-            padding: EdgeInsets.all(height / 4),
-            child: Image.asset(imagePath, height: height / 2),
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text('Mission 1', style: TextStyle(fontSize: 14.0)),
-              SizedBox(height: 6.0),
-              Text('공원 한바퀴', style: TextStyle(fontSize: 16.0))
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.all(height / 4),
+                child: Image.asset(imagePath, height: height / 2),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: TextStyle(fontSize: 14.0)),
+                  SizedBox(height: 6.0),
+                  Text(content, style: TextStyle(fontSize: 16.0))
+                ],
+              )
             ],
-          )
+          ),
+          Center(
+            child: isComplete
+                ? const Text(
+                    'COMPLETE',
+                    style: TextStyle(
+                        fontSize: 32.0,
+                        color: Colors.white,
+                        fontStyle: FontStyle.italic,
+                        fontWeight: FontWeight.w700),
+                  )
+                : null,
+          ),
         ],
       ),
     );
