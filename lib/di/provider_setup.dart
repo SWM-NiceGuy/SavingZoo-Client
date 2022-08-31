@@ -8,7 +8,6 @@ import 'package:amond/domain/usecases/member/member_use_cases.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-
 import '../domain/usecases/exp/change_exp.dart';
 
 List<SingleChildWidget> globalProviders = [

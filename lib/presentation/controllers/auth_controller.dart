@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+
 import 'package:amond/data/entity/member_entity.dart';
 import 'package:amond/domain/usecases/member/member_use_cases.dart';
 import 'package:amond/utils/apple_client_secret.dart';
@@ -10,6 +11,7 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk_talk.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+
 
 import '../../domain/models/member_info.dart';
 
@@ -28,8 +30,10 @@ class AuthController {
     return _prefs!;
   }
 
+
   MemberInfo? get memberInfo => _memberInfo;
   bool get isTokenExists => _memberInfo != null;
+
 
   /// 앱 시작시 토큰 설정 (자동로그인)
   ///
@@ -55,6 +59,7 @@ class AuthController {
   Future<bool> isTokenValid() async {
     if (_loginType == null) return false;
 
+
     // 카카오
     if (_loginType == LoginType.kakao) {
       if (await AuthApi.instance.hasToken()) {
@@ -73,6 +78,7 @@ class AuthController {
         }
       }
     }
+
     // 애플
     else if (_loginType == LoginType.apple) {
       await FirebaseAuth.instance.currentUser?.getIdToken();
@@ -249,7 +255,9 @@ class AuthController {
       try {
         await FirebaseAuth.instance.signOut();
         // print('애플 로그아웃 성공');
+
        _memberInfo = null;
+
         await prefs.remove('loginType');
       } catch (error) {
         // print('애플 로그아웃 실패 $error');
