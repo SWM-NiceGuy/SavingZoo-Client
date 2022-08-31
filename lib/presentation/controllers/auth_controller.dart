@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+
+import 'package:amond/data/entity/member_entity.dart';
+import 'package:amond/domain/usecases/member/member_use_cases.dart';
 import 'package:amond/utils/apple_client_secret.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_talk.dart';
@@ -10,20 +12,28 @@ import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
+
+import '../../domain/models/member_info.dart';
+
 enum LoginType { kakao, apple }
 
-class AuthController with ChangeNotifier {
-  String? _accessToken;
+class AuthController {
+  MemberInfo? _memberInfo;
   LoginType? _loginType;
   SharedPreferences? _prefs;
+  final MemberUseCases _memberUseCases;
+
+  AuthController(this._memberUseCases);
 
   Future<SharedPreferences> get prefs async {
     _prefs ??= await SharedPreferences.getInstance();
     return _prefs!;
   }
 
-  String? get token => _accessToken;
-  bool get isTokenExists => _accessToken != null;
+
+  MemberInfo? get memberInfo => _memberInfo;
+  bool get isTokenExists => _memberInfo != null;
+
 
   /// 앱 시작시 토큰 설정 (자동로그인)
   ///
@@ -35,10 +45,12 @@ class AuthController with ChangeNotifier {
     if (_loginType == null) return false;
 
     if (_loginType == LoginType.kakao) {
-      final token = await TokenManagerProvider.instance.manager.getToken();
-      _accessToken = token?.accessToken;
+      await TokenManagerProvider.instance.manager.getToken();
+      final user = await UserApi.instance.me();
+      _memberInfo = MemberInfo(provider: 'KAKAO', uid: user.id.toString());
     } else if (_loginType == LoginType.apple) {
-      _accessToken = await FirebaseAuth.instance.currentUser?.getIdToken();
+      _memberInfo = MemberInfo(
+          provider: 'APPLE', uid: FirebaseAuth.instance.currentUser!.uid);
     }
     return true;
   }
@@ -47,7 +59,8 @@ class AuthController with ChangeNotifier {
   Future<bool> isTokenValid() async {
     if (_loginType == null) return false;
 
-    // 카카오 로그인
+
+    // 카카오
     if (_loginType == LoginType.kakao) {
       if (await AuthApi.instance.hasToken()) {
         try {
@@ -65,10 +78,10 @@ class AuthController with ChangeNotifier {
         }
       }
     }
-    // 애플 로그인
+
+    // 애플
     else if (_loginType == LoginType.apple) {
-      _accessToken = await FirebaseAuth.instance.currentUser?.getIdToken();
-      if (_accessToken == null) return false;
+      await FirebaseAuth.instance.currentUser?.getIdToken();
       return true;
     }
     return false;
@@ -83,6 +96,25 @@ class AuthController with ChangeNotifier {
       try {
         await UserApi.instance.loginWithKakaoTalk();
         // print('카카오톡으로 로그인 성공');
+
+        // 카카오 계정으로 처음 로그인하면
+        final userMe = await UserApi.instance.me();
+        final createdAt = userMe.connectedAt;
+
+        // 현재 로그인 시간과 계정 생성 시각 차이가 2초 미만이면 새로운 회원이라고 인지하고 계정생성
+        bool isFirst =
+            DateTime.now().toUtc().difference(createdAt!).inSeconds < 2;
+        if (isFirst) {
+          final responseStatusCode = await _memberUseCases.signUp(MemberEntity(
+            provider: 'KAKAO',
+            uid: userMe.id.toString(),
+            nickname: userMe.kakaoAccount?.profile?.nickname,
+          ));
+          if (responseStatusCode >= 300) {
+            throw Exception('회원가입에 실패했습니다.');
+          }
+        }
+
         await prefs.setString('loginType', 'kakao');
         await setToken();
       } catch (error) {
@@ -97,6 +129,25 @@ class AuthController with ChangeNotifier {
         try {
           await UserApi.instance.loginWithKakaoAccount();
           // print('카카오계정으로 로그인 성공');
+
+          // 카카오 계정으로 처음 로그인하면
+          final userMe = await UserApi.instance.me();
+
+          print(userMe.hasSignedUp);
+          if (userMe.hasSignedUp == null || userMe.hasSignedUp == false) {
+            final responseStautsCode =
+                await _memberUseCases.signUp(MemberEntity(
+              provider: 'KAKAO',
+              uid: userMe.id.toString(),
+              nickname: userMe.kakaoAccount?.profile?.nickname,
+            ));
+            if (responseStautsCode >= 300) {
+              throw Exception('회원가입에 실패했습니다.');
+            }
+            userMe.hasSignedUp = true;
+          }
+          await prefs.setString('loginType', 'kakao');
+          await setToken();
         } catch (error) {
           // print('카카오계정으로 로그인 실패 $error');
           rethrow;
@@ -106,6 +157,25 @@ class AuthController with ChangeNotifier {
       try {
         await UserApi.instance.loginWithKakaoAccount();
         // print('카카오계정으로 로그인 성공');
+
+        // 카카오 계정으로 처음 로그인하면
+        final userMe = await UserApi.instance.me();
+
+        print(userMe.hasSignedUp);
+        if (userMe.hasSignedUp == null || userMe.hasSignedUp == false) {
+          final responseStatusCode = await _memberUseCases.signUp(MemberEntity(
+            provider: 'KAKAO',
+            uid: userMe.id.toString(),
+            nickname: userMe.kakaoAccount?.profile?.nickname,
+          ));
+          if (responseStatusCode >= 300) {
+            UserApi.instance.unlink();
+            throw Exception('회원가입에 실패했습니다.');
+          }
+          userMe.hasSignedUp = true;
+        }
+        await prefs.setString('loginType', 'kakao');
+        await setToken();
       } catch (error) {
         // print('카카오계정으로 로그인 실패 $error');
         rethrow;
@@ -130,19 +200,27 @@ class AuthController with ChangeNotifier {
         accessToken: appleCredential.authorizationCode,
       );
 
+      // Apple로그인을 통해 받은 정보로 파이어베이스에 로그인
       await FirebaseAuth.instance.signInWithCredential(oauthCredential);
 
-      // 로그인/회원가입 로직
+      // App 내의 로그인/회원가입 로직
+      // 애플 계정의 첫번째 로그인이라면 서버에 회원가입 처리
+      print(appleCredential.email);
+      if (appleCredential.email != null) {
+        _memberUseCases.signUp(MemberEntity(
+            provider: 'APPLE',
+            uid: FirebaseAuth.instance.currentUser!.uid,
+            nickname: (appleCredential.familyName ?? '') +
+                (appleCredential.givenName ?? '')));
+      }
+
       await prefs.setString('loginType', 'apple');
       await setToken();
-      // print(authResult);
-      return Future<void>.value();
     } catch (error) {
       // print('애플 로그인 실패 $error');
       rethrow;
     }
   }
-
 
   /// SharedPreferences에서 가져온 loginType의 [String]값을 [LoginType]으로 변환하여 반환
   LoginType? _getLoginTypeFromString(String? str) {
@@ -168,7 +246,7 @@ class AuthController with ChangeNotifier {
       try {
         await UserApi.instance.logout();
         // print('카카오 로그아웃 성공, SDK에서 토큰 삭제');
-        _accessToken = null;
+        _memberInfo = null;
         await prefs.remove('loginType');
       } catch (error) {
         rethrow;
@@ -177,7 +255,9 @@ class AuthController with ChangeNotifier {
       try {
         await FirebaseAuth.instance.signOut();
         // print('애플 로그아웃 성공');
-        _accessToken = null;
+
+       _memberInfo = null;
+
         await prefs.remove('loginType');
       } catch (error) {
         // print('애플 로그아웃 실패 $error');
