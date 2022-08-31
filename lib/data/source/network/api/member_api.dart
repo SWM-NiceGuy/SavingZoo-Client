@@ -11,10 +11,8 @@ class MemberApi {
   'Content-type' : 'application/json', 
   'Accept': 'application/json',
 });
-    print(jsonEncode(me.toJson()));
-    print(response.statusCode);
-    print(response.headers);
-    print(jsonDecode(response.body));
     return response;
   }
+
+  
 }

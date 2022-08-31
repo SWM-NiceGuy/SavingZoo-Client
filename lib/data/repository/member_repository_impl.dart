@@ -8,8 +8,9 @@ class MemberRepositoryImpl implements MemberRepository {
   MemberRepositoryImpl(this.memberApi);
 
   @override
-  /// 성공하면 200을 반환
+  /// 회원가입 함수
   ///
+  /// response의 statusCode를 반환 성공하면 200을 반환
   Future<int> signUp(MemberEntity me) async {
     final response =  await memberApi.signUp(me);
     return response.statusCode;
