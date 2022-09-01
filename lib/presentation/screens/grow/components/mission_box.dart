@@ -27,39 +27,31 @@ class MissionBox extends StatelessWidget {
       width: width,
       height: height,
       padding: padding,
-      backgroundColor: isComplete ? Colors.grey.shade400 : null,
-      child: Stack(
-        children: [
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(height / 4),
-                child: Image.asset(imagePath, height: height / 2),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: TextStyle(fontSize: 14.0)),
-                  SizedBox(height: 6.0),
-                  Text(content, style: TextStyle(fontSize: 16.0))
-                ],
-              )
-            ],
-          ),
-          Center(
-            child: isComplete
-                ? const Text(
-                    'COMPLETE',
-                    style: TextStyle(
-                        fontSize: 32.0,
-                        color: Colors.white,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w700),
-                  )
-                : null,
-          ),
-        ],
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: height / 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Image.asset(imagePath, height: height / 2),
+                SizedBox(width: height / 4),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: TextStyle(fontSize: 14.0)),
+                    SizedBox(height: 6.0),
+                    Text(content, style: TextStyle(fontSize: 16.0))
+                  ],
+                ),
+              ],
+            ),
+            isComplete
+                ? Image.asset('assets/images/check_icon.png')
+                : const SizedBox()
+          ],
+        ),
       ),
     );
   }
