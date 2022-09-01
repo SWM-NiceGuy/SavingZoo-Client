@@ -53,9 +53,9 @@ void showExpGuidePopup(BuildContext context) {
           RichText(
             text: TextSpan(
               children: [
-                TextSpan(text: '아바타를 ', style: normalStyle),
+                const TextSpan(text: '아바타를 ', style: normalStyle),
                 TextSpan(text: '한 단계 진화', style: boldStyle),
-                TextSpan(text: '시킬 수 있어요.', style: normalStyle),
+                const TextSpan(text: '시킬 수 있어요.', style: normalStyle),
               ],
             ),
           ),
@@ -63,9 +63,9 @@ void showExpGuidePopup(BuildContext context) {
           RichText(
             text: TextSpan(
               children: [
-                TextSpan(text: '아바타가 최종 단계로 진화하면  ', style: normalStyle),
+                const TextSpan(text: '아바타가 LV3로 진화하면  ', style: normalStyle),
                 TextSpan(text: '실제 과일', style: boldStyle),
-                TextSpan(text: '을 드려요!', style: normalStyle),
+                const TextSpan(text: '을 드려요!', style: normalStyle),
               ],
             ),
           ),
@@ -84,7 +84,7 @@ void showExpGuidePopup(BuildContext context) {
             '90xp / 100xp',
             style: TextStyle(color: expTextColor),
           ),
-          SizedBox(height: 12.0),
+          const SizedBox(height: 12.0),
           ExpBar(width: width, height: 12.0, percentage: 0.9),
         ],
       ),
@@ -92,13 +92,19 @@ void showExpGuidePopup(BuildContext context) {
   );
 }
 
+const missionCompletePopupTextStyle = TextStyle(
+  fontSize: 16.0,
+  fontWeight: FontWeight.w400,
+  color: blackColor,
+);
+
 void showMissionCompletePopup(
   BuildContext context,
   double screenWidth,
   double screenHeight,
   String title,
   int exp,
-  String content,
+  Widget content,
   VoidCallback onDismiss,
 ) {
   showDialog(
@@ -123,16 +129,16 @@ void showMissionCompletePopup(
                   children: [
                     Text(
                       title,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w500,
                         color: blackColor,
                       ),
                     ),
-                    SizedBox(height: 12.0),
+                    const SizedBox(height: 12.0),
                     Text(
                       '+ $exp XP',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 24.0,
                         fontWeight: FontWeight.w500,
                         color: expTextColor,
@@ -140,15 +146,7 @@ void showMissionCompletePopup(
                     ),
                   ],
                 ),
-                WordBreakText(
-                  content,
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w400,
-                    color: blackColor,
-                  ),
-                  wrapAlignment: WrapAlignment.center,
-                ),
+                content,
                 ShadowButton(
                   width: minSize / 2,
                   height: minSize / 8,
@@ -157,7 +155,7 @@ void showMissionCompletePopup(
                     Navigator.of(context).pop();
                     onDismiss();
                   },
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       '확인',
                       style: TextStyle(

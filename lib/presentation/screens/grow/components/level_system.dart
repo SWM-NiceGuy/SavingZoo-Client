@@ -11,6 +11,7 @@ class LevelSystem extends StatelessWidget {
   final int currentExp;
   final int maxExp;
   final double percentage;
+  final Widget? leading;
 
   const LevelSystem({
     required this.width,
@@ -19,6 +20,7 @@ class LevelSystem extends StatelessWidget {
     required this.currentExp,
     required this.maxExp,
     required this.percentage,
+    this.leading,
     Key? key,
   }) : super(key: key);
 
@@ -32,13 +34,23 @@ class LevelSystem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                'LV$level',
-                style: TextStyle(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.w500,
-                  color: blackColor,
-                ),
+              Row(
+                children: [
+                  leading != null
+                      ? Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: leading,
+                        )
+                      : const SizedBox(),
+                  Text(
+                    'LV$level',
+                    style: const TextStyle(
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.w500,
+                      color: blackColor,
+                    ),
+                  ),
+                ],
               ),
               GestureDetector(
                 onTap: () => showExpGuidePopup(context),
@@ -46,10 +58,10 @@ class LevelSystem extends StatelessWidget {
                   children: [
                     Text(
                       '${currentExp}xp / ${maxExp}xp',
-                      style: TextStyle(color: blackColor),
+                      style: const TextStyle(color: blackColor),
                     ),
-                    SizedBox(width: 4.0),
-                    Icon(
+                    const SizedBox(width: 4.0),
+                    const Icon(
                       Icons.info_outline,
                       color: Color(0xff919191),
                       size: 18.0,
@@ -60,7 +72,7 @@ class LevelSystem extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 12.0),
+        const SizedBox(height: 12.0),
         ExpBar(width: width, height: height, percentage: percentage),
       ],
     );

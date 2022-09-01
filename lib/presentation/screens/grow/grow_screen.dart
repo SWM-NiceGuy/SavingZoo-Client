@@ -7,6 +7,7 @@ import 'package:amond/presentation/screens/grow/util/popup.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:word_break_text/word_break_text.dart';
 
 class GrowScreen extends StatelessWidget {
   bool isNewUser;
@@ -30,22 +31,39 @@ class GrowScreen extends StatelessWidget {
     final buttonHeight = height * 0.09;
 
     void executeMissionComplete() {
-      final title =
-          !completedMissions.contains(1) ? 'Mission 1 성공' : 'Mission 2 성공';
-      final content = !completedMissions.contains(1)
-          ? 'Mission 2를 이어서 완수하시면 경험치를 획득하여 레벨업 하고 선구자 뱃지를 획득하실 수 있습니다!'
-          : '모든 미션을 완수하셨습니다. 감사의 의미로 선구자 뱃지를 드립니다';
+      final completedMission = completedMissions.contains(2)
+          ? 0
+          : completedMissions.contains(1)
+              ? 2
+              : 1;
 
-      completedMissions.add(!completedMissions.contains(1) ? 1 : 2);
+      final title = completedMission == 1 ? 'Mission 1 성공' : 'Mission 2 성공';
+      final content = completedMission == 1
+          ? const WordBreakText(
+              'Mission 2를 이어서 완수하시면 경험치를 획득하여 레벨업 하고 선구자 뱃지를 획득하실 수 있습니다!',
+              style: missionCompletePopupTextStyle,
+              wrapAlignment: WrapAlignment.center,
+            )
+          : Column(
+              children: [
+                const Text('선구자', style: missionCompletePopupTextStyle),
+                const SizedBox(height: 8.0),
+                Image.asset('assets/images/pioneer_badge_icon.png'),
+              ],
+            );
 
-      showMissionCompletePopup(context, width, height, title, 30, content, () {
-        growController.increaseExp(30);
-      });
+      if (completedMission > 0) {
+        completedMissions.add(completedMission);
+        showMissionCompletePopup(context, width, height, title, 30, content,
+            () {
+          growController.increaseExp(30);
+        });
+      }
     }
 
     if (isNewUser) {
       isNewUser = false;
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         if (!Navigator.of(context).canPop()) {
           showMissionCompletePopup(
             context,
@@ -53,7 +71,10 @@ class GrowScreen extends StatelessWidget {
             height,
             '환경 보호를 위한 첫걸음',
             10,
-            '환경을 지키겠다는 마음들이 모여 건강한 지구를 만들어가고 있어요!',
+            const WordBreakText(
+              '환경을 지키겠다는 마음들이 모여 건강한 지구를 만들어가고 있어요!',
+              style: missionCompletePopupTextStyle,
+            ),
             () {
               growController.increaseExp(10);
             },
@@ -68,8 +89,8 @@ class GrowScreen extends StatelessWidget {
         Column(
           children: [
             Padding(
-              padding:
-                  EdgeInsets.fromLTRB(screenMargin, 8.0, screenMargin, 0.0),
+              padding: const EdgeInsets.fromLTRB(
+                  screenMargin, 8.0, screenMargin, 0.0),
               child: LevelSystem(
                 width: width,
                 height: 12.0,
@@ -77,6 +98,12 @@ class GrowScreen extends StatelessWidget {
                 currentExp: growController.currentExp,
                 maxExp: growController.maxExp,
                 percentage: growController.expPercentage,
+                leading: growController.hasBadge
+                    ? Image.asset(
+                        'assets/images/pioneer_badge_icon.png',
+                        height: 32.0,
+                      )
+                    : null,
               ),
             ),
             SingleChildScrollView(
@@ -86,7 +113,7 @@ class GrowScreen extends StatelessWidget {
                   MissionBox(
                     width: width * 0.75,
                     height: missionBoxHeight,
-                    padding: EdgeInsets.all(screenMargin),
+                    padding: const EdgeInsets.all(screenMargin),
                     isComplete: completedMissions.contains(1),
                     title: 'Mission 1',
                     content: '공원 한바퀴',
@@ -95,7 +122,7 @@ class GrowScreen extends StatelessWidget {
                   MissionBox(
                     width: width * 0.75,
                     height: missionBoxHeight,
-                    padding: EdgeInsets.fromLTRB(
+                    padding: const EdgeInsets.fromLTRB(
                       0.0,
                       screenMargin,
                       screenMargin,

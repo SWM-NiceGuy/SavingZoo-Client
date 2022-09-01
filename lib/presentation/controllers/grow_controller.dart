@@ -32,7 +32,7 @@ class GrowController with ChangeNotifier {
   int get maxExp => _avatar.maxExp; // 최대 경험치
   int _extraExp = 0; // 증가한 경험치가 최대 경험치를 넘었을 때의 잔여 경험치
   double expPercentage = 0.0; // 경험치 게이지 채워짐 정도 (0.0 ~ 1.0)
-
+  bool hasBadge = false; // 개척자 배지 보유 여부
   String get avatarPath => _avatar.imagePath; // 아바타 이미지 경로
   int fadeDuration = 2000; // Fade 애니메이션 지속시간
   bool avatarIsVisible = true; // 아바타 보임 유무
@@ -111,7 +111,11 @@ class GrowController with ChangeNotifier {
       avatarIsVisible = true;
       notifyListeners();
 
-      if (_avatar == Avatar.adult) return;
+      if (_avatar == Avatar.adult) {
+        hasBadge = true;
+        notifyListeners();
+        return;
+      }
 
       resetExp();
 
