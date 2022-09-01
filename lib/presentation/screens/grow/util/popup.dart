@@ -8,13 +8,10 @@ import '../../../../ui/colors.dart';
 import '../components/shadow_button.dart';
 
 void showExpGuidePopup(BuildContext context) {
-  const normalStyle = TextStyle(
-    fontSize: 16.0,
-    fontWeight: FontWeight.w500,
-    color: blackColor,
-  );
+  final normalStyle =
+      Theme.of(context).textTheme.bodyText1?.copyWith(fontSize: 16.0);
 
-  final boldStyle = normalStyle.copyWith(fontWeight: FontWeight.w700);
+  final boldStyle = normalStyle?.copyWith(fontWeight: FontWeight.w700);
 
   final width = MediaQuery.of(context).size.width;
   final height = MediaQuery.of(context).size.height;
@@ -38,14 +35,15 @@ void showExpGuidePopup(BuildContext context) {
             width: 48.0,
             height: 3.0,
           ),
-          const Padding(
-            padding: EdgeInsets.all(24.0),
-            child: Text(
-              '경험치',
-              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w700),
-            ),
+          Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Text('경험치',
+                style: Theme.of(context)
+                    .textTheme
+                    .headline6
+                    ?.copyWith(fontSize: 24.0)),
           ),
-          const WordBreakText(
+          WordBreakText(
             '환경 보호 활동을 하면 경험치가 증가해요. 경험치가 전부 채워지면',
             style: normalStyle,
             wrapAlignment: WrapAlignment.center,
@@ -53,9 +51,9 @@ void showExpGuidePopup(BuildContext context) {
           RichText(
             text: TextSpan(
               children: [
-                const TextSpan(text: '아바타를 ', style: normalStyle),
+                TextSpan(text: '아바타를 ', style: normalStyle),
                 TextSpan(text: '한 단계 진화', style: boldStyle),
-                const TextSpan(text: '시킬 수 있어요.', style: normalStyle),
+                TextSpan(text: '시킬 수 있어요.', style: normalStyle),
               ],
             ),
           ),
@@ -63,9 +61,9 @@ void showExpGuidePopup(BuildContext context) {
           RichText(
             text: TextSpan(
               children: [
-                const TextSpan(text: '아바타가 LV3로 진화하면  ', style: normalStyle),
+                TextSpan(text: '아바타가 LV3로 진화하면  ', style: normalStyle),
                 TextSpan(text: '실제 과일', style: boldStyle),
-                const TextSpan(text: '을 드려요!', style: normalStyle),
+                TextSpan(text: '을 드려요!', style: normalStyle),
               ],
             ),
           ),
@@ -80,9 +78,12 @@ void showExpGuidePopup(BuildContext context) {
                   height: height * 0.15),
             ],
           ),
-          const Text(
+          Text(
             '90xp / 100xp',
-            style: TextStyle(color: expTextColor),
+            style: Theme.of(context)
+                .textTheme
+                .bodyText1
+                ?.copyWith(color: expTextColor, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 12.0),
           ExpBar(width: width, height: 12.0, percentage: 0.9),
@@ -91,12 +92,6 @@ void showExpGuidePopup(BuildContext context) {
     ),
   );
 }
-
-const missionCompletePopupTextStyle = TextStyle(
-  fontSize: 16.0,
-  fontWeight: FontWeight.w400,
-  color: blackColor,
-);
 
 void showMissionCompletePopup(
   BuildContext context,
@@ -129,20 +124,19 @@ void showMissionCompletePopup(
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                        color: blackColor,
-                      ),
+                      style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w500,
+                          ),
                     ),
                     const SizedBox(height: 12.0),
                     Text(
                       '+ $exp XP',
-                      style: const TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.w500,
-                        color: expTextColor,
-                      ),
+                      style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.w500,
+                            color: expTextColor,
+                          ),
                     ),
                   ],
                 ),
@@ -155,14 +149,14 @@ void showMissionCompletePopup(
                     Navigator.of(context).pop();
                     onDismiss();
                   },
-                  child: const Center(
+                  child: Center(
                     child: Text(
                       '확인',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500,
-                        color: expTextColor,
-                      ),
+                      style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w500,
+                            color: expTextColor,
+                          ),
                     ),
                   ),
                 )

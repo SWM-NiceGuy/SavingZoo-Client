@@ -1,5 +1,4 @@
 import 'package:amond/presentation/screens/grow/components/exp_bar.dart';
-import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 
 import '../util/popup.dart';
@@ -44,11 +43,10 @@ class LevelSystem extends StatelessWidget {
                       : const SizedBox(),
                   Text(
                     'LV$level',
-                    style: const TextStyle(
-                      fontSize: 22.0,
-                      fontWeight: FontWeight.w500,
-                      color: blackColor,
-                    ),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        ?.copyWith(fontSize: 22.0, letterSpacing: 3.0),
                   ),
                 ],
               ),
@@ -56,10 +54,7 @@ class LevelSystem extends StatelessWidget {
                 onTap: () => showExpGuidePopup(context),
                 child: Row(
                   children: [
-                    Text(
-                      '${currentExp}xp / ${maxExp}xp',
-                      style: const TextStyle(color: blackColor),
-                    ),
+                    Text('${currentExp}xp / ${maxExp}xp'),
                     const SizedBox(width: 4.0),
                     const Icon(
                       Icons.info_outline,

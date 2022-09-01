@@ -5,8 +5,10 @@ import 'package:amond/presentation/screens/main_screen.dart';
 import 'package:amond/presentation/screens/qr_scanner.dart';
 import 'package:amond/presentation/screens/splash_screen.dart';
 import 'package:amond/secrets/secret.dart';
+import 'package:amond/ui/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_common.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +35,10 @@ class MyApp extends StatelessWidget {
     final authController = context.read<AuthController>();
     return MaterialApp(
       title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        textTheme: GoogleFonts.montserratTextTheme(
+            Theme.of(context).textTheme.apply(bodyColor: blackColor)),
         primarySwatch: Colors.blue,
       ),
 

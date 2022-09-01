@@ -40,9 +40,15 @@ class MissionBox extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title, style: TextStyle(fontSize: 14.0)),
+                    Text(title),
                     SizedBox(height: 6.0),
-                    Text(content, style: TextStyle(fontSize: 16.0))
+                    Text(
+                      content,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          ?.copyWith(fontSize: 16.0),
+                    )
                   ],
                 ),
               ],

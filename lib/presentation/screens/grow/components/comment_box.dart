@@ -22,7 +22,10 @@ class CommentBox extends StatelessWidget {
         child: Text(
           comment,
           textAlign: TextAlign.center,
-          style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0),
+          style: Theme.of(context)
+              .textTheme
+              .bodyText1
+              ?.copyWith(fontSize: 16.0, height: 1.5),
         ),
       ),
     );

@@ -35,10 +35,7 @@ class _MainScreenState extends State<MainScreen> {
                   Icons.logout,
                   color: blackColor,
                 ),
-                title: const Text(
-                  '로그아웃',
-                  style: TextStyle(color: blackColor),
-                ),
+                title: const Text('로그아웃'),
                 onTap: () async {
                   try {
                     await authController.logout();
@@ -54,10 +51,7 @@ class _MainScreenState extends State<MainScreen> {
                   Icons.delete_forever,
                   color: blackColor,
                 ),
-                title: const Text(
-                  'AMOND 탈퇴',
-                  style: TextStyle(color: blackColor),
-                ),
+                title: const Text('AMOND 탈퇴'),
                 onTap: () async {
                   try {
                     await authController.resign();

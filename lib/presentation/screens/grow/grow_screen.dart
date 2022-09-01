@@ -30,6 +30,11 @@ class GrowScreen extends StatelessWidget {
     final commentBoxHeight = height * 0.12;
     final buttonHeight = height * 0.09;
 
+    final missionCompletePopupTextStyle = Theme.of(context)
+        .textTheme
+        .bodyText1
+        ?.copyWith(fontSize: 16.0, height: 1.5);
+
     void executeMissionComplete() {
       final completedMission = completedMissions.contains(2)
           ? 0
@@ -37,16 +42,16 @@ class GrowScreen extends StatelessWidget {
               ? 2
               : 1;
 
-      final title = completedMission == 1 ? 'Mission 1 성공' : 'Mission 2 성공';
+      final title = completedMission == 1 ? 'Mission 1 완수' : 'Mission 2 완수';
       final content = completedMission == 1
-          ? const WordBreakText(
+          ? WordBreakText(
               'Mission 2를 이어서 완수하시면 경험치를 획득하여 레벨업 하고 선구자 뱃지를 획득하실 수 있습니다!',
               style: missionCompletePopupTextStyle,
               wrapAlignment: WrapAlignment.center,
             )
           : Column(
               children: [
-                const Text('선구자', style: missionCompletePopupTextStyle),
+                Text('선구자', style: missionCompletePopupTextStyle),
                 const SizedBox(height: 8.0),
                 Image.asset('assets/images/pioneer_badge_icon.png'),
               ],
@@ -71,7 +76,7 @@ class GrowScreen extends StatelessWidget {
             height,
             '환경 보호를 위한 첫걸음',
             10,
-            const WordBreakText(
+            WordBreakText(
               '환경을 지키겠다는 마음들이 모여 건강한 지구를 만들어가고 있어요!',
               style: missionCompletePopupTextStyle,
             ),
