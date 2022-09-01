@@ -38,13 +38,13 @@ class ShadowContainer extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: darkShadowColor ?? amond_colors.darkShadowColor,
-              blurRadius: 8.0,
-              offset: Offset(minSize / 10, minSize / 10),
+              blurRadius: 1.0,
+              offset: Offset(minSize / 100, minSize / 100),
             ),
             BoxShadow(
               color: lightShadowColor ?? amond_colors.lightShadowColor,
-              blurRadius: 8.0,
-              offset: Offset(-minSize / 10, -minSize / 10),
+              blurRadius: 1.0,
+              offset: Offset(-minSize / 100, -minSize / 100),
             ),
           ],
         ),
