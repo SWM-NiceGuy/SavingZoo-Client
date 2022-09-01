@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:amond/presentation/screens/grow/components/exp_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:word_break_text/word_break_text.dart';
 
@@ -7,13 +8,24 @@ import '../../../../ui/colors.dart';
 import '../components/shadow_button.dart';
 
 void showExpGuidePopup(BuildContext context) {
+  const normalStyle = TextStyle(
+    fontSize: 16.0,
+    fontWeight: FontWeight.w500,
+    color: blackColor,
+  );
+
+  final boldStyle = normalStyle.copyWith(fontWeight: FontWeight.w700);
+
+  final width = MediaQuery.of(context).size.width;
+  final height = MediaQuery.of(context).size.height;
+
   showModalBottomSheet(
     context: context,
     backgroundColor: Colors.transparent,
     builder: (context) => Container(
       padding: const EdgeInsets.all(24.0),
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: backgroundColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
@@ -30,30 +42,50 @@ void showExpGuidePopup(BuildContext context) {
             padding: EdgeInsets.all(24.0),
             child: Text(
               '경험치',
-              style: TextStyle(fontSize: 24.0),
+              style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.w700),
             ),
           ),
-          WordBreakText(
-            '환경 보호 활동을 하면 경험치가 증가해요. 경험치가 전부 채워지면 아바타를 한 단계 진화시킬 수 있어요.',
-            style: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.w500,
-              color: blackColor,
-            ),
+          const WordBreakText(
+            '환경 보호 활동을 하면 경험치가 증가해요. 경험치가 전부 채워지면',
+            style: normalStyle,
             wrapAlignment: WrapAlignment.center,
           ),
-          SizedBox(height: 16.0),
-          WordBreakText(
-            '아바타가 최종 단계로 진화하면 실제 과일을 드려요!',
-            style: TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.w500,
-              color: blackColor,
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(text: '아바타를 ', style: normalStyle),
+                TextSpan(text: '한 단계 진화', style: boldStyle),
+                TextSpan(text: '시킬 수 있어요.', style: normalStyle),
+              ],
             ),
-            wrapAlignment: WrapAlignment.center,
           ),
-          SizedBox(height: 16.0),
-          Image.asset('assets/images/exp_guide_image.png'),
+          const SizedBox(height: 16.0),
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(text: '아바타가 최종 단계로 진화하면  ', style: normalStyle),
+                TextSpan(text: '실제 과일', style: boldStyle),
+                TextSpan(text: '을 드려요!', style: normalStyle),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Image.asset('assets/images/first_apple_avatar.png',
+                  height: height * 0.15),
+              Image.asset('assets/images/right_arrow_icon.png'),
+              Image.asset('assets/images/anonymous_avatar.png',
+                  height: height * 0.15),
+            ],
+          ),
+          const Text(
+            '90xp / 100xp',
+            style: TextStyle(color: expTextColor),
+          ),
+          SizedBox(height: 12.0),
+          ExpBar(width: width, height: 12.0, percentage: 0.9),
         ],
       ),
     ),
@@ -103,7 +135,7 @@ void showMissionCompletePopup(
                       style: TextStyle(
                         fontSize: 24.0,
                         fontWeight: FontWeight.w500,
-                        color: expBarColor1,
+                        color: expTextColor,
                       ),
                     ),
                   ],
@@ -131,7 +163,7 @@ void showMissionCompletePopup(
                       style: TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w500,
-                        color: expBarColor1,
+                        color: expTextColor,
                       ),
                     ),
                   ),

@@ -1,3 +1,4 @@
+import 'package:amond/presentation/screens/grow/components/exp_bar.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -60,36 +61,7 @@ class LevelSystem extends StatelessWidget {
           ),
         ),
         SizedBox(height: 12.0),
-        Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(height),
-            color: backgroundColor,
-            border: Border.all(color: Colors.white, width: 0.15),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0xFFC6CEDA),
-                blurRadius: 3.0,
-                offset: Offset(0, -1.5),
-              ),
-              BoxShadow(
-                color: Color(0xFFFEFEFF),
-                blurRadius: 3.0,
-                offset: Offset(0, 1.5),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(height / 2),
-            child: LinearProgressIndicator(
-              value: percentage,
-              // backgroundColor: Colors.grey.shade300,
-              backgroundColor: Colors.transparent,
-              valueColor: AlwaysStoppedAnimation(Color(0xFF96CE5F)),
-            ),
-          ),
-        ),
+        ExpBar(width: width, height: height, percentage: percentage),
       ],
     );
   }
