@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 enum Avatar {
-  baby(1, 'assets/images/baby_apple.png', 20),
-  juvenile(2, 'assets/images/many_leaves.png', 50),
-  adult(3, 'assets/images/fully_grown.png', 50);
+  baby(1, 'assets/images/first_apple_avatar.png', 20),
+  juvenile(2, 'assets/images/second_apple_avatar.png', 50),
+  adult(3, 'assets/images/third_apple_avatar.png', 50);
 
   const Avatar(this.level, this.imagePath, this.maxExp);
 

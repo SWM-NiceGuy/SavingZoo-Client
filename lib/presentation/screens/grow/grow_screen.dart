@@ -26,7 +26,6 @@ class GrowScreen extends StatelessWidget {
     final height = MediaQuery.of(context).size.height;
 
     final missionBoxHeight = height * 0.1;
-    final avatarHeight = height * 0.2;
     final commentBoxHeight = height * 0.12;
     final buttonHeight = height * 0.09;
 
@@ -91,7 +90,7 @@ class GrowScreen extends StatelessWidget {
                     isComplete: completedMissions.contains(1),
                     title: 'Mission 1',
                     content: '공원 한바퀴',
-                    imagePath: 'assets/images/shoes.png',
+                    imagePath: 'assets/images/shoe_icon.png',
                   ),
                   MissionBox(
                     width: width * 0.75,
@@ -105,33 +104,33 @@ class GrowScreen extends StatelessWidget {
                     isComplete: completedMissions.contains(2),
                     title: 'Mission 2',
                     content: '플로깅',
-                    imagePath: 'assets/images/plogging.png',
+                    imagePath: 'assets/images/plogging_icon.png',
                   ),
                 ],
               ),
             ),
           ],
         ),
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            AnimatedOpacity(
-              opacity: growController.avatarIsVisible ? 1.0 : 0.0,
-              duration: Duration(milliseconds: growController.fadeDuration),
-              child: Image.asset(
-                growController.avatarPath,
-                height: avatarHeight,
-                // height: 180.0,
+        Expanded(
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              AnimatedOpacity(
+                opacity: growController.avatarIsVisible ? 1.0 : 0.0,
+                duration: Duration(milliseconds: growController.fadeDuration),
+                child: Image.asset(
+                  growController.avatarPath,
+                  // height: 180.0,
+                ),
               ),
-            ),
-            growController.heartsIsVisible
-                ? Lottie.asset(
-                    'assets/lotties/lottie-hearts.json',
-                    height: avatarHeight * 1.2,
-                    repeat: false,
-                  )
-                : const SizedBox(),
-          ],
+              growController.heartsIsVisible
+                  ? Lottie.asset(
+                      'assets/lotties/lottie-hearts.json',
+                      repeat: false,
+                    )
+                  : const SizedBox(),
+            ],
+          ),
         ),
         Column(
           children: [
