@@ -1,12 +1,12 @@
-import 'package:amond/data/entity/member_entity.dart';
-import 'package:amond/domain/repositories/member_repository.dart';
+import 'package:amond/domain/usecases/member/resign.dart';
+import 'package:amond/domain/usecases/member/sign_up.dart';
 
 class MemberUseCases {
-  MemberRepository repository;
-  MemberUseCases(this.repository);
+  Resign resign;
+  SignUp signUp;
 
-  Future<int> signUp(MemberEntity me) async {
-    final statusCode = await repository.signUp(me);
-    return statusCode;
-  }
- }
+  MemberUseCases({
+    required this.resign,
+    required this.signUp
+  });
+}

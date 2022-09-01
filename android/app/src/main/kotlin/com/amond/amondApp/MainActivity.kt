@@ -1,4 +1,4 @@
-package com.example.amond
+package com.amond.amondApp
 
 import io.flutter.embedding.android.FlutterActivity
 

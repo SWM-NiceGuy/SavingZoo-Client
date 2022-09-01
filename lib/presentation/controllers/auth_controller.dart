@@ -4,6 +4,7 @@ import 'package:amond/data/entity/member_entity.dart';
 import 'package:amond/domain/usecases/member/member_use_cases.dart';
 import 'package:amond/utils/apple_client_secret.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_talk.dart';
@@ -15,7 +16,7 @@ import '../../domain/models/member_info.dart';
 
 enum LoginType { kakao, apple }
 
-class AuthController {
+class AuthController with ChangeNotifier {
   MemberInfo? _memberInfo;
   LoginType? _loginType;
   SharedPreferences? _prefs;
@@ -39,7 +40,7 @@ class AuthController {
     final prefs = await this.prefs;
     _loginType = _getLoginTypeFromString(prefs.getString('loginType'));
     if (_loginType == null) return false;
-
+  try {
     if (_loginType == LoginType.kakao) {
       await TokenManagerProvider.instance.manager.getToken();
       final user = await UserApi.instance.me();
@@ -48,6 +49,10 @@ class AuthController {
       _memberInfo = MemberInfo(
           provider: 'APPLE', uid: FirebaseAuth.instance.currentUser!.uid);
     }
+  } catch (error) {
+    return false;
+  }
+    notifyListeners();
     return true;
   }
 
@@ -200,7 +205,6 @@ class AuthController {
 
       // Apple로그인을 통해 받은 정보로 파이어베이스에 로그인
       await FirebaseAuth.instance.signInWithCredential(oauthCredential);
-
       // App 내의 로그인/회원가입 로직
       // 애플 계정의 첫번째 로그인이라면 서버에 회원가입 처리
       if (appleCredential.email != null) {
@@ -275,6 +279,10 @@ class AuthController {
       try {
         await UserApi.instance.unlink();
         // print('카카오 탈퇴 성공, SDK에서 토큰 삭제');
+        await _memberUseCases.resign(MemberEntity(
+          provider: memberInfo!.provider,
+          uid: memberInfo!.uid
+        ));
         await prefs.remove('loginType');
       } catch (error) {
         // print('연결 끊기 실패 $error');
@@ -324,6 +332,11 @@ class AuthController {
           throw Exception('Revoke Failed');
         }
 
+        await _memberUseCases.resign(MemberEntity(
+          provider: memberInfo!.provider,
+          uid: memberInfo!.uid
+        ));
+
         await FirebaseAuth.instance.currentUser?.delete();
         await prefs.remove('loginType');
       } catch (error) {
@@ -331,5 +344,6 @@ class AuthController {
         rethrow;
       }
     }
+    _memberInfo = null;
   }
 }

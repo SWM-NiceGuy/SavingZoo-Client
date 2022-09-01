@@ -9,8 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-import 'qr_scanner.dart';
-
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
 
@@ -37,12 +35,15 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 title: const Text('로그아웃'),
                 onTap: () async {
+                  bool check;
+                  check = await _checkDialog(context, '로그아웃을 진행합니다');
+                  if (!check) return;
                   try {
                     await authController.logout();
                     Navigator.of(context)
                         .pushReplacementNamed(AuthScreen.routeName);
                   } catch (error) {
-                    _showLogoutFailDialog(context);
+                    _showLogoutFailDialog(context, '로그아웃에 실패했습니다');
                   }
                 },
               ),
@@ -51,14 +52,18 @@ class _MainScreenState extends State<MainScreen> {
                   Icons.delete_forever,
                   color: blackColor,
                 ),
-                title: const Text('AMOND 탈퇴'),
+                title: const Text('AMOND 계정 탈퇴'),
                 onTap: () async {
+                  bool check;
+                  check = await _checkDialog(context,
+                      'AMOND 계정 탈퇴', 'AMOND 계정을 탈퇴하면 저장된 데이터들을 복구할 수 없습니다, 진행하시겠습니까?');
+                  if (!check) return;
                   try {
                     await authController.resign();
                     Navigator.of(context)
                         .pushReplacementNamed(AuthScreen.routeName);
                   } catch (error) {
-                    _showLogoutFailDialog(context);
+                    _showLogoutFailDialog(context, '회원탈퇴에 실패했습니다.');
                   }
                 },
               )
@@ -73,7 +78,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       backgroundColor: backgroundColor,
       body: SafeArea(
-        child: GrowScreen(isNewUser: true),
+        child: GrowScreen(),
       ),
     );
   }
@@ -93,18 +98,13 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  void _toQrScanner() async {
-    await _getStatuses();
-    Navigator.of(context).pushNamed(QrScanner.routeName);
-  }
-
-  void _showLogoutFailDialog(BuildContext context) {
+  void _showLogoutFailDialog(BuildContext context, String errMsg) {
     if (Platform.isIOS) {
       showCupertinoDialog(
         context: context,
         builder: (_) {
           return CupertinoAlertDialog(
-            title: const Text('로그아웃에 실패하였습니다'),
+            title: Text(errMsg),
             content: const Text('다시 시도해주세요.'),
             actions: [
               CupertinoDialogAction(
@@ -120,7 +120,7 @@ class _MainScreenState extends State<MainScreen> {
         context: context,
         builder: (_) {
           return AlertDialog(
-            title: const Text('로그아웃에 실패하였습니다'),
+            title: Text(errMsg),
             content: const Text('다시 시도해주세요.'),
             actions: [
               TextButton(
@@ -132,5 +132,60 @@ class _MainScreenState extends State<MainScreen> {
         },
       );
     }
+  }
+
+  Future<bool> _checkDialog(BuildContext context, String title,
+      [String? content]) async {
+    bool response = false;
+    if (Platform.isIOS) {
+      response = await showCupertinoDialog(
+        context: context,
+        builder: (_) {
+          return CupertinoAlertDialog(
+            title: Text(title),
+            content: Text(content ?? ''),
+            actions: [
+              CupertinoDialogAction(
+                child: const Text('네'),
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+              ),
+              CupertinoDialogAction(
+                child: const Text('아니오'),
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+              )
+            ],
+          );
+        },
+      );
+    } else {
+      response = await showDialog(
+        context: context,
+        builder: (_) {
+          return AlertDialog(
+            title: Text(title),
+            content: Text(content ?? ''),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: const Text('네'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: const Text('아니오'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    return response;
   }
 }

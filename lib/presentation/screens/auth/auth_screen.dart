@@ -30,45 +30,88 @@ class _AuthScreenState extends State<AuthScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // 카카오 로그인 버튼
-            GestureDetector(
-              onTap: () async {
-                try {
-                  // 로그인 시도 후 성공하면 MainScreen으로 이동
-                  await authController.loginWithKakaoApp();
-                  _navigateToMainScreen();
-                } catch (error) {
-                  // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
-                  // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
-                  if (error is PlatformException && error.code == 'CANCELED') {
-                    return;
-                  } else {
-                    // 로그인 실패
-                    _showLoginFailDialog(context);
-                  }
-                }
-              },
-              child: const KakaoLoginContainer(),
-            ),
-            const SizedBox(height: 24),
-            // 애플 로그인 버튼
-            if (Platform.isIOS)
-              GestureDetector(
-                onTap: () async {
-                  try {
-                    // 로그인 시도 후 성공하면 MainScreen으로 이동
-                    await authController.loginWithApple();
-                    _navigateToMainScreen();
-                  } catch (error) {
-                    // 의도적인 로그인 취소로 보고 애플 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
-                    if (error is SignInWithAppleAuthorizationException && error.code == AuthorizationErrorCode.canceled) {
-                      return;
-                    }
-                    _showLoginFailDialog(context);
-                  }
-                },
-                child: const AppleLoginContainer(),
+            const Expanded(
+              child: Center(
+                child: Text(
+                  'AMOND',
+                  style: TextStyle(fontSize: 22, ),
+                  textAlign: TextAlign.center,
+                ),
               ),
+            ),
+            Expanded(
+              child: Image.asset(
+                'assets/images/first_apple_avatar.png',
+                width: 200,
+                height: 200,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Expanded(
+              child: Column(
+                children: [
+                  const Text('소셜계정으로 로그인하기'),
+                  const SizedBox(height: 12.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          try {
+                            // 로그인 시도 후 성공하면 MainScreen으로 이동
+                            await authController.loginWithKakaoApp();
+                            _navigateToMainScreen();
+                          } catch (error) {
+                            // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
+                            // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
+                            if (error is PlatformException &&
+                                error.code == 'CANCELED') {
+                              return;
+                            } else {
+                              // 로그인 실패
+                              _showLoginFailDialog(context);
+                            }
+                          }
+                        },
+                        child: Image.asset(
+                          'assets/images/kakao-login-icon.png',
+                          height: 50,
+                          width: 50,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      // 애플 로그인 버튼
+                      if (Platform.isIOS)
+                      const SizedBox(width: 24),
+                      if (Platform.isIOS)
+                        GestureDetector(
+                          onTap: () async {
+                            try {
+                              // 로그인 시도 후 성공하면 MainScreen으로 이동
+                              await authController.loginWithApple();
+                              _navigateToMainScreen();
+                            } catch (error) {
+                              // 의도적인 로그인 취소로 보고 애플 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
+                              if (error is SignInWithAppleAuthorizationException &&
+                                  error.code == AuthorizationErrorCode.canceled) {
+                                return;
+                              }
+                              _showLoginFailDialog(context);
+                            }
+                          },
+                          child: Image.asset(
+                            'assets/images/apple-login-icon.png',
+                            height: 50,
+                            width: 50,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            )
+            // 카카오 로그인 버튼
           ],
         ),
       ),

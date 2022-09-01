@@ -149,7 +149,7 @@ void showMissionCompletePopup(
                     Navigator.of(context).pop();
                     onDismiss();
                   },
-                  child: Center(
+                  child:  Center(
                     child: Text(
                       '확인',
                       style: Theme.of(context).textTheme.bodyText1?.copyWith(

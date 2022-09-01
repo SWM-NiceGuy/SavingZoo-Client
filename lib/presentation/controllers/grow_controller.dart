@@ -1,17 +1,20 @@
 import 'dart:async';
 
+import 'package:amond/domain/usecases/exp/exp_use_cases.dart';
 import 'package:flutter/material.dart';
 
-enum Avatar {
-  baby(1, 'assets/images/first_apple_avatar.png', 20),
-  juvenile(2, 'assets/images/second_apple_avatar.png', 50),
-  adult(3, 'assets/images/third_apple_avatar.png', 50);
+import '../../domain/models/member_info.dart';
 
-  const Avatar(this.level, this.imagePath, this.maxExp);
+enum Avatar {
+  baby(1, 'assets/images/first_apple_avatar.png', 0),
+  juvenile(2, 'assets/images/second_apple_avatar.png', 20),
+  adult(3, 'assets/images/third_apple_avatar.png', 70);
+
+  const Avatar(this.level, this.imagePath, this.requiredExp);
 
   final int level;
   final String imagePath;
-  final int maxExp;
+  final int requiredExp;
 
   Avatar getNext() {
     if (name == Avatar.baby.name) {
@@ -25,13 +28,30 @@ enum Avatar {
 }
 
 class GrowController with ChangeNotifier {
+  final ExpUseCases _expUseCases;
+  final MemberInfo _memberInfo;
+  GrowController(this._expUseCases, this._memberInfo);
+
+  int missionCompleted = 0;
+
+  bool _isLoading = true;
+  bool get isLoading => _isLoading;
+
+  bool _isDataFetched = false;
+  bool get isDataFetched => _isDataFetched;
+
+  bool isNewUser = false;
+
   Avatar _avatar = Avatar.baby;
 
   int get level => _avatar.level;
   int currentExp = 0; // 현재 경험치
-  int get maxExp => _avatar.maxExp; // 최대 경험치
+  int get maxExp => _avatar == Avatar.adult ? 50 : _avatar.getNext().requiredExp - _avatar.requiredExp; // 최대 경험치
   int _extraExp = 0; // 증가한 경험치가 최대 경험치를 넘었을 때의 잔여 경험치
   double expPercentage = 0.0; // 경험치 게이지 채워짐 정도 (0.0 ~ 1.0)
+
+  int get displayExp => _avatar == Avatar.adult ? 50: currentExp - _avatar.requiredExp;
+
   bool hasBadge = false; // 개척자 배지 보유 여부
   String get avatarPath => _avatar.imagePath; // 아바타 이미지 경로
   int fadeDuration = 2000; // Fade 애니메이션 지속시간
@@ -75,25 +95,27 @@ class GrowController with ChangeNotifier {
   }
 
   /// 경험치를 증가시킨다
-  void increaseExp(int point) {
+  Future<void> increaseExp(int point) async {
     if (_avatar == Avatar.adult) {
       return;
     }
 
+    // 경험치 증가 로직
     currentExp += point;
 
-    if (currentExp > maxExp) {
-      _extraExp = currentExp - maxExp;
-      currentExp = maxExp;
+    if (currentExp > _avatar.getNext().requiredExp) {
+      _extraExp = currentExp - _avatar.getNext().requiredExp;
+      currentExp = _avatar.getNext().requiredExp;
     }
 
     notifyListeners();
-    _increaseExpBar(expPercentage, currentExp / maxExp);
+    _increaseExpBar(expPercentage, displayExp / (_avatar.getNext().requiredExp - _avatar.requiredExp));
+    await changeExpInServer(currentExp);
   }
 
   /// 경험치와 게이지를 초기화한다
   void resetExp() {
-    currentExp = 0;
+    currentExp = _avatar.requiredExp;
     expPercentage = 0.0;
     notifyListeners();
   }
@@ -137,9 +159,55 @@ class GrowController with ChangeNotifier {
 
     heartsIsVisible = true;
     notifyListeners();
-    Future.delayed(Duration(seconds: 6), () {
+    Future.delayed(const Duration(seconds: 6), () {
       heartsIsVisible = false;
       notifyListeners();
     });
+  }
+
+  /// 캐릭터 데이터를 불러오는 함수
+  Future<void> fetchData(MemberInfo memberInfo) async {
+    // 데이터 불러오기
+    currentExp = await _expUseCases.getExp(memberInfo.provider, memberInfo.uid);
+    // 현재 경험치가 0이면 새로운 유저로 판단
+    if (currentExp == 0) {
+      isNewUser = true;
+    }
+
+    if (currentExp >= Avatar.adult.requiredExp) {
+      _avatar = Avatar.adult;
+    } else if (currentExp >= Avatar.juvenile.requiredExp) {
+      _avatar = Avatar.juvenile;
+    } else {
+      _avatar = Avatar.baby;
+    }
+
+    missionCompleted = await getMissionCompleted();
+
+
+    _isDataFetched = true;
+    _isLoading = false;
+    if (_avatar == Avatar.adult) {
+      expPercentage = 1.0;
+    } else {
+    expPercentage = (currentExp - _avatar.requiredExp) / (_avatar.getNext().requiredExp - _avatar.requiredExp);
+    }
+
+    notifyListeners();
+  }
+
+  /// 서버에서 [memberInfo]의 캐릭터의 경험치를 [value]로 바꿈
+  Future<void> changeExpInServer(int value) async {
+    await _expUseCases.changeExp(_memberInfo.provider, _memberInfo.uid, value);
+  }
+
+  Future<void> changeMissionCompleted(int value) async {
+    missionCompleted = value;
+    notifyListeners();
+    await _expUseCases.changeMissionCompleted(_memberInfo.provider, _memberInfo.uid, value);
+  }
+
+  Future<int> getMissionCompleted() async {
+    return await _expUseCases.getMissionCompleted(_memberInfo.provider, _memberInfo.uid);
   }
 }

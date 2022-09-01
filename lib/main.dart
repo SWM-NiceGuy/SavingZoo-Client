@@ -12,8 +12,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_common.dart';
 import 'package:provider/provider.dart';
 
-import 'utils/apple_client_secret.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -47,11 +45,13 @@ class MyApp extends StatelessWidget {
       /// 반환된 값이 [false]라면 AuthScreen으로 이동
       home: FutureBuilder(
         future: authController.setToken(),
-        builder: (context, snapshot) => snapshot.hasData
+        builder: (context, snapshot) { 
+          return snapshot.hasData
             ? snapshot.data.toString() == 'true'
                 ? const MainScreen()
                 : const AuthScreen()
-            : const SplashScreen() // 사용하려면 Future.delayed 필요
+            : const SplashScreen() ;
+            }// 사용하려면 Future.delayed 필요
         ,
       ),
       routes: {
