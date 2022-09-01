@@ -102,18 +102,11 @@ class AuthController with ChangeNotifier {
         final createdAt = userMe.connectedAt;
 
         // 현재 로그인 시간과 계정 생성 시각 차이가 2초 미만이면 새로운 회원이라고 인지하고 계정생성
-        bool isFirst =
-            DateTime.now().toUtc().difference(createdAt!).inSeconds < 2;
-        if (isFirst) {
           final responseStatusCode = await _memberUseCases.signUp(MemberEntity(
             provider: 'KAKAO',
             uid: userMe.id.toString(),
             nickname: userMe.kakaoAccount?.profile?.nickname,
           ));
-          if (responseStatusCode >= 300) {
-            throw Exception('회원가입에 실패했습니다.');
-          }
-        }
 
         await prefs.setString('loginType', 'kakao');
         await setToken();
@@ -134,20 +127,14 @@ class AuthController with ChangeNotifier {
           final createdAt = userMe.connectedAt;
 
           // 현재 로그인 시간과 계정 생성 시각 차이가 2초 미만이면 새로운 회원이라고 인지하고 계정생성
-          bool isFirst =
-              DateTime.now().toUtc().difference(createdAt!).inSeconds < 2;
-          if (isFirst) {
+          
             final responseStatusCode =
                 await _memberUseCases.signUp(MemberEntity(
               provider: 'KAKAO',
               uid: userMe.id.toString(),
               nickname: userMe.kakaoAccount?.profile?.nickname,
             ));
-            if (responseStatusCode >= 300) {
-              throw Exception('회원가입에 실패했습니다.');
-            }
-          }
-
+          
           await prefs.setString('loginType', 'kakao');
           await setToken();
         } catch (error) {
@@ -165,18 +152,13 @@ class AuthController with ChangeNotifier {
         final createdAt = userMe.connectedAt;
 
         // 현재 로그인 시간과 계정 생성 시각 차이가 2초 미만이면 새로운 회원이라고 인지하고 계정생성
-        bool isFirst =
-            DateTime.now().toUtc().difference(createdAt!).inSeconds < 2;
-        if (isFirst) {
+      
           final responseStatusCode = await _memberUseCases.signUp(MemberEntity(
             provider: 'KAKAO',
             uid: userMe.id.toString(),
             nickname: userMe.kakaoAccount?.profile?.nickname,
           ));
-          if (responseStatusCode >= 300) {
-            throw Exception('회원가입에 실패했습니다.');
-          }
-        }
+        
         await prefs.setString('loginType', 'kakao');
         await setToken();
       } catch (error) {
