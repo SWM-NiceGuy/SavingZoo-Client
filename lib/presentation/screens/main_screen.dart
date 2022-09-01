@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-import 'qr_scanner.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -29,26 +28,26 @@ class _MainScreenState extends State<MainScreen> {
         child: ListView(
           children: [
             ListTile(
-              title: Text('로그아웃'),
+              title: const Text('로그아웃'),
               onTap: () async {
                 try {
                   await authController.logout();
                   Navigator.of(context)
                       .pushReplacementNamed(AuthScreen.routeName);
                 } catch (error) {
-                  _showLogoutFailDialog(context);
+                  _showLogoutFailDialog(context, '로그아웃에 실패하였습니다.');
                 }
               },
             ),
             ListTile(
-              title: Text('회원탈퇴'),
+              title: const Text('회원탈퇴'),
               onTap: () async {
                 try {
                   await authController.resign();
                   Navigator.of(context)
                       .pushReplacementNamed(AuthScreen.routeName);
                 } catch (error) {
-                  _showLogoutFailDialog(context);
+                  _showLogoutFailDialog(context, '회원탈퇴에 실패하였습니다.');
                 }
               },
             )
@@ -61,7 +60,7 @@ class _MainScreenState extends State<MainScreen> {
         iconTheme: const IconThemeData(color: Color(0xFF96CE5F)),
       ),
       backgroundColor: backgroundColor,
-      body: GrowScreen(isNewUser: true),
+      body: GrowScreen(),
     );
   }
 
@@ -80,18 +79,14 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  void _toQrScanner() async {
-    await _getStatuses();
-    Navigator.of(context).pushNamed(QrScanner.routeName);
-  }
 
-  void _showLogoutFailDialog(BuildContext context) {
+  void _showLogoutFailDialog(BuildContext context, String errMsg) {
     if (Platform.isIOS) {
       showCupertinoDialog(
         context: context,
         builder: (_) {
           return CupertinoAlertDialog(
-            title: const Text('로그아웃에 실패하였습니다'),
+            title: Text(errMsg),
             content: const Text('다시 시도해주세요.'),
             actions: [
               CupertinoDialogAction(
@@ -107,7 +102,7 @@ class _MainScreenState extends State<MainScreen> {
         context: context,
         builder: (_) {
           return AlertDialog(
-            title: const Text('로그아웃에 실패하였습니다'),
+            title: Text(errMsg),
             content: const Text('다시 시도해주세요.'),
             actions: [
               TextButton(

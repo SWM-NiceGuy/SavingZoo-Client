@@ -33,7 +33,7 @@ class LevelSystem extends StatelessWidget {
             children: [
               Text(
                 'LV$level',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 22.0,
                   fontWeight: FontWeight.w500,
                   color: blackColor,
@@ -45,10 +45,10 @@ class LevelSystem extends StatelessWidget {
                   children: [
                     Text(
                       '${currentExp}xp / ${maxExp}xp',
-                      style: TextStyle(color: blackColor),
+                      style: const TextStyle(color: blackColor),
                     ),
-                    SizedBox(width: 4.0),
-                    Icon(
+                    const SizedBox(width: 4.0),
+                    const Icon(
                       Icons.info_outline,
                       color: Color(0xff919191),
                       size: 18.0,
@@ -59,7 +59,7 @@ class LevelSystem extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: 12.0),
+        const SizedBox(height: 12.0),
         Container(
           width: width,
           height: height,
@@ -86,7 +86,7 @@ class LevelSystem extends StatelessWidget {
               value: percentage,
               // backgroundColor: Colors.grey.shade300,
               backgroundColor: Colors.transparent,
-              valueColor: AlwaysStoppedAnimation(Color(0xFF96CE5F)),
+              valueColor: const AlwaysStoppedAnimation(Color(0xFF96CE5F)),
             ),
           ),
         ),

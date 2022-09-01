@@ -1,3 +1,4 @@
+import 'package:amond/presentation/screens/grow/util/mission.dart';
 import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,12 +22,19 @@ class _QrScannerState extends State<QrScanner> {
 
   @override
   void dispose() {
+    controller?.pauseCamera();
     controller?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    var scanArea = (MediaQuery.of(context).size.width < 400 ||
+            MediaQuery.of(context).size.height < 400)
+        ? 200.0
+        : 300.0;
+
+
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -35,6 +43,13 @@ class _QrScannerState extends State<QrScanner> {
             child: QRView(
               key: qrKey,
               onQRViewCreated: _onQRViewCreated,
+              overlay: QrScannerOverlayShape(
+          borderColor: Colors.grey,
+          borderRadius: 10,
+          borderLength: 30,
+          borderWidth: 10,
+          cutOutSize: scanArea),
+
             ),
           ),
           Expanded(
@@ -43,7 +58,7 @@ class _QrScannerState extends State<QrScanner> {
               child: (result != null)
                   ? Text(
                       'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                  : Text('Scan a code'),
+                  : const Text('Scan a code'),
             ),
           )
         ],
@@ -52,12 +67,12 @@ class _QrScannerState extends State<QrScanner> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
+    setState(() {
+      this.controller = controller;
+    });
     controller.scannedDataStream.listen((scanData) {
       if (!_read) {
         _readData(scanData);
-        Future.delayed(const Duration(seconds: 2))
-            .then((_) => Navigator.of(context).pop());
       }
       setState(() {
         result = scanData;
@@ -66,16 +81,9 @@ class _QrScannerState extends State<QrScanner> {
   }
 
   void _readData(Barcode data) {
-    print(data.code);
-    // value 조건을 만족하면 동작 실행
-    if (data.code == "value") {
-      showDialog(
-        context: context,
-        builder: (_) => const AbsorbPointer(
-          child: PlatformBasedIndicator(),
-        ),
-      );
+    if (missionMap.containsKey(data.code)) {
       _read = true;
+      Navigator.of(context).pop(missionMap[data.code]);
     }
     return;
   }

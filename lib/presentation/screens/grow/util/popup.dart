@@ -33,7 +33,7 @@ void showExpGuidePopup(BuildContext context) {
               style: TextStyle(fontSize: 24.0),
             ),
           ),
-          WordBreakText(
+          const WordBreakText(
             '환경 보호 활동을 하면 경험치가 증가해요. 경험치가 전부 채워지면 아바타를 한 단계 진화시킬 수 있어요.',
             style: TextStyle(
               fontSize: 16.0,
@@ -42,8 +42,8 @@ void showExpGuidePopup(BuildContext context) {
             ),
             wrapAlignment: WrapAlignment.center,
           ),
-          SizedBox(height: 16.0),
-          WordBreakText(
+          const SizedBox(height: 16.0),
+          const WordBreakText(
             '아바타가 최종 단계로 진화하면 실제 과일을 드려요!',
             style: TextStyle(
               fontSize: 16.0,
@@ -52,7 +52,7 @@ void showExpGuidePopup(BuildContext context) {
             ),
             wrapAlignment: WrapAlignment.center,
           ),
-          SizedBox(height: 16.0),
+          const SizedBox(height: 16.0),
           Image.asset('assets/images/exp_guide_image.png'),
         ],
       ),
@@ -91,16 +91,16 @@ void showMissionCompletePopup(
                   children: [
                     Text(
                       title,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16.0,
                         fontWeight: FontWeight.w500,
                         color: blackColor,
                       ),
                     ),
-                    SizedBox(height: 12.0),
+                    const SizedBox(height: 12.0),
                     Text(
                       '+ $exp XP',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 24.0,
                         fontWeight: FontWeight.w500,
                         color: expBarColor1,
@@ -110,7 +110,7 @@ void showMissionCompletePopup(
                 ),
                 WordBreakText(
                   content,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.w400,
                     color: blackColor,
@@ -125,7 +125,7 @@ void showMissionCompletePopup(
                     Navigator.of(context).pop();
                     onDismiss();
                   },
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       '확인',
                       style: TextStyle(

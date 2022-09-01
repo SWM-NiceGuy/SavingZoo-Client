@@ -37,9 +37,9 @@ class MissionBox extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: TextStyle(fontSize: 14.0)),
-                  SizedBox(height: 6.0),
-                  Text(content, style: TextStyle(fontSize: 16.0))
+                  Text(title, style: const TextStyle(fontSize: 14.0)),
+                  const SizedBox(height: 6.0),
+                  Text(content, style: const TextStyle(fontSize: 16.0))
                 ],
               )
             ],
