@@ -47,6 +47,7 @@ dependencies:
   http: ^0.13.5
   jose: ^0.3.2
   json_annotation: ^4.6.0
+  google_fonts: ^3.0.1
 
 dev_dependencies:
   flutter_test:
@@ -90,6 +91,16 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  # fonts:
+  #   - family: Gotham
+  #     fonts:
+  #       - asset: assets/fonts/GothamBook.ttf
+  #       - asset: assets/fonts/GothamBold.ttf
+  #         weight: 700
+  #       - asset: assets/fonts/GothamMedium.ttf
+  #         weight: 500
+  #       - asset: assets/fonts/GothamLight.ttf
+  #         weight: 300
   # fonts:
   #   - family: Schyler
   #     fonts:

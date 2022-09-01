@@ -9,6 +9,7 @@ class ShadowContainer extends StatelessWidget {
   final Color? backgroundColor;
   final Color? darkShadowColor;
   final Color? lightShadowColor;
+  final EdgeInsets? padding;
   final Widget? child;
 
   const ShadowContainer({
@@ -17,6 +18,7 @@ class ShadowContainer extends StatelessWidget {
     this.backgroundColor,
     this.darkShadowColor,
     this.lightShadowColor,
+    this.padding,
     this.child,
     Key? key,
   }) : super(key: key);
@@ -26,7 +28,7 @@ class ShadowContainer extends StatelessWidget {
     final minSize = min(width, height);
 
     return Padding(
-      padding: EdgeInsets.all(minSize / 5),
+      padding: padding ?? EdgeInsets.all(minSize / 5),
       child: Container(
         width: width,
         height: height,
@@ -36,13 +38,13 @@ class ShadowContainer extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: darkShadowColor ?? amond_colors.darkShadowColor,
-              blurRadius: 8.0,
-              offset: Offset(minSize / 10, minSize / 10),
+              blurRadius: 1.0,
+              offset: Offset(minSize / 100, minSize / 100),
             ),
             BoxShadow(
               color: lightShadowColor ?? amond_colors.lightShadowColor,
-              blurRadius: 8.0,
-              offset: Offset(-minSize / 10, -minSize / 10),
+              blurRadius: 1.0,
+              offset: Offset(-minSize / 100, -minSize / 100),
             ),
           ],
         ),

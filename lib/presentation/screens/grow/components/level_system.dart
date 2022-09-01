@@ -1,4 +1,4 @@
-import 'package:amond/ui/colors.dart';
+import 'package:amond/presentation/screens/grow/components/exp_bar.dart';
 import 'package:flutter/material.dart';
 
 import '../util/popup.dart';
@@ -10,6 +10,7 @@ class LevelSystem extends StatelessWidget {
   final int currentExp;
   final int maxExp;
   final double percentage;
+  final Widget? leading;
 
   const LevelSystem({
     required this.width,
@@ -18,6 +19,7 @@ class LevelSystem extends StatelessWidget {
     required this.currentExp,
     required this.maxExp,
     required this.percentage,
+    this.leading,
     Key? key,
   }) : super(key: key);
 
@@ -31,22 +33,28 @@ class LevelSystem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                'LV$level',
-                style: const TextStyle(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.w500,
-                  color: blackColor,
-                ),
+              Row(
+                children: [
+                  leading != null
+                      ? Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: leading,
+                        )
+                      : const SizedBox(),
+                  Text(
+                    'LV$level',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6
+                        ?.copyWith(fontSize: 22.0, letterSpacing: 3.0),
+                  ),
+                ],
               ),
               GestureDetector(
                 onTap: () => showExpGuidePopup(context),
                 child: Row(
                   children: [
-                    Text(
-                      '${currentExp}xp / ${maxExp}xp',
-                      style: const TextStyle(color: blackColor),
-                    ),
+                    Text('${currentExp}xp / ${maxExp}xp'),
                     const SizedBox(width: 4.0),
                     const Icon(
                       Icons.info_outline,
@@ -60,36 +68,7 @@ class LevelSystem extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12.0),
-        Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(height),
-            color: backgroundColor,
-            border: Border.all(color: Colors.white, width: 0.15),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0xFFC6CEDA),
-                blurRadius: 3.0,
-                offset: Offset(0, -1.5),
-              ),
-              BoxShadow(
-                color: Color(0xFFFEFEFF),
-                blurRadius: 3.0,
-                offset: Offset(0, 1.5),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(height / 2),
-            child: LinearProgressIndicator(
-              value: percentage,
-              // backgroundColor: Colors.grey.shade300,
-              backgroundColor: Colors.transparent,
-              valueColor: const AlwaysStoppedAnimation(Color(0xFF96CE5F)),
-            ),
-          ),
-        ),
+        ExpBar(width: width, height: height, percentage: percentage),
       ],
     );
   }

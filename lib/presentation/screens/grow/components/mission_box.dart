@@ -8,6 +8,7 @@ class MissionBox extends StatelessWidget {
   final String content;
   final String imagePath;
   final bool isComplete;
+  final EdgeInsets? padding;
 
   const MissionBox({
     Key? key,
@@ -17,6 +18,7 @@ class MissionBox extends StatelessWidget {
     required this.content,
     required this.imagePath,
     this.isComplete = false,
+    this.padding,
   }) : super(key: key);
 
   @override
@@ -24,39 +26,38 @@ class MissionBox extends StatelessWidget {
     return ShadowContainer(
       width: width,
       height: height,
-      backgroundColor: isComplete ? Colors.grey.shade400 : null,
-      child: Stack(
-        children: [
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(height / 4),
-                child: Image.asset(imagePath, height: height / 2),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: const TextStyle(fontSize: 14.0)),
-                  const SizedBox(height: 6.0),
-                  Text(content, style: const TextStyle(fontSize: 16.0))
-                ],
-              )
-            ],
-          ),
-          Center(
-            child: isComplete
-                ? const Text(
-                    'COMPLETE',
-                    style: TextStyle(
-                        fontSize: 32.0,
-                        color: Colors.white,
-                        fontStyle: FontStyle.italic,
-                        fontWeight: FontWeight.w700),
-                  )
-                : null,
-          ),
-        ],
+      padding: padding,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: height / 4),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Image.asset(imagePath, height: height / 2),
+                SizedBox(width: height / 4),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title),
+                    SizedBox(height: 6.0),
+                    Text(
+                      content,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyText1
+                          ?.copyWith(fontSize: 16.0),
+                    )
+                  ],
+                ),
+              ],
+            ),
+            isComplete
+                ? Image.asset('assets/images/check_icon.png')
+                : const SizedBox()
+          ],
+        ),
       ),
     );
   }

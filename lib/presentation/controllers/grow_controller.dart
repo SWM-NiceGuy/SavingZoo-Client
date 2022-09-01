@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import '../../domain/models/member_info.dart';
 
 enum Avatar {
-  baby(1, 'assets/images/baby_apple.png', 0),
-  juvenile(2, 'assets/images/many_leaves.png', 20),
-  adult(3, 'assets/images/fully_grown.png', 70);
+  baby(1, 'assets/images/first_apple_avatar.png', 0),
+  juvenile(2, 'assets/images/second_apple_avatar.png', 20),
+  adult(3, 'assets/images/third_apple_avatar.png', 70);
 
   const Avatar(this.level, this.imagePath, this.requiredExp);
 
@@ -52,6 +52,7 @@ class GrowController with ChangeNotifier {
 
   int get displayExp => _avatar == Avatar.adult ? 50: currentExp - _avatar.requiredExp;
 
+  bool hasBadge = false; // 개척자 배지 보유 여부
   String get avatarPath => _avatar.imagePath; // 아바타 이미지 경로
   int fadeDuration = 2000; // Fade 애니메이션 지속시간
   bool avatarIsVisible = true; // 아바타 보임 유무
@@ -132,7 +133,11 @@ class GrowController with ChangeNotifier {
       avatarIsVisible = true;
       notifyListeners();
 
-      if (_avatar == Avatar.adult) return;
+      if (_avatar == Avatar.adult) {
+        hasBadge = true;
+        notifyListeners();
+        return;
+      }
 
       resetExp();
 

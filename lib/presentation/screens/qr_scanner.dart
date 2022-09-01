@@ -34,7 +34,6 @@ class _QrScannerState extends State<QrScanner> {
         ? 200.0
         : 300.0;
 
-
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -44,22 +43,23 @@ class _QrScannerState extends State<QrScanner> {
               key: qrKey,
               onQRViewCreated: _onQRViewCreated,
               overlay: QrScannerOverlayShape(
-          borderColor: Colors.grey,
-          borderRadius: 10,
-          borderLength: 30,
-          borderWidth: 10,
-          cutOutSize: scanArea),
-
+                  borderColor: Colors.grey,
+                  borderRadius: 10,
+                  borderLength: 30,
+                  borderWidth: 10,
+                  cutOutSize: scanArea),
             ),
           ),
           Expanded(
             flex: 1,
             child: Center(
-              child: (result != null)
-                  ? Text(
-                      'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                  : const Text('Scan a code'),
-            ),
+                child: Text(
+              '미션완료 QR코드를 스캔해주세요!',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  ?.copyWith(fontSize: 16.0, height: 1.5),
+            )),
           )
         ],
       ),
@@ -74,9 +74,6 @@ class _QrScannerState extends State<QrScanner> {
       if (!_read) {
         _readData(scanData);
       }
-      setState(() {
-        result = scanData;
-      });
     });
   }
 
