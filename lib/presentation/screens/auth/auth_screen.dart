@@ -39,13 +39,8 @@ class _AuthScreenState extends State<AuthScreen> {
                 ),
               ),
             ),
-            Expanded(
-              child: Image.asset(
-                'assets/images/first_apple_avatar.png',
-                width: 200,
-                height: 200,
-                fit: BoxFit.cover,
-              ),
+            const Expanded(
+              child: LogoImage(),
             ),
             Expanded(
               child: Column(
@@ -158,5 +153,22 @@ class _AuthScreenState extends State<AuthScreen> {
         },
       );
     }
+  }
+}
+
+class LogoImage extends StatelessWidget {
+  const LogoImage({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final deviceSize = MediaQuery.of(context).size;
+    return Image.asset(
+      'assets/images/first_apple_avatar.png',
+      width: deviceSize.width*0.5,
+      height: deviceSize.width*0.5,
+      fit: BoxFit.cover,
+    );
   }
 }

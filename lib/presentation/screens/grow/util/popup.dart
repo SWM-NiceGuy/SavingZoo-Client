@@ -28,66 +28,70 @@ void showExpGuidePopup(BuildContext context) {
           topRight: Radius.circular(24),
         ),
       ),
-      child: Column(
-        children: [
-          Container(
-            color: Colors.grey.shade300,
-            width: 48.0,
-            height: 3.0,
-          ),
-          Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Text('경험치',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6
-                    ?.copyWith(fontSize: 24.0)),
-          ),
-          WordBreakText(
-            '환경 보호 활동을 하면 경험치가 증가해요. 경험치가 전부 채워지면',
-            style: normalStyle,
-            wrapAlignment: WrapAlignment.center,
-          ),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(text: '아바타를 ', style: normalStyle),
-                TextSpan(text: '한 단계 진화', style: boldStyle),
-                TextSpan(text: '시킬 수 있어요.', style: normalStyle),
-              ],
+      child: SafeArea(
+        child: Column(
+          children: [
+            Container(
+              color: Colors.grey.shade300,
+              width: 48.0,
+              height: 3.0,
             ),
-          ),
-          const SizedBox(height: 16.0),
-          RichText(
-            text: TextSpan(
-              children: [
-                TextSpan(text: '아바타가 LV3로 진화하면  ', style: normalStyle),
-                TextSpan(text: '실제 과일', style: boldStyle),
-                TextSpan(text: '을 드려요!', style: normalStyle),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Text('경험치',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6
+                      ?.copyWith(fontSize: 24.0)),
             ),
-          ),
-          const SizedBox(height: 16.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Image.asset('assets/images/first_apple_avatar.png',
-                  height: height * 0.15),
-              Image.asset('assets/images/right_arrow_icon.png'),
-              Image.asset('assets/images/anonymous_avatar.png',
-                  height: height * 0.15),
-            ],
-          ),
-          Text(
-            '90xp / 100xp',
-            style: Theme.of(context)
-                .textTheme
-                .bodyText1
-                ?.copyWith(color: expTextColor, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 12.0),
-          ExpBar(width: width, height: 12.0, percentage: 0.9),
-        ],
+            WordBreakText(
+              '환경 보호 활동을 하면 경험치가 증가해요. 경험치가 전부 채워지면',
+              style: normalStyle,
+              wrapAlignment: WrapAlignment.center,
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(text: '아바타를 ', style: normalStyle),
+                  TextSpan(text: '한 단계 진화', style: boldStyle),
+                  TextSpan(text: '시킬 수 있어요.', style: normalStyle),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(text: '아바타가 LV3로 진화하면  ', style: normalStyle),
+                  TextSpan(text: '실제 과일', style: boldStyle),
+                  TextSpan(text: '을 드려요!', style: normalStyle),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Image.asset('assets/images/first_apple_avatar.png',
+                      height: height * 0.15),
+                  Image.asset('assets/images/right_arrow_icon.png'),
+                  Image.asset('assets/images/anonymous_avatar.png',
+                      height: height * 0.15),
+                ],
+              ),
+            ),
+            Text(
+              '90xp / 100xp',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyText1
+                  ?.copyWith(color: expTextColor, fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(height: 6.0),
+            ExpBar(width: width, height: 12.0, percentage: 0.9),
+          ],
+        ),
       ),
     ),
   );
@@ -110,7 +114,7 @@ void showMissionCompletePopup(
       return Center(
         child: Container(
           width: minSize * 5 / 6,
-          height: minSize * 5 / 6,
+          height: (minSize * 5 / 6),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10.0),
             color: backgroundColor,
