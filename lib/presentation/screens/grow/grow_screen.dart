@@ -4,6 +4,8 @@ import 'package:amond/presentation/screens/grow/components/level_system.dart';
 import 'package:amond/presentation/screens/grow/components/mission_box.dart';
 import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
 import 'package:amond/presentation/screens/grow/util/popup.dart';
+import 'package:amond/widget/platform_based_indicator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -55,6 +57,12 @@ class GrowScreen extends StatelessWidget {
       }
     }
 
+    if (growController.isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        growController.fetchData();
+      });
+    }
+
     if (growController.isFirst) {
       Future.delayed(const Duration(seconds: 1), () {
         if (!Navigator.of(context).canPop()) {
@@ -76,137 +84,140 @@ class GrowScreen extends StatelessWidget {
       });
     }
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(
-                  screenMargin, 8.0, screenMargin, 0.0),
-              child: LevelSystem(
-                width: width,
-                height: 12.0,
-                level: growController.level,
-                currentExp: growController.currentExp,
-                maxExp: growController.maxExp,
-                percentage: growController.expPercentage,
-                leading: growController.hasBadge
-                    ? Image.asset(
-                        'assets/images/pioneer_badge_icon.png',
-                        height: 32.0,
-                      )
-                    : null,
-              ),
-            ),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
+    return growController.isLoading
+        ? const Center(child: PlatformBasedIndicator())
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
                 children: [
-                  MissionBox(
-                    width: width * 0.75,
-                    height: missionBoxHeight,
-                    padding: const EdgeInsets.all(screenMargin),
-                    isComplete: growController.missionCompleted >= 1,
-                    title: 'Mission 1',
-                    content: '공원 한바퀴',
-                    imagePath: 'assets/images/shoe_icon.png',
-                  ),
-                  MissionBox(
-                    width: width * 0.75,
-                    height: missionBoxHeight,
+                  Padding(
                     padding: const EdgeInsets.fromLTRB(
-                      0.0,
-                      screenMargin,
-                      screenMargin,
-                      screenMargin,
+                        screenMargin, 8.0, screenMargin, 0.0),
+                    child: LevelSystem(
+                      width: width,
+                      height: 12.0,
+                      level: growController.level,
+                      currentExp: growController.currentExp,
+                      maxExp: growController.maxExp,
+                      percentage: growController.expPercentage,
+                      leading: growController.hasBadge
+                          ? Image.asset(
+                              'assets/images/pioneer_badge_icon.png',
+                              height: 32.0,
+                            )
+                          : null,
                     ),
-                    isComplete: growController.missionCompleted >= 2,
-                    title: 'Mission 2',
-                    content: '플로깅',
-                    imagePath: 'assets/images/plogging_icon.png',
+                  ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        MissionBox(
+                          width: width * 0.75,
+                          height: missionBoxHeight,
+                          padding: const EdgeInsets.all(screenMargin),
+                          isComplete: growController.missionCompleted >= 1,
+                          title: 'Mission 1',
+                          content: '공원 한바퀴',
+                          imagePath: 'assets/images/shoe_icon.png',
+                        ),
+                        MissionBox(
+                          width: width * 0.75,
+                          height: missionBoxHeight,
+                          padding: const EdgeInsets.fromLTRB(
+                            0.0,
+                            screenMargin,
+                            screenMargin,
+                            screenMargin,
+                          ),
+                          isComplete: growController.missionCompleted >= 2,
+                          title: 'Mission 2',
+                          content: '플로깅',
+                          imagePath: 'assets/images/plogging_icon.png',
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
-        ),
-        Expanded(
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              AnimatedOpacity(
-                opacity: growController.avatarIsVisible ? 1.0 : 0.0,
-                duration: Duration(milliseconds: growController.fadeDuration),
-                child: Image.asset(
-                  growController.avatarPath,
-                  // height: 180.0,
+              Expanded(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    AnimatedOpacity(
+                      opacity: growController.avatarIsVisible ? 1.0 : 0.0,
+                      duration:
+                          Duration(milliseconds: growController.fadeDuration),
+                      child: Image.asset(
+                        growController.avatarPath,
+                        // height: 180.0,
+                      ),
+                    ),
+                    growController.heartsIsVisible
+                        ? Lottie.asset(
+                            'assets/lotties/lottie-hearts.json',
+                            repeat: false,
+                          )
+                        : const SizedBox(),
+                  ],
                 ),
               ),
-              growController.heartsIsVisible
-                  ? Lottie.asset(
-                      'assets/lotties/lottie-hearts.json',
-                      repeat: false,
-                    )
-                  : const SizedBox(),
-            ],
-          ),
-        ),
-        Column(
-          children: [
-            CommentBox(
-              comment: growController.comment,
-              width: width * 2 / 3,
-              height: commentBoxHeight,
-              // height: 100.0,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: screenMargin,
-                vertical: screenMargin / 2,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
                 children: [
-                  ShadowButton(
-                    width: buttonHeight,
-                    height: buttonHeight,
-                    padding: EdgeInsets.zero,
-                    onPress: growController.showHearts,
-                    child: Image.asset(
-                      'assets/images/heart_icon.png',
-                      width: buttonHeight / 2,
-                      height: buttonHeight / 2,
-                    ),
+                  CommentBox(
+                    comment: growController.comment,
+                    width: width * 2 / 3,
+                    height: commentBoxHeight,
+                    // height: 100.0,
                   ),
-                  ShadowButton(
-                    width: buttonHeight,
-                    height: buttonHeight,
-                    padding: EdgeInsets.zero,
-                    onPress: executeMissionComplete,
-                    child: Image.asset(
-                      'assets/images/barcode_icon.png',
-                      width: buttonHeight / 2,
-                      height: buttonHeight / 2,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: screenMargin,
+                      vertical: screenMargin / 2,
                     ),
-                  ),
-                  ShadowButton(
-                    width: buttonHeight,
-                    height: buttonHeight,
-                    padding: EdgeInsets.zero,
-                    onPress: growController.changeComment,
-                    child: Image.asset(
-                      'assets/images/comment_icon.png',
-                      width: buttonHeight / 2,
-                      height: buttonHeight / 2,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ShadowButton(
+                          width: buttonHeight,
+                          height: buttonHeight,
+                          padding: EdgeInsets.zero,
+                          onPress: growController.showHearts,
+                          child: Image.asset(
+                            'assets/images/heart_icon.png',
+                            width: buttonHeight / 2,
+                            height: buttonHeight / 2,
+                          ),
+                        ),
+                        ShadowButton(
+                          width: buttonHeight,
+                          height: buttonHeight,
+                          padding: EdgeInsets.zero,
+                          onPress: executeMissionComplete,
+                          child: Image.asset(
+                            'assets/images/barcode_icon.png',
+                            width: buttonHeight / 2,
+                            height: buttonHeight / 2,
+                          ),
+                        ),
+                        ShadowButton(
+                          width: buttonHeight,
+                          height: buttonHeight,
+                          padding: EdgeInsets.zero,
+                          onPress: growController.changeComment,
+                          child: Image.asset(
+                            'assets/images/comment_icon.png',
+                            width: buttonHeight / 2,
+                            height: buttonHeight / 2,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ),
-          ],
-        ),
-      ],
-    );
+            ],
+          );
   }
 }
