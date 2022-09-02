@@ -174,6 +174,7 @@ class GrowController with ChangeNotifier {
       await _prefs!.setBool('isFirst', false);
       await _prefs!.setInt('currentExp', 0);
       await _prefs!.setInt('level', 1);
+      await _prefs!.setInt('missionCompleted', 0);
       // 처음 접속이 아닐때
     } else {
       _missionCompleted = _prefs!.getInt('missionCompleted') ?? 0;
@@ -194,5 +195,11 @@ class GrowController with ChangeNotifier {
     }
     _isLoading = false;
     notifyListeners();
+  }
+
+  void changeMissionCompleted(int value) {
+    _missionCompleted = value;
+    notifyListeners();
+    _prefs!.setInt('missionCompleted', value);
   }
 }

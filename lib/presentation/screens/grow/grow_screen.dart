@@ -3,10 +3,12 @@ import 'package:amond/presentation/screens/grow/components/comment_box.dart';
 import 'package:amond/presentation/screens/grow/components/level_system.dart';
 import 'package:amond/presentation/screens/grow/components/mission_box.dart';
 import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
+import 'package:amond/presentation/screens/grow/util/mission.dart';
 import 'package:amond/presentation/screens/grow/util/popup.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:word_break_text/word_break_text.dart';
 
 class GrowScreen extends StatelessWidget {
@@ -193,7 +195,21 @@ class GrowScreen extends StatelessWidget {
                           width: buttonHeight,
                           height: buttonHeight,
                           padding: EdgeInsets.zero,
-                          onPress: executeMissionComplete,
+                          onPress: () async {
+                            var res = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const SimpleBarcodeScannerPage(),
+                                ));
+                            if (res == mission1) {
+                              growController.changeMissionCompleted(1);
+                              executeMissionComplete();
+                            } else if (res == mission2) {
+                              growController.changeMissionCompleted(2);
+                              executeMissionComplete();
+                            }
+                          },
                           child: Image.asset(
                             'assets/images/barcode_icon.png',
                             width: buttonHeight / 2,
