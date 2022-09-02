@@ -1,6 +1,4 @@
 import 'package:amond/di/provider_setup.dart';
-import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/main_screen.dart';
 import 'package:amond/presentation/screens/qr_scanner.dart';
 import 'package:amond/presentation/screens/splash_screen.dart';
@@ -15,8 +13,8 @@ import 'utils/apple_client_secret.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
-  KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
+  // await Firebase.initializeApp();
+  // KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
 
   runApp(MultiProvider(
     providers: globalProviders,
@@ -30,7 +28,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final authController = context.read<AuthController>();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -39,7 +36,6 @@ class MyApp extends StatelessWidget {
 
       home: const MainScreen(),
       routes: {
-        AuthScreen.routeName: (context) => const AuthScreen(),
         MainScreen.routeName: (context) => const MainScreen(),
         QrScanner.routeName: (context) => const QrScanner(),
       },

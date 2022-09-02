@@ -5,7 +5,6 @@ import 'package:amond/data/source/network/api/member_api.dart';
 import 'package:amond/domain/usecases/exp/exp_use_cases.dart';
 import 'package:amond/domain/usecases/exp/get_exp.dart';
 import 'package:amond/domain/usecases/member/member_use_cases.dart';
-import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -40,7 +39,5 @@ List<SingleChildWidget> dependentModels = [
 ];
 
 List<SingleChildWidget> viewModels = [
-  Provider<AuthController>(
-      create: (_) => AuthController(_.read<MemberUseCases>())),
   ChangeNotifierProvider(create: (_) => GrowController()),
 ];

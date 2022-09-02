@@ -192,7 +192,7 @@ class GrowController with ChangeNotifier {
       }
       expPercentage = currentExp / _avatar.maxExp;
     }
-
+    _isLoading = false;
     notifyListeners();
   }
 

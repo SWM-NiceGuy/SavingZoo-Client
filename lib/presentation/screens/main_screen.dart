@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:amond/presentation/screens/grow/grow_screen.dart';
 import 'package:amond/ui/colors.dart';
@@ -23,55 +21,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
-    final authController = context.read<AuthController>();
     return Scaffold(
-      drawer: Drawer(
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ListTile(
-                leading: const Icon(
-                  Icons.logout,
-                  color: blackColor,
-                ),
-                title: const Text(
-                  '로그아웃',
-                  style: TextStyle(color: blackColor),
-                ),
-                onTap: () async {
-                  try {
-                    await authController.logout();
-                    Navigator.of(context)
-                        .pushReplacementNamed(AuthScreen.routeName);
-                  } catch (error) {
-                    _showLogoutFailDialog(context);
-                  }
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.delete_forever,
-                  color: blackColor,
-                ),
-                title: const Text(
-                  'AMOND 탈퇴',
-                  style: TextStyle(color: blackColor),
-                ),
-                onTap: () async {
-                  try {
-                    await authController.resign();
-                    Navigator.of(context)
-                        .pushReplacementNamed(AuthScreen.routeName);
-                  } catch (error) {
-                    _showLogoutFailDialog(context);
-                  }
-                },
-              )
-            ],
-          ),
-        ),
-      ),
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: backgroundColor,
