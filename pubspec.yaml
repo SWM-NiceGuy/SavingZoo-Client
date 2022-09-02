@@ -48,6 +48,7 @@ dependencies:
   jose: ^0.3.2
   json_annotation: ^4.6.0
   simple_barcode_scanner: ^0.0.5
+  google_fonts: ^3.0.1
 
 dev_dependencies:
   flutter_test:

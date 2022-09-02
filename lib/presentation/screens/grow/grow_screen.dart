@@ -152,6 +152,7 @@ class GrowScreen extends StatelessWidget {
                           Duration(milliseconds: growController.fadeDuration),
                       child: Image.asset(
                         growController.avatarPath,
+                        filterQuality: FilterQuality.high,
                         // height: 180.0,
                       ),
                     ),
@@ -202,6 +203,7 @@ class GrowScreen extends StatelessWidget {
                                   builder: (context) =>
                                       const SimpleBarcodeScannerPage(),
                                 ));
+                              print(res);
                             if (res == mission1) {
                               growController.changeMissionCompleted(1);
                               executeMissionComplete();
