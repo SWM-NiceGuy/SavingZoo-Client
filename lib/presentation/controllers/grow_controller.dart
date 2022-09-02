@@ -43,8 +43,7 @@ class GrowController with ChangeNotifier {
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
-  bool _isFirst = false;
-  bool get isFirst => _isFirst;
+  bool isFirst = false;
   int _missionCompleted = 0;
   int get missionCompleted => _missionCompleted;
 
@@ -166,15 +165,16 @@ class GrowController with ChangeNotifier {
   }
 
   Future<void> fetchData() async {
-    _isLoading = true;
     _prefs = await SharedPreferences.getInstance();
 
     bool? isNew = _prefs!.getBool('isFirst');
     // 처음 접속일때
     if (isNew == null) {
-      _isFirst = true;
+      isFirst = true;
       await _prefs!.setBool('isFirst', false);
-    // 처음 접속이 아닐때
+      await _prefs!.setInt('currentExp', 0);
+      await _prefs!.setInt('level', 1);
+      // 처음 접속이 아닐때
     } else {
       _missionCompleted = _prefs!.getInt('missionCompleted') ?? 0;
       currentExp = _prefs!.getInt('currentExp') ?? 0;
@@ -195,5 +195,4 @@ class GrowController with ChangeNotifier {
     _isLoading = false;
     notifyListeners();
   }
-
 }

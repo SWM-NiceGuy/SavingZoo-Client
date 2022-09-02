@@ -4,8 +4,6 @@ import 'package:amond/presentation/screens/grow/components/level_system.dart';
 import 'package:amond/presentation/screens/grow/components/mission_box.dart';
 import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
 import 'package:amond/presentation/screens/grow/util/popup.dart';
-import 'package:amond/widget/platform_based_indicator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -82,6 +80,7 @@ class GrowScreen extends StatelessWidget {
           );
         }
       });
+      growController.isFirst = false;
     }
 
     return growController.isLoading
