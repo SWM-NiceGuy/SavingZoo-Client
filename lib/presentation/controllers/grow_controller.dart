@@ -45,6 +45,8 @@ class GrowController with ChangeNotifier {
   bool get isLoading => _isLoading;
   bool _isFirst = false;
   bool get isFirst => _isFirst;
+  int _missionCompleted = 0;
+  int get missionCompleted => _missionCompleted;
 
   int get level => _avatar.level;
   int currentExp = 0; // 현재 경험치
@@ -157,7 +159,7 @@ class GrowController with ChangeNotifier {
 
     heartsIsVisible = true;
     notifyListeners();
-    Future.delayed(Duration(seconds: 6), () {
+    Future.delayed(const Duration(seconds: 6), () {
       heartsIsVisible = false;
       notifyListeners();
     });
@@ -174,6 +176,7 @@ class GrowController with ChangeNotifier {
       await _prefs!.setBool('isFirst', false);
     // 처음 접속이 아닐때
     } else {
+      _missionCompleted = _prefs!.getInt('missionCompleted') ?? 0;
       currentExp = _prefs!.getInt('currentExp') ?? 0;
       int level = _prefs!.getInt('level') ?? 1;
       switch (level) {

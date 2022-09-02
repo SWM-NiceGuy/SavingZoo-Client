@@ -10,14 +10,12 @@ import 'package:provider/provider.dart';
 import 'package:word_break_text/word_break_text.dart';
 
 class GrowScreen extends StatelessWidget {
-  bool isNewUser;
   List<int> completedMissions = [];
 
   static const screenMargin = 24.0;
 
   GrowScreen({
     Key? key,
-    required this.isNewUser,
   }) : super(key: key);
 
   @override
@@ -31,11 +29,7 @@ class GrowScreen extends StatelessWidget {
     final buttonHeight = height * 0.09;
 
     void executeMissionComplete() {
-      final completedMission = completedMissions.contains(2)
-          ? 0
-          : completedMissions.contains(1)
-              ? 2
-              : 1;
+      final completedMission = growController.missionCompleted;
 
       final title = completedMission == 1 ? 'Mission 1 성공' : 'Mission 2 성공';
       final content = completedMission == 1
@@ -61,8 +55,7 @@ class GrowScreen extends StatelessWidget {
       }
     }
 
-    if (isNewUser) {
-      isNewUser = false;
+    if (growController.isFirst) {
       Future.delayed(const Duration(seconds: 1), () {
         if (!Navigator.of(context).canPop()) {
           showMissionCompletePopup(
@@ -114,7 +107,7 @@ class GrowScreen extends StatelessWidget {
                     width: width * 0.75,
                     height: missionBoxHeight,
                     padding: const EdgeInsets.all(screenMargin),
-                    isComplete: completedMissions.contains(1),
+                    isComplete: growController.missionCompleted >= 1,
                     title: 'Mission 1',
                     content: '공원 한바퀴',
                     imagePath: 'assets/images/shoe_icon.png',
@@ -128,7 +121,7 @@ class GrowScreen extends StatelessWidget {
                       screenMargin,
                       screenMargin,
                     ),
-                    isComplete: completedMissions.contains(2),
+                    isComplete: growController.missionCompleted >= 2,
                     title: 'Mission 2',
                     content: '플로깅',
                     imagePath: 'assets/images/plogging_icon.png',

@@ -79,7 +79,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       backgroundColor: backgroundColor,
       body: SafeArea(
-        child: GrowScreen(isNewUser: true),
+        child: GrowScreen(),
       ),
     );
   }
