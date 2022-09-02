@@ -1,6 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+const imagePath = [
+  'assets/images/first_apple_avatar.png',
+  'assets/images/second_apple_avatar.png',
+  'assets/images/third_apple_avatar.png'
+];
 
 enum Avatar {
   baby(1, 'assets/images/first_apple_avatar.png', 20),
@@ -26,6 +33,18 @@ enum Avatar {
 
 class GrowController with ChangeNotifier {
   Avatar _avatar = Avatar.baby;
+
+  SharedPreferences? _prefs;
+
+  Future<SharedPreferences> get prefs async {
+    _prefs ??= await SharedPreferences.getInstance();
+    return _prefs!;
+  }
+
+  bool _isLoading = true;
+  bool get isLoading => _isLoading;
+  bool _isFirst = false;
+  bool get isFirst => _isFirst;
 
   int get level => _avatar.level;
   int currentExp = 0; // 현재 경험치
@@ -86,7 +105,7 @@ class GrowController with ChangeNotifier {
       _extraExp = currentExp - maxExp;
       currentExp = maxExp;
     }
-
+    _prefs!.setInt('currentExp', currentExp);
     notifyListeners();
     _increaseExpBar(expPercentage, currentExp / maxExp);
   }
@@ -107,6 +126,7 @@ class GrowController with ChangeNotifier {
 
     Future.delayed(Duration(milliseconds: fadeDuration), () {
       _avatar = _avatar.getNext();
+      _prefs!.setInt('level', _avatar.level);
       fadeDuration = 500;
       avatarIsVisible = true;
       notifyListeners();
@@ -141,5 +161,35 @@ class GrowController with ChangeNotifier {
       heartsIsVisible = false;
       notifyListeners();
     });
+  }
+
+  Future<void> fetchData() async {
+    _isLoading = true;
+    _prefs = await SharedPreferences.getInstance();
+
+    bool? isNew = _prefs!.getBool('isFirst');
+    // 처음 접속일때
+    if (isNew == null) {
+      _isFirst = true;
+      await _prefs!.setBool('isFirst', false);
+    // 처음 접속이 아닐때
+    } else {
+      currentExp = _prefs!.getInt('currentExp') ?? 0;
+      int level = _prefs!.getInt('level') ?? 1;
+      switch (level) {
+        case 1:
+          _avatar = Avatar.baby;
+          break;
+        case 2:
+          _avatar = Avatar.juvenile;
+          break;
+        case 3:
+          _avatar = Avatar.adult;
+          break;
+      }
+      expPercentage = currentExp / _avatar.maxExp;
+    }
+
+    notifyListeners();
   }
 }
