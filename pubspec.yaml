@@ -48,6 +48,7 @@ dependencies:
   jose: ^0.3.2
   json_annotation: ^4.6.0
   google_fonts: ^3.0.1
+  firebase_analytics: ^9.3.3
 
 dev_dependencies:
   flutter_test:
