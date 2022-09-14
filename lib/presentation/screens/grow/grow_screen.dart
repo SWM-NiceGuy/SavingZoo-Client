@@ -30,7 +30,7 @@ class GrowScreen extends StatelessWidget {
 
     final missionBoxHeight = height * 0.1;
     final commentBoxHeight = height * 0.12;
-    final buttonHeight = height * 0.09;
+    final buttonHeight = height * 0.08;
 
     // 데이터가 불러와 있지 않을때 데이터 불러오기
     if (!growController.isDataFetched) {
@@ -118,36 +118,6 @@ class GrowScreen extends StatelessWidget {
                             : null,
                       ),
                     ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          MissionBox(
-                            width: width * 0.75,
-                            height: missionBoxHeight,
-                            isComplete: growController.missionCompleted >= 1,
-                            title: 'Mission 1',
-                            content: '공원 한바퀴',
-                            padding: const EdgeInsets.all(screenMargin),
-                            imagePath: 'assets/images/shoe_icon.png',
-                          ),
-                          MissionBox(
-                            width: width * 0.75,
-                            height: missionBoxHeight,
-                            padding: const EdgeInsets.fromLTRB(
-                              0.0,
-                              screenMargin,
-                              screenMargin,
-                              screenMargin,
-                            ),
-                            isComplete: growController.missionCompleted >= 2,
-                            title: 'Mission 2',
-                            content: '플로깅',
-                            imagePath: 'assets/images/plogging_icon.png',
-                          ),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
                 Expanded(
@@ -160,7 +130,6 @@ class GrowScreen extends StatelessWidget {
                             Duration(milliseconds: growController.fadeDuration),
                         child: Image.asset(
                           growController.character.avatarPath,
-                          // height: 180.0,
                         ),
                       ),
                       growController.heartsIsVisible

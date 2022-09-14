@@ -2,6 +2,7 @@ import 'package:amond/di/provider_setup.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/main_screen.dart';
+import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/presentation/screens/qr_scanner.dart';
 import 'package:amond/presentation/screens/splash_screen.dart';
 import 'package:amond/secrets/secret.dart';
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
         AuthScreen.routeName: (context) => const AuthScreen(),
         MainScreen.routeName: (context) => const MainScreen(),
         QrScanner.routeName: (context) => const QrScanner(),
+        MissionScreen.routeName: (context) => const MissionScreen(),
       },
     );
   }

@@ -18,8 +18,6 @@ class GrowController with ChangeNotifier {
 
   Character get character => _character;
 
-  int missionCompleted = 0;
-
   bool _isLoading = true;
   bool get isLoading => _isLoading;
 
@@ -124,15 +122,14 @@ class GrowController with ChangeNotifier {
   /// 캐릭터 데이터를 불러오는 함수
   Future<void> fetchData(MemberInfo memberInfo) async {
     // 데이터 불러오기
-    var currentExp = await _expUseCases.getExp(memberInfo.provider, memberInfo.uid);
+    // var currentExp = await _expUseCases.getExp(memberInfo.provider, memberInfo.uid);
+    var currentExp = 70;
     // 현재 경험치가 0이면 새로운 유저로 판단
     if (currentExp == 0) {
       isNewUser = true;
     }
 
     _character = Character.ofExp(currentExp);
-
-    missionCompleted = await getMissionCompleted();
 
     _isDataFetched = true;
     _isLoading = false;
@@ -145,11 +142,11 @@ class GrowController with ChangeNotifier {
     await _expUseCases.changeExp(_memberInfo.provider, _memberInfo.uid, value);
   }
 
-  Future<void> changeMissionCompleted(int value) async {
-    missionCompleted = value;
-    notifyListeners();
-    await _expUseCases.changeMissionCompleted(_memberInfo.provider, _memberInfo.uid, value);
-  }
+  // Future<void> changeMissionCompleted(int value) async {
+  //   missionCompleted = value;
+  //   notifyListeners();
+  //   await _expUseCases.changeMissionCompleted(_memberInfo.provider, _memberInfo.uid, value);
+  // }
 
   Future<int> getMissionCompleted() async {
     return await _expUseCases.getMissionCompleted(_memberInfo.provider, _memberInfo.uid);

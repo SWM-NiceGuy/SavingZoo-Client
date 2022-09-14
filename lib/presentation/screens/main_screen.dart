@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
+import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:amond/presentation/screens/grow/grow_screen.dart';
 import 'package:amond/ui/colors.dart';
@@ -19,58 +20,18 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  List<Widget> bottomNavigationBarScreens = [
+    const GrowScreen(),
+    const MissionScreen(),
+  ];
+
+  var _screenIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     final authController = context.read<AuthController>();
     return Scaffold(
-      drawer: Drawer(
-        child: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ListTile(
-                leading: const Icon(
-                  Icons.logout,
-                  color: blackColor,
-                ),
-                title: const Text('로그아웃'),
-                onTap: () async {
-                  bool check;
-                  check = await _checkDialog(context, '로그아웃을 진행합니다');
-                  if (!check) return;
-                  try {
-                    await authController.logout();
-                    Navigator.of(context)
-                        .pushReplacementNamed(AuthScreen.routeName);
-                  } catch (error) {
-                    _showLogoutFailDialog(context, '로그아웃에 실패했습니다');
-                  }
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.delete_forever,
-                  color: blackColor,
-                ),
-                title: const Text('AMOND 계정 탈퇴'),
-                onTap: () async {
-                  bool check;
-                  check = await _checkDialog(context,
-                      'AMOND 계정 탈퇴', 'AMOND 계정을 탈퇴하면 저장된 데이터들을 복구할 수 없습니다, 진행하시겠습니까?');
-                  if (!check) return;
-                  try {
-                    await authController.resign();
-                    Navigator.of(context)
-                        .pushReplacementNamed(AuthScreen.routeName);
-                  } catch (error) {
-                    _showLogoutFailDialog(context, '회원탈퇴에 실패했습니다.');
-                  }
-                },
-              )
-            ],
-          ),
-        ),
-      ),
+      drawer: mainDrawer(context, authController),
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: backgroundColor,
@@ -78,7 +39,90 @@ class _MainScreenState extends State<MainScreen> {
       ),
       backgroundColor: backgroundColor,
       body: SafeArea(
-        child: GrowScreen(),
+        child: bottomNavigationBarScreens[_screenIndex],
+      ),
+      extendBody: true,
+      bottomNavigationBar: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topRight: Radius.circular(30),
+          topLeft: Radius.circular(30),
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: Colors.white,
+          items: const [
+            BottomNavigationBarItem(label: '홈', icon: Icon(Icons.home_filled)),
+            BottomNavigationBarItem(
+                label: '미션', icon: Icon(Icons.track_changes_outlined))
+          ],
+          onTap: (index) {
+            setState(() {
+              _screenIndex = index;
+            });
+          },
+          currentIndex: _screenIndex,
+        ),
+      ),
+    );
+  }
+
+  Drawer mainDrawer(BuildContext context, AuthController authController) {
+    return Drawer(
+      child: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            ListTile(
+              leading: const Icon(
+                Icons.book,
+                color: blackColor,
+              ),
+              title: const Text('미션'),
+              onTap: () {
+                Navigator.of(context).pushNamed(MissionScreen.routeName);
+              },
+            ),
+            const Spacer(),
+            ListTile(
+              leading: const Icon(
+                Icons.logout,
+                color: blackColor,
+              ),
+              title: const Text('로그아웃'),
+              onTap: () async {
+                bool check;
+                check = await _checkDialog(context, '로그아웃을 진행합니다');
+                if (!check) return;
+                try {
+                  await authController.logout();
+                  Navigator.of(context)
+                      .pushReplacementNamed(AuthScreen.routeName);
+                } catch (error) {
+                  _showLogoutFailDialog(context, '로그아웃에 실패했습니다');
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.delete_forever,
+                color: blackColor,
+              ),
+              title: const Text('AMOND 계정 탈퇴'),
+              onTap: () async {
+                bool check;
+                check = await _checkDialog(context, 'AMOND 계정 탈퇴',
+                    'AMOND 계정을 탈퇴하면 저장된 데이터들을 복구할 수 없습니다, 진행하시겠습니까?');
+                if (!check) return;
+                try {
+                  await authController.resign();
+                  Navigator.of(context)
+                      .pushReplacementNamed(AuthScreen.routeName);
+                } catch (error) {
+                  _showLogoutFailDialog(context, '회원탈퇴에 실패했습니다.');
+                }
+              },
+            )
+          ],
+        ),
       ),
     );
   }

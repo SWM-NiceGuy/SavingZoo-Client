@@ -6,12 +6,16 @@ class Character {
   Character.ofExp(int exp) {
     currentExp = exp;
     for (var elem in avatarList.reversed) {
-      if (exp > elem.requiredExp) {
+      if (exp >= elem.requiredExp) {
         avatar = elem;
         break;
       }
     }
-    expPercentage = (currentExp - avatar.requiredExp) / maxExp;
+    if (avatar == avatarList.last) {
+      expPercentage = 1.0;
+    } else {
+      expPercentage = (currentExp - avatar.requiredExp) / maxExp;
+    }
   }
 
   int get level => avatar.level;
