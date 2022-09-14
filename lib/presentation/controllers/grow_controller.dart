@@ -1,36 +1,22 @@
 import 'dart:async';
 
+import 'package:amond/domain/models/character.dart';
 import 'package:amond/domain/usecases/exp/exp_use_cases.dart';
 import 'package:flutter/material.dart';
 
+import '../../domain/models/avatar.dart';
 import '../../domain/models/member_info.dart';
 
-enum Avatar {
-  baby(1, 'assets/images/first_apple_avatar.png', 0),
-  juvenile(2, 'assets/images/second_apple_avatar.png', 20),
-  adult(3, 'assets/images/third_apple_avatar.png', 70);
 
-  const Avatar(this.level, this.imagePath, this.requiredExp);
-
-  final int level;
-  final String imagePath;
-  final int requiredExp;
-
-  Avatar getNext() {
-    if (name == Avatar.baby.name) {
-      return Avatar.juvenile;
-    } else if (name == Avatar.juvenile.name) {
-      return Avatar.adult;
-    } else {
-      return Avatar.baby;
-    }
-  }
-}
 
 class GrowController with ChangeNotifier {
   final ExpUseCases _expUseCases;
   final MemberInfo _memberInfo;
   GrowController(this._expUseCases, this._memberInfo);
+
+  late Character _character;
+
+  Character get character => _character;
 
   int missionCompleted = 0;
 
@@ -42,18 +28,7 @@ class GrowController with ChangeNotifier {
 
   bool isNewUser = false;
 
-  Avatar _avatar = Avatar.baby;
-
-  int get level => _avatar.level;
-  int currentExp = 0; // 현재 경험치
-  int get maxExp => _avatar == Avatar.adult ? 50 : _avatar.getNext().requiredExp - _avatar.requiredExp; // 최대 경험치
-  int _extraExp = 0; // 증가한 경험치가 최대 경험치를 넘었을 때의 잔여 경험치
-  double expPercentage = 0.0; // 경험치 게이지 채워짐 정도 (0.0 ~ 1.0)
-
-  int get displayExp => _avatar == Avatar.adult ? 50: currentExp - _avatar.requiredExp;
-
   bool hasBadge = false; // 개척자 배지 보유 여부
-  String get avatarPath => _avatar.imagePath; // 아바타 이미지 경로
   int fadeDuration = 2000; // Fade 애니메이션 지속시간
   bool avatarIsVisible = true; // 아바타 보임 유무
 
@@ -78,16 +53,16 @@ class GrowController with ChangeNotifier {
       (timer) {
         count++;
 
-        expPercentage = from + (to - from) * count / 100;
+        _character.expPercentage = from + (to - from) * count / 100;
         notifyListeners();
 
         if (count == 100) {
           timer.cancel();
-          expPercentage = to;
+          _character.expPercentage = to;
           notifyListeners();
         }
 
-        if (expPercentage == 1.0) {
+        if (_character.expPercentage == 1.0) {
           changeAvatar();
         }
       },
@@ -96,28 +71,10 @@ class GrowController with ChangeNotifier {
 
   /// 경험치를 증가시킨다
   Future<void> increaseExp(int point) async {
-    if (_avatar == Avatar.adult) {
-      return;
-    }
-
-    // 경험치 증가 로직
-    currentExp += point;
-
-    if (currentExp > _avatar.getNext().requiredExp) {
-      _extraExp = currentExp - _avatar.getNext().requiredExp;
-      currentExp = _avatar.getNext().requiredExp;
-    }
+    _character.increaseExp(point, _increaseExpBar);
 
     notifyListeners();
-    _increaseExpBar(expPercentage, displayExp / (_avatar.getNext().requiredExp - _avatar.requiredExp));
-    await changeExpInServer(currentExp);
-  }
-
-  /// 경험치와 게이지를 초기화한다
-  void resetExp() {
-    currentExp = _avatar.requiredExp;
-    expPercentage = 0.0;
-    notifyListeners();
+    await changeExpInServer(_character.currentExp);
   }
 
   /// 다음 단계로 아바타를 변화시킨다.
@@ -128,21 +85,20 @@ class GrowController with ChangeNotifier {
     notifyListeners();
 
     Future.delayed(Duration(milliseconds: fadeDuration), () {
-      _avatar = _avatar.getNext();
+      _character.avatar = avatarList[_character.level + 1];
       fadeDuration = 500;
       avatarIsVisible = true;
       notifyListeners();
 
-      if (_avatar == Avatar.adult) {
-        hasBadge = true;
-        notifyListeners();
+      if (_character.avatar == avatarList.last) {
         return;
       }
 
-      resetExp();
+      _character.resetExp();
+      notifyListeners();
 
-      if (_extraExp > 0) {
-        increaseExp(_extraExp);
+      if (_character.extraExp > 0) {
+        increaseExp(_character.extraExp);
       }
     });
   }
@@ -168,30 +124,18 @@ class GrowController with ChangeNotifier {
   /// 캐릭터 데이터를 불러오는 함수
   Future<void> fetchData(MemberInfo memberInfo) async {
     // 데이터 불러오기
-    currentExp = await _expUseCases.getExp(memberInfo.provider, memberInfo.uid);
+    var currentExp = await _expUseCases.getExp(memberInfo.provider, memberInfo.uid);
     // 현재 경험치가 0이면 새로운 유저로 판단
     if (currentExp == 0) {
       isNewUser = true;
     }
 
-    if (currentExp >= Avatar.adult.requiredExp) {
-      _avatar = Avatar.adult;
-    } else if (currentExp >= Avatar.juvenile.requiredExp) {
-      _avatar = Avatar.juvenile;
-    } else {
-      _avatar = Avatar.baby;
-    }
+    _character = Character.ofExp(currentExp);
 
     missionCompleted = await getMissionCompleted();
 
-
     _isDataFetched = true;
     _isLoading = false;
-    if (_avatar == Avatar.adult) {
-      expPercentage = 1.0;
-    } else {
-    expPercentage = (currentExp - _avatar.requiredExp) / (_avatar.getNext().requiredExp - _avatar.requiredExp);
-    }
 
     notifyListeners();
   }

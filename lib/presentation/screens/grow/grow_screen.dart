@@ -17,7 +17,7 @@ import 'package:word_break_text/word_break_text.dart';
 class GrowScreen extends StatelessWidget {
   static const screenMargin = 24.0;
 
-  GrowScreen({
+  const GrowScreen({
     Key? key,
   }) : super(key: key);
 
@@ -106,10 +106,10 @@ class GrowScreen extends StatelessWidget {
                       child: LevelSystem(
                         width: width,
                         height: 12.0,
-                        level: growController.level,
-                        currentExp: growController.displayExp,
-                        maxExp: growController.maxExp,
-                        percentage: growController.expPercentage,
+                        level: growController.character.level,
+                        currentExp: growController.character.displayExp,
+                        maxExp: growController.character.maxExp,
+                        percentage: growController.character.expPercentage,
                         leading: growController.hasBadge
                             ? Image.asset(
                                 'assets/images/pioneer_badge_icon.png',
@@ -159,7 +159,7 @@ class GrowScreen extends StatelessWidget {
                         duration:
                             Duration(milliseconds: growController.fadeDuration),
                         child: Image.asset(
-                          growController.avatarPath,
+                          growController.character.avatarPath,
                           // height: 180.0,
                         ),
                       ),
@@ -203,19 +203,20 @@ class GrowScreen extends StatelessWidget {
                             width: buttonHeight,
                             height: buttonHeight,
                             padding: EdgeInsets.zero,
-                            onPress: () => _toQrScanner(context).then((mission) {
-                              if (mission == null) return;
+                            // onPress: () => _toQrScanner(context).then((mission) {
+                            //   if (mission == null) return;
 
-                              if (mission == Mission.first) {
-                                if (growController.missionCompleted >= 1) return;
-                                growController.changeMissionCompleted(1);
-                                executeMissionComplete(1);
-                              } else if (mission == Mission.second) {
-                                if (growController.missionCompleted >= 2) return;
-                                growController.changeMissionCompleted(2);
-                                executeMissionComplete(2);
-                              }
-                            }),
+                            //   if (mission == Mission.first) {
+                            //     if (growController.missionCompleted >= 1) return;
+                            //     growController.changeMissionCompleted(1);
+                            //     executeMissionComplete(1);
+                            //   } else if (mission == Mission.second) {
+                            //     if (growController.missionCompleted >= 2) return;
+                            //     growController.changeMissionCompleted(2);
+                            //     executeMissionComplete(2);
+                            //   }
+                            // }),
+                            onPress: () => growController.increaseExp(10),
                             child: Image.asset(
                               'assets/images/barcode_icon.png',
                               width: buttonHeight / 2,
