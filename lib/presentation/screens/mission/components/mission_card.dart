@@ -1,6 +1,8 @@
 import 'package:amond/data/entity/mission_entity.dart';
+import 'package:amond/presentation/controllers/mission_controller.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'mission_complete_dialog.dart';
 
@@ -21,6 +23,7 @@ class _MissionCardState extends State<MissionCard> {
 
   @override
   Widget build(BuildContext context) {
+    // final missionController = context.read<MissionController>();
     return GestureDetector(
       onTap: () => setState(() {
         selected = !selected;
@@ -73,6 +76,7 @@ class _MissionCardState extends State<MissionCard> {
                     TextButton(
                       onPressed: () {
                         // 미션 성공 후 팝업
+                        // missionController.completeMission(widget.mission.id);
                         showDialog(
                             context: context,
                             builder: (context) {

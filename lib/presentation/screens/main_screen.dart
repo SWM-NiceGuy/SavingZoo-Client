@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:amond/domain/repositories/mission_repository.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
+import 'package:amond/presentation/controllers/mission_controller.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +11,8 @@ import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
+import '../../data/repository/mission_repository_impl.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);

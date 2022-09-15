@@ -35,6 +35,8 @@ class MissionController with ChangeNotifier {
   // 미션을 완료 처리로 바꾼다.
   Future<void> completeMission(int missionId) async {
     var missionIdx =_missions.indexWhere((mission) => mission.id == missionId);
+    if (missionIdx < 0) return;
+    
     _missions[missionIdx].state = "COMPLETE";
     try {
       await repository.completeMission(me, missionId);

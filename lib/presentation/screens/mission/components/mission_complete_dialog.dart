@@ -42,7 +42,7 @@ class MissionCompleteDialog extends StatelessWidget {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Text(
-              "+8XP",
+              "+${reward}XP",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             LevelSystem(
