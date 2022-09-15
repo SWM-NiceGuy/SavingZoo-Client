@@ -125,6 +125,7 @@ class GrowController with ChangeNotifier {
     notifyListeners();
     
     // 서버에 캐릭터 이름 저장
+    _characterUseCases.setName(_memberInfo, name);
   }
 
   /// 캐릭터 데이터를 불러오는 함수
