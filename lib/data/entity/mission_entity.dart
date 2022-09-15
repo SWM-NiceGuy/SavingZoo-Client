@@ -10,7 +10,7 @@ class MissionEntity {
   final String content;
   final String imageUrl;
   final int reward;
-  final String state;
+  String state;
 
   MissionEntity({
     required this.id,

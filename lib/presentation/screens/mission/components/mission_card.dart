@@ -66,7 +66,6 @@ class _MissionCardState extends State<MissionCard> {
                   ),
                   const Spacer(),
                   // 미션 성공 여부
-                  
                   if (widget.mission.state == 'WAIT')
                     TextButton(
                       onPressed: () {
@@ -80,7 +79,7 @@ class _MissionCardState extends State<MissionCard> {
                       child: const Text("완료"),
                     ),
                   if (widget.mission.state == 'COMPLETE')
-                  Image.asset("assets/images/check_icon.png"),
+                    Image.asset("assets/images/check_icon.png"),
                 ],
               ),
               AnimatedContainer(
