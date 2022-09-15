@@ -48,11 +48,14 @@ class _MissionCardState extends State<MissionCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 미션 아이콘 (아마 사진이 될 것)
-                  Icon(
-                    Icons.water_drop,
-                    size: 48,
-                    color: Colors.blue,
-                  ),
+                  widget.mission.imageUrl == ""
+                      ? const Icon(
+                          Icons.water_drop,
+                          size: 48,
+                          color: Colors.blue,
+                        )
+                      : Image.network(widget.mission.imageUrl,
+                          height: 30, fit: BoxFit.cover),
                   const SizedBox(width: 24),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,7 +76,10 @@ class _MissionCardState extends State<MissionCard> {
                         showDialog(
                             context: context,
                             builder: (context) {
-                              return MissionCompleteDialog();
+                              return MissionCompleteDialog(
+                                missionId: widget.mission.id,
+                                reward: widget.mission.reward,
+                              );
                             });
                       },
                       child: const Text("완료"),

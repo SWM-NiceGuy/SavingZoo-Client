@@ -1,4 +1,5 @@
 import 'package:amond/presentation/controllers/grow_controller.dart';
+import 'package:amond/presentation/controllers/mission_controller.dart';
 import 'package:amond/presentation/screens/grow/components/level_system.dart';
 import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
 import 'package:amond/ui/colors.dart';
@@ -6,18 +7,27 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MissionCompleteDialog extends StatelessWidget {
-  MissionCompleteDialog({Key? key}) : super(key: key);
+  MissionCompleteDialog({
+    Key? key,
+    required this.missionId,
+    required this.reward,
+  }) : super(key: key);
+
+  final int missionId;
+  final int reward;
 
   bool isIncreased = false;
 
   @override
   Widget build(BuildContext context) {
     final growController = context.watch<GrowController>();
+    final missionController = context.read<MissionController>();
     if (!isIncreased) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      isIncreased = true;
-      growController.increaseExp(8);
-    });
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        isIncreased = true;
+        growController.increaseExp(reward);
+        missionController.completeMission(missionId);
+      });
     }
     return Dialog(
       shape: const RoundedRectangleBorder(
@@ -45,8 +55,10 @@ class MissionCompleteDialog extends StatelessWidget {
               leading: null,
             ),
             const SizedBox(height: 24),
-              Text(growController.characterName ?? "", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-              Text('(${growController.character.avatar.nickname})', style: TextStyle(color: Colors.grey)),
+            Text(growController.characterName ?? "",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+            Text('(${growController.character.avatar.nickname})',
+                style: TextStyle(color: Colors.grey)),
             Expanded(
               child: Stack(
                 alignment: Alignment.center,
@@ -63,23 +75,23 @@ class MissionCompleteDialog extends StatelessWidget {
               ),
             ),
             ShadowButton(
-                width: 80,
-                height: 40,
-                borderRadius: 10,
-                onPress: () {
-                  Navigator.of(context).pop();
-                },
-                child: Center(
-                  child: Text(
-                    '확인',
-                    style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
-                          color: expTextColor,
-                        ),
-                  ),
+              width: 80,
+              height: 40,
+              borderRadius: 10,
+              onPress: () {
+                Navigator.of(context).pop();
+              },
+              child: Center(
+                child: Text(
+                  '확인',
+                  style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.w500,
+                        color: expTextColor,
+                      ),
                 ),
-              )
+              ),
+            )
           ],
         ),
       ),

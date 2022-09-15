@@ -157,7 +157,4 @@ class GrowController with ChangeNotifier {
   //   await _expUseCases.changeMissionCompleted(_memberInfo.provider, _memberInfo.uid, value);
   // }
 
-  Future<int> getMissionCompleted() async {
-    return await _expUseCases.getMissionCompleted(_memberInfo.provider, _memberInfo.uid);
-  }
 }

@@ -2,10 +2,8 @@ import 'package:amond/data/repository/exp_repository_impl.dart';
 import 'package:amond/data/repository/member_repository_impl.dart';
 import 'package:amond/data/source/network/api/exp_api.dart';
 import 'package:amond/data/source/network/api/member_api.dart';
-import 'package:amond/domain/usecases/exp/change_mission_completed.dart';
 import 'package:amond/domain/usecases/exp/exp_use_cases.dart';
 import 'package:amond/domain/usecases/exp/get_exp.dart';
-import 'package:amond/domain/usecases/exp/get_mission_completed.dart';
 import 'package:amond/domain/usecases/member/member_use_cases.dart';
 import 'package:amond/domain/usecases/member/resign.dart';
 import 'package:amond/domain/usecases/member/sign_up.dart';
@@ -42,8 +40,6 @@ List<SingleChildWidget> dependentModels = [
     update: (_, repository, __) => ExpUseCases(
       changeExp: ChangeExp(repository),
       getExp: GetExp(repository),
-      changeMissionCompleted: ChangeMissionCompleted(repository),
-      getMissionCompleted: GetMissionCompleted(repository)
     ),
   )
 ];
