@@ -21,12 +21,10 @@ class MissionCompleteDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final growController = context.watch<GrowController>();
-    final missionController = context.read<MissionController>();
     if (!isIncreased) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         isIncreased = true;
         growController.increaseExp(reward);
-        missionController.completeMission(missionId);
       });
     }
     return Dialog(

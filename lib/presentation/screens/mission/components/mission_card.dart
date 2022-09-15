@@ -23,7 +23,7 @@ class _MissionCardState extends State<MissionCard> {
 
   @override
   Widget build(BuildContext context) {
-    // final missionController = context.read<MissionController>();
+    final missionController = context.read<MissionController>();
     return GestureDetector(
       onTap: () => setState(() {
         selected = !selected;
@@ -65,9 +65,9 @@ class _MissionCardState extends State<MissionCard> {
                     // 미션 내용 및 경험치
                     children: [
                       Text(widget.mission.title,
-                          style: TextStyle(fontSize: 24)),
+                          style: const TextStyle(fontSize: 24)),
                       Text("+${widget.mission.reward}XP",
-                          style: TextStyle(fontSize: 16)),
+                          style: const TextStyle(fontSize: 16)),
                     ],
                   ),
                   const Spacer(),
@@ -76,7 +76,7 @@ class _MissionCardState extends State<MissionCard> {
                     TextButton(
                       onPressed: () {
                         // 미션 성공 후 팝업
-                        // missionController.completeMission(widget.mission.id);
+                        missionController.completeMission(widget.mission.id);
                         showDialog(
                             context: context,
                             builder: (context) {

@@ -64,8 +64,4 @@ List<SingleChildWidget> viewModels = [
     create: (context) => GrowController(context.read<CharacterUseCases>(), context.read<AuthController>().memberInfo!),
     update: (context, authController, previous) => GrowController(context.read<CharacterUseCases>(), authController.memberInfo!),
   ),
-  ChangeNotifierProxyProvider<AuthController, MissionController>(
-    create: (context) => MissionController(context.read<MissionRepositoryImpl>(), member: context.read<AuthController>().memberInfo!),
-    update: (context, authController, previous) => MissionController(context.read<MissionRepositoryImpl>(), member: authController.memberInfo!),
-  )
 ];
