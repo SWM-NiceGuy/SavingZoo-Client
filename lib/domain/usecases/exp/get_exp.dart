@@ -1,7 +1,7 @@
-import 'package:amond/domain/repositories/exp_repository.dart';
+import 'package:amond/domain/repositories/character_repository.dart';
 
 class GetExp {
-  ExpRepository expRepository;
+  CharacterRepository expRepository;
   GetExp(this.expRepository);
 
   Future<int> call(String provider, String uid) async {

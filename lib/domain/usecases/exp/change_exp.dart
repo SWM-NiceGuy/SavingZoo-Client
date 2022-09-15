@@ -1,7 +1,7 @@
-import 'package:amond/domain/repositories/exp_repository.dart';
+import 'package:amond/domain/repositories/character_repository.dart';
 
 class ChangeExp {
-  ExpRepository expRepository;
+  CharacterRepository expRepository;
   ChangeExp(this.expRepository);
 
   Future<int> call(String provider, String uid, int exp) async {

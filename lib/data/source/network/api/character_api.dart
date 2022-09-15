@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:amond/data/source/network/base_url.dart';
+import 'package:amond/domain/models/member_info.dart';
 import 'package:http/http.dart' as http;
 
-class ExpApi {
+class CharacterApi {
   Future<int> getExp(String provider, String uid) async {
     try {
     final url = Uri.parse('$baseUrl/v1/exp?provider=$provider&uid=$uid');
@@ -37,26 +38,21 @@ class ExpApi {
     return res;
   }
 
-  Future<int> getMissionCompleted(String provider, String uid) async {
-    final url = Uri.parse('$baseUrl/v1/mission?provider=$provider&uid=$uid');
+  Future<String> getName(MemberInfo me) async {
+    final url = Uri.parse('$baseUrl/v1/nickname?provider=${me.provider}&uid=${me.uid}');
+
     final response = await http.get(url);
-    final missionResult = jsonDecode(response.body)['mission'];
-    return missionResult;
+    final String res = jsonDecode(response.body)["nickname"];
+    return res;
   }
 
-  Future<void> changeMissionCompleted(String provider, String uid, int value) async {
-    final url = Uri.parse('$baseUrl/v1/mission');
-    final response = await http.put(
-      url,
-      body: jsonEncode({
-        'provider': provider,
-        'uid': uid,
-        'mission': value,
-      }),
-      headers: {
-        'Content-type': 'application/json',
-        'Accept': 'application/json',
-      },
-    );
+  Future<void> setName(MemberInfo me, String name) async {
+    final url = Uri.parse("$baseUrl/v1/nickname");
+    
+    final response = await http.post(url, body: jsonEncode({
+      "provider": me.provider,
+      "uid": me.uid,
+      "nickname": name,
+    }));
   }
 }

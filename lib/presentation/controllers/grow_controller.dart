@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:amond/domain/models/character.dart';
-import 'package:amond/domain/usecases/exp/exp_use_cases.dart';
+import 'package:amond/domain/usecases/exp/character_use_cases.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/models/avatar.dart';
@@ -10,9 +10,9 @@ import '../../domain/models/member_info.dart';
 
 
 class GrowController with ChangeNotifier {
-  final ExpUseCases _expUseCases;
+  final CharacterUseCases _characterUseCases;
   final MemberInfo _memberInfo;
-  GrowController(this._expUseCases, this._memberInfo);
+  GrowController(this._characterUseCases, this._memberInfo);
 
   late Character _character;
   String? characterName;
@@ -129,9 +129,9 @@ class GrowController with ChangeNotifier {
 
   /// 캐릭터 데이터를 불러오는 함수
   Future<void> fetchData(MemberInfo memberInfo) async {
-    // 데이터 불러오기
     // var currentExp = await _expUseCases.getExp(memberInfo.provider, memberInfo.uid);
     var currentExp = 30;
+    // var characterName = await _characterUseCases.getName(memberInfo);
     characterName = '장금이';
     // 캐릭터 닉네임이 없으면 새로운 유저로 판단
     if (characterName == null) {
@@ -148,13 +148,6 @@ class GrowController with ChangeNotifier {
 
   /// 서버에서 [memberInfo]의 캐릭터의 경험치를 [value]로 바꿈
   Future<void> changeExpInServer(int value) async {
-    await _expUseCases.changeExp(_memberInfo.provider, _memberInfo.uid, value);
+    await _characterUseCases.changeExp(_memberInfo.provider, _memberInfo.uid, value);
   }
-
-  // Future<void> changeMissionCompleted(int value) async {
-  //   missionCompleted = value;
-  //   notifyListeners();
-  //   await _expUseCases.changeMissionCompleted(_memberInfo.provider, _memberInfo.uid, value);
-  // }
-
 }

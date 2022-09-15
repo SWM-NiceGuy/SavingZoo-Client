@@ -1,14 +1,14 @@
-import 'package:amond/data/entity/member_entity.dart';
 import 'package:amond/data/entity/mission_entity.dart';
+import 'package:amond/domain/models/member_info.dart';
 import 'package:amond/domain/repositories/mission_repository.dart';
 import 'package:flutter/material.dart';
 
 class MissionController with ChangeNotifier {
 
   final MissionRepository repository;
-  late MemberEntity me;
+  late MemberInfo me;
 
-  MissionController(this.repository, {required MemberEntity member}) {
+  MissionController(this.repository, {required MemberInfo member}) {
     me = member;
   }
 
