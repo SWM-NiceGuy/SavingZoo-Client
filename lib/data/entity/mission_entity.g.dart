@@ -8,18 +8,20 @@ part of 'mission_entity.dart';
 
 MissionEntity _$MissionEntityFromJson(Map<String, dynamic> json) =>
     MissionEntity(
+      id: json['id'] as int,
       title: json['title'] as String,
-      contents: json['contents'] as String,
-      iconUrl: json['iconUrl'] as String,
-      exp: json['exp'] as int,
-      isDone: json['isDone'] as bool,
+      content: json['content'] as String,
+      imageUrl: json['imageUrl'] as String,
+      reward: json['reward'] as int,
+      state: json['state'] as String,
     );
 
 Map<String, dynamic> _$MissionEntityToJson(MissionEntity instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'title': instance.title,
-      'contents': instance.contents,
-      'iconUrl': instance.iconUrl,
-      'exp': instance.exp,
-      'isDone': instance.isDone,
+      'content': instance.content,
+      'imageUrl': instance.imageUrl,
+      'reward': instance.reward,
+      'state': instance.state,
     };

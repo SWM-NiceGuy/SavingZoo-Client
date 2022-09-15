@@ -1,10 +1,16 @@
+import 'package:amond/data/entity/mission_entity.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 
+import 'mission_complete_dialog.dart';
+
 class MissionCard extends StatefulWidget {
   const MissionCard({
+    required this.mission,
     Key? key,
   }) : super(key: key);
+
+  final MissionEntity mission;
 
   @override
   State<MissionCard> createState() => _MissionCardState();
@@ -52,29 +58,52 @@ class _MissionCardState extends State<MissionCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     // 미션 내용 및 경험치
                     children: [
-                      Text("플로깅", style: TextStyle(fontSize: 24)),
-                      Text("+8XP", style: TextStyle(fontSize: 16)),
+                      Text(widget.mission.title,
+                          style: TextStyle(fontSize: 24)),
+                      Text("+${widget.mission.reward}XP",
+                          style: TextStyle(fontSize: 16)),
                     ],
                   ),
                   const Spacer(),
                   // 미션 성공 여부
+                  
+                  if (widget.mission.state == 'WAIT')
+                    TextButton(
+                      onPressed: () {
+                        // 미션 성공 후 팝업
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return MissionCompleteDialog();
+                            });
+                      },
+                      child: const Text("완료"),
+                    ),
+                  if (widget.mission.state == 'COMPLETE')
                   Image.asset("assets/images/check_icon.png"),
                 ],
               ),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 curve: Curves.easeIn,
-                height: selected ? 80 : 0,
-                child: ListView(
-                  children: [
-                    const SizedBox(height: 24),
-                    Row(
-                      children: [
-                        Expanded(child: Text("어떤 공원이든 상관없습니다! 공원을 걸으시면서 겸사겸사 쓰레기를 주워봐요!",
-                        style: TextStyle(fontSize: 16, color: Color.fromARGB(255, 102, 102, 102)),))
-                      ],
-                    )
-                  ],
+                height: selected ? 100 : 0,
+                child: Scrollbar(
+                  child: ListView(
+                    children: [
+                      const SizedBox(height: 24),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: Text(
+                            widget.mission.content,
+                            style: const TextStyle(
+                                fontSize: 16,
+                                color: Color.fromARGB(255, 102, 102, 102)),
+                          ))
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               )
             ],

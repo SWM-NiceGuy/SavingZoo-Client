@@ -5,18 +5,20 @@ part 'mission_entity.g.dart';
 @JsonSerializable()
 class MissionEntity {
   // provider, email, nickname, gender, age
+  final int id;
   final String title;
-  final String contents;
-  final String iconUrl;
-  final int exp;
-  final bool isDone;
+  final String content;
+  final String imageUrl;
+  final int reward;
+  final String state;
 
   MissionEntity({
+    required this.id,
     required this.title,
-    required this.contents,
-    required this.iconUrl,
-    required this.exp,
-    required this.isDone
+    required this.content,
+    required this.imageUrl,
+    required this.reward,
+    required this.state,
   });
 
 

@@ -5,18 +5,13 @@ import 'package:amond/presentation/controllers/grow_controller.dart';
 import 'package:amond/presentation/controllers/name_validation.dart';
 import 'package:amond/presentation/screens/grow/components/comment_box.dart';
 import 'package:amond/presentation/screens/grow/components/level_system.dart';
-import 'package:amond/presentation/screens/grow/components/mission_box.dart';
 import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
-import 'package:amond/presentation/screens/grow/util/mission.dart';
-import 'package:amond/presentation/screens/grow/util/popup.dart';
 import 'package:amond/presentation/screens/qr_scanner.dart';
-import 'package:amond/ui/colors.dart';
 import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:word_break_text/word_break_text.dart';
 
 import 'components/character_name_input.dart';
 
