@@ -51,16 +51,16 @@ class LevelSystem extends StatelessWidget {
                 ],
               ),
               GestureDetector(
-                onTap: () => showExpGuidePopup(context),
+                // onTap: () => showExpGuidePopup(context),
                 child: Row(
                   children: [
                     Text('${currentExp}xp / ${maxExp}xp'),
                     const SizedBox(width: 4.0),
-                    const Icon(
-                      Icons.info_outline,
-                      color: Color(0xff919191),
-                      size: 18.0,
-                    ),
+                    // const Icon(
+                    //   Icons.info_outline,
+                    //   color: Color(0xff919191),
+                    //   size: 18.0,
+                    // ),
                   ],
                 ),
               )

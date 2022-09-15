@@ -15,6 +15,7 @@ class GrowController with ChangeNotifier {
   GrowController(this._expUseCases, this._memberInfo);
 
   late Character _character;
+  String? characterName;
 
   Character get character => _character;
 
@@ -119,13 +120,21 @@ class GrowController with ChangeNotifier {
     });
   }
 
+  void setCharacterName(String name) {
+    characterName = name;
+    notifyListeners();
+    
+    // 서버에 캐릭터 이름 저장
+  }
+
   /// 캐릭터 데이터를 불러오는 함수
   Future<void> fetchData(MemberInfo memberInfo) async {
     // 데이터 불러오기
     // var currentExp = await _expUseCases.getExp(memberInfo.provider, memberInfo.uid);
-    var currentExp = 70;
-    // 현재 경험치가 0이면 새로운 유저로 판단
-    if (currentExp == 0) {
+    var currentExp = 30;
+    characterName = '장금이';
+    // 캐릭터 닉네임이 없으면 새로운 유저로 판단
+    if (characterName == null) {
       isNewUser = true;
     }
 

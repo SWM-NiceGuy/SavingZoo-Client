@@ -97,15 +97,17 @@ void showExpGuidePopup(BuildContext context) {
   );
 }
 
-void showMissionCompletePopup(
-  BuildContext context,
-  double screenWidth,
-  double screenHeight,
-  String title,
-  int exp,
-  Widget content,
-  VoidCallback onDismiss,
+void showPopup(
+  {
+  required BuildContext context,
+  required String title,
+  required Widget content,
+  required VoidCallback onDismiss,
+  }
 ) {
+  final deviceSize = MediaQuery.of(context).size;
+  final screenWidth = deviceSize.width;
+  final screenHeight = deviceSize.height;
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -130,16 +132,7 @@ void showMissionCompletePopup(
                       title,
                       style: Theme.of(context).textTheme.bodyText1?.copyWith(
                             fontSize: 16.0,
-                            fontWeight: FontWeight.w500,
-                          ),
-                    ),
-                    const SizedBox(height: 12.0),
-                    Text(
-                      '+ $exp XP',
-                      style: Theme.of(context).textTheme.bodyText1?.copyWith(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.w500,
-                            color: expTextColor,
+                            fontWeight: FontWeight.bold,
                           ),
                     ),
                   ],

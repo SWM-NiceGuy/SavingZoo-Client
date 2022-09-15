@@ -25,6 +25,11 @@ class _MainScreenState extends State<MainScreen> {
     const MissionScreen(),
   ];
 
+  List<Widget> appBarTitle = [
+    const Text(""),
+    const Text("미션"),
+  ];
+
   var _screenIndex = 0;
 
   @override
@@ -33,6 +38,8 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       drawer: mainDrawer(context, authController),
       appBar: AppBar(
+        title: appBarTitle[_screenIndex],
+        foregroundColor: Colors.black,
         elevation: 0.0,
         backgroundColor: backgroundColor,
         iconTheme: const IconThemeData(color: Color(0xFF96CE5F)),
@@ -49,6 +56,8 @@ class _MainScreenState extends State<MainScreen> {
         ),
         child: BottomNavigationBar(
           backgroundColor: Colors.white,
+          unselectedItemColor: Colors.grey,
+          selectedItemColor: Colors.black,
           items: const [
             BottomNavigationBarItem(label: '홈', icon: Icon(Icons.home_filled)),
             BottomNavigationBarItem(
@@ -71,16 +80,6 @@ class _MainScreenState extends State<MainScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            ListTile(
-              leading: const Icon(
-                Icons.book,
-                color: blackColor,
-              ),
-              title: const Text('미션'),
-              onTap: () {
-                Navigator.of(context).pushNamed(MissionScreen.routeName);
-              },
-            ),
             const Spacer(),
             ListTile(
               leading: const Icon(
