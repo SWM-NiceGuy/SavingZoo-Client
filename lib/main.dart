@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
         AuthScreen.routeName: (context) => const AuthScreen(),
         MainScreen.routeName: (context) => const MainScreen(),
         QrScanner.routeName: (context) => const QrScanner(),
-        MissionScreen.routeName: (context) => const MissionScreen(),
+        MissionScreen.routeName: (context) => MissionScreen(),
       },
     );
   }

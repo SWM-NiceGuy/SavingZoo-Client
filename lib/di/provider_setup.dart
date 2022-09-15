@@ -40,7 +40,6 @@ List<SingleChildWidget> dependentModels = [
   ProxyProvider<MissionApi, MissionRepositoryImpl>(
     update: (_, api, __) => MissionRepositoryImpl(api),
   ),
-  
   ProxyProvider<MemberRepositoryImpl, MemberUseCases>(
     update: (_, repository, __) => MemberUseCases(
       resign: Resign(repository),
@@ -58,10 +57,24 @@ List<SingleChildWidget> dependentModels = [
 ];
 
 List<SingleChildWidget> viewModels = [
+  // AuthController
   ChangeNotifierProvider<AuthController>(
       create: (_) => AuthController(_.read<MemberUseCases>())),
+  
+  // GrowController
   ChangeNotifierProxyProvider<AuthController, GrowController>(
-    create: (context) => GrowController(context.read<CharacterUseCases>(), context.read<AuthController>().memberInfo!),
-    update: (context, authController, previous) => GrowController(context.read<CharacterUseCases>(), authController.memberInfo!),
+    create: (context) => GrowController(context.read<CharacterUseCases>(),
+        context.read<AuthController>().memberInfo!),
+    update: (context, authController, previous) => GrowController(
+        context.read<CharacterUseCases>(), authController.memberInfo!),
   ),
+
+  // MissionController
+  ChangeNotifierProxyProvider<AuthController, MissionController>(
+      create: (context) => MissionController(
+          context.read<MissionRepositoryImpl>(),
+          member: context.read<AuthController>().memberInfo!),
+      update: (context, authController, previous) => MissionController(
+          context.read<MissionRepositoryImpl>(),
+          member: authController.memberInfo!)),
 ];

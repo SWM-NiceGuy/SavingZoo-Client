@@ -26,7 +26,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   List<Widget> bottomNavigationBarScreens = [
     const GrowScreen(),
-    const MissionScreen(),
+    MissionScreen(),
   ];
 
   List<Widget> appBarTitle = [

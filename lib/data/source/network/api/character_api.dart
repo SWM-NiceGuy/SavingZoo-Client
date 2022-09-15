@@ -53,6 +53,9 @@ class CharacterApi {
       "provider": me.provider,
       "uid": me.uid,
       "nickname": name,
-    }));
+    }),  headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      },);
   }
 }

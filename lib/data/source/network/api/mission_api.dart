@@ -11,8 +11,9 @@ class MissionApi {
     final url = Uri.parse('$baseUrl/v1/mission?provider=${me.provider}&uid=${me.uid}');
 
     final response = await http.get(url);
-    final Iterable<Map<String, dynamic>> result = jsonDecode(response.body);
-    Iterable<MissionEntity> missions = result.map((e) => MissionEntity.fromJson(e));
+    final Map<String, dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
+    final List<dynamic> missionsList = result["missions"];
+    Iterable<MissionEntity> missions = missionsList.map((e) => MissionEntity.fromJson(e));
     return missions;
   }
 
@@ -23,7 +24,10 @@ class MissionApi {
       "provider": me.provider,
       "uid": me.uid,
       "missionId": missionId,
-    }));
+    }), headers: {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+    });
     if (response.statusCode == 400) {
       throw Exception("미션완료에 실패했습니다. status_code: 400");
     }
