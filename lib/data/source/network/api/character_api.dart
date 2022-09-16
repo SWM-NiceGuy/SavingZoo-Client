@@ -42,7 +42,7 @@ class CharacterApi {
     final url = Uri.parse('$baseUrl/v1/nickname?provider=${me.provider}&uid=${me.uid}');
 
     final response = await http.get(url);
-    final String? res = jsonDecode(response.body)["nickname"];
+    final String? res = jsonDecode(utf8.decode(response.bodyBytes))["nickname"];
     return res;
   }
 

@@ -73,7 +73,7 @@ class _MissionCardState extends State<MissionCard> {
                   const Spacer(),
                   // 미션 성공 여부
                   if (widget.mission.state == 'WAIT')
-                    TextButton(
+                    ElevatedButton(
                       onPressed: () {
                         // 미션 성공 후 팝업
                         missionController.completeMission(widget.mission.id);
@@ -86,7 +86,11 @@ class _MissionCardState extends State<MissionCard> {
                               );
                             });
                       },
-                      child: const Text("완료"),
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.grey.shade100,
+                        elevation: 5
+                      ),
+                      child: const Text("완료하기", style: TextStyle(fontWeight: FontWeight.bold,color: expTextColor),),
                     ),
                   if (widget.mission.state == 'COMPLETE')
                     Image.asset("assets/images/check_icon.png"),

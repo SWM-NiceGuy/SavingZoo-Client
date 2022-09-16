@@ -28,7 +28,7 @@ class GrowController with ChangeNotifier {
   bool isNewUser = false;
 
   bool hasBadge = false; // 개척자 배지 보유 여부
-  int fadeDuration = 2000; // Fade 애니메이션 지속시간
+  int fadeDuration = 1000; // Fade 애니메이션 지속시간
   bool avatarIsVisible = true; // 아바타 보임 유무
 
   bool heartsIsVisible = false; // 하트 애니메이션 보임 유무

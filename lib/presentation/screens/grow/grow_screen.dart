@@ -109,8 +109,8 @@ class GrowScreen extends StatelessWidget {
               ),
               // 캐릭터 이름
               const SizedBox(height: 24),
-              Text(growController.characterName ?? "", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-              Text('(${growController.character.avatar.nickname})', style: TextStyle(color: Colors.grey)),
+              Text(growController.characterName ?? "", style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+              Text('(${growController.character.avatar.nickname})', style: const TextStyle(color: Colors.grey)),
               // 캐릭터 이미지
               Expanded(
                 child: Stack(
@@ -164,20 +164,8 @@ class GrowScreen extends StatelessWidget {
                           width: buttonHeight,
                           height: buttonHeight,
                           padding: EdgeInsets.zero,
-                          // onPress: () => _toQrScanner(context).then((mission) {
-                          //   if (mission == null) return;
-
-                          //   if (mission == Mission.first) {
-                          //     if (growController.missionCompleted >= 1) return;
-                          //     growController.changeMissionCompleted(1);
-                          //     executeMissionComplete(1);
-                          //   } else if (mission == Mission.second) {
-                          //     if (growController.missionCompleted >= 2) return;
-                          //     growController.changeMissionCompleted(2);
-                          //     executeMissionComplete(2);
-                          //   }
-                          // }),
-                          onPress: () => growController.increaseExp(10),
+                          onPress: () => _toQrScanner(context).then((mission) {
+                          }),
                           child: Image.asset(
                             'assets/images/barcode_icon.png',
                             width: buttonHeight / 2,

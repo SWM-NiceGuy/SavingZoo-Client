@@ -5,6 +5,7 @@ import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/mission_controller.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
+import 'package:amond/utils/app_version.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:amond/presentation/screens/grow/grow_screen.dart';
 import 'package:amond/ui/colors.dart';
@@ -39,7 +40,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final authController = context.read<AuthController>();
-    return Scaffold(
+    return  Scaffold(
       drawer: mainDrawer(context, authController),
       appBar: AppBar(
         title: appBarTitle[_screenIndex],
@@ -58,21 +59,32 @@ class _MainScreenState extends State<MainScreen> {
           topRight: Radius.circular(30),
           topLeft: Radius.circular(30),
         ),
-        child: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          unselectedItemColor: Colors.grey,
-          selectedItemColor: Colors.black,
-          items: const [
-            BottomNavigationBarItem(label: '홈', icon: Icon(Icons.home_filled)),
-            BottomNavigationBarItem(
-                label: '미션', icon: Icon(Icons.track_changes_outlined))
-          ],
-          onTap: (index) {
-            setState(() {
-              _screenIndex = index;
-            });
-          },
-          currentIndex: _screenIndex,
+        child: Container(
+          decoration: const BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black,
+                blurRadius: 8,
+                offset: Offset(0, -4),
+              )
+            ]
+          ),
+          child: BottomNavigationBar(
+            backgroundColor: Colors.white,
+            unselectedItemColor: Colors.grey,
+            selectedItemColor: Colors.black,
+            items: const [
+              BottomNavigationBarItem(label: '홈', icon: Icon(Icons.home_filled)),
+              BottomNavigationBarItem(
+                  label: '미션', icon: Icon(Icons.track_changes_outlined))
+            ],
+            onTap: (index) {
+              setState(() {
+                _screenIndex = index;
+              });
+            },
+            currentIndex: _screenIndex,
+          ),
         ),
       ),
     );

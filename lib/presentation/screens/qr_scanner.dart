@@ -35,6 +35,10 @@ class _QrScannerState extends State<QrScanner> {
         : 300.0;
 
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+      ),
       body: Column(
         children: <Widget>[
           Expanded(

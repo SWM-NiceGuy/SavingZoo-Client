@@ -45,8 +45,13 @@ void showExpGuidePopup(BuildContext context) {
                       ?.copyWith(fontSize: 24.0)),
             ),
             WordBreakText(
-              '환경 보호 활동을 하면 경험치가 증가해요. 경험치가 전부 채워지면',
+              '환경 보호 활동을 하면 경험치가 증가해요.',
               style: normalStyle,
+              wrapAlignment: WrapAlignment.center,
+            ),
+            WordBreakText(
+              '경험치가 전부 채워지면',
+              style: normalStyle?.copyWith(height: 2.0),
               wrapAlignment: WrapAlignment.center,
             ),
             RichText(
@@ -59,15 +64,15 @@ void showExpGuidePopup(BuildContext context) {
               ),
             ),
             const SizedBox(height: 16.0),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(text: '아바타가 LV3로 진화하면  ', style: normalStyle),
-                  TextSpan(text: '실제 과일', style: boldStyle),
-                  TextSpan(text: '을 드려요!', style: normalStyle),
-                ],
-              ),
-            ),
+            // RichText(
+            //   text: TextSpan(
+            //     children: [
+            //       TextSpan(text: '아바타가 LV3로 진화하면  ', style: normalStyle),
+            //       TextSpan(text: '실제 과일', style: boldStyle),
+            //       TextSpan(text: '을 드려요!', style: normalStyle),
+            //     ],
+            //   ),
+            // ),
             const SizedBox(height: 16.0),
             Expanded(
               child: Row(
