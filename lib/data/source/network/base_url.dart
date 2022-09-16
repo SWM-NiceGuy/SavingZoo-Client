@@ -1,1 +1,0 @@
-const String baseUrl = 'https://api.amondfarm.com';
