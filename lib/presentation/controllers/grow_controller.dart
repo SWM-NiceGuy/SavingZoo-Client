@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:amond/domain/models/character.dart';
-import 'package:amond/domain/usecases/exp/character_use_cases.dart';
+import 'package:amond/domain/usecases/character/character_use_cases.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/models/avatar.dart';
@@ -130,15 +130,17 @@ class GrowController with ChangeNotifier {
 
   /// 캐릭터 데이터를 불러오는 함수
   Future<void> fetchData(MemberInfo memberInfo) async {
-    // var currentExp = await _expUseCases.getExp(memberInfo.provider, memberInfo.uid);
-    var currentExp = 30;
-    // var characterName = await _characterUseCases.getName(memberInfo);
-    characterName = '장금이';
+    var currentExp = await _characterUseCases.getExp(memberInfo.provider, memberInfo.uid);
+    // var currentExp = 30;
+    var name = await _characterUseCases.getName(memberInfo);
+    // characterName = '장금이';
     // 캐릭터 닉네임이 없으면 새로운 유저로 판단
-    if (characterName == null) {
+    if (name == null) {
       isNewUser = true;
     }
 
+    characterName = name;
+  
     _character = Character.ofExp(currentExp);
 
     _isDataFetched = true;

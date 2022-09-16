@@ -1,4 +1,3 @@
-import 'package:amond/data/entity/member_entity.dart';
 import 'package:amond/domain/models/member_info.dart';
 import 'package:amond/domain/repositories/character_repository.dart';
 

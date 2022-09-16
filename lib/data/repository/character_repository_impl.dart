@@ -1,4 +1,3 @@
-import 'package:amond/data/entity/member_entity.dart';
 import 'package:amond/data/source/network/api/character_api.dart';
 import 'package:amond/domain/models/member_info.dart';
 import 'package:amond/domain/repositories/character_repository.dart';
@@ -28,7 +27,7 @@ class CharacterRepositoryImpl implements CharacterRepository {
   }
 
   @override
-  Future<String> getName(MemberInfo me) async {
+  Future<String?> getName(MemberInfo me) async {
     final res = await characterApi.getName(me);
     return res;
   }

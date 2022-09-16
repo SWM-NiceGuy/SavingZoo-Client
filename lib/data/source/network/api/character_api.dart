@@ -38,11 +38,11 @@ class CharacterApi {
     return res;
   }
 
-  Future<String> getName(MemberInfo me) async {
+  Future<String?> getName(MemberInfo me) async {
     final url = Uri.parse('$baseUrl/v1/nickname?provider=${me.provider}&uid=${me.uid}');
 
     final response = await http.get(url);
-    final String res = jsonDecode(response.body)["nickname"];
+    final String? res = jsonDecode(response.body)["nickname"];
     return res;
   }
 

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:amond/presentation/screens/auth/components/apple_login_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +9,6 @@ import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/screens/main_screen.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-import 'components/kakao_login_container.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
