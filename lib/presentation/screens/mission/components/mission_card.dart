@@ -58,14 +58,14 @@ class _MissionCardState extends State<MissionCard> {
                           color: Colors.blue,
                         )
                       : Image.network(widget.mission.imageUrl,
-                          height: 30, fit: BoxFit.cover),
+                          height: 40, fit: BoxFit.cover),
                   const SizedBox(width: 24),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     // 미션 내용 및 경험치
                     children: [
                       Text(widget.mission.title,
-                          style: const TextStyle(fontSize: 24)),
+                          style: const TextStyle(fontSize: 24, overflow: TextOverflow.ellipsis)),
                       Text("+${widget.mission.reward}XP",
                           style: const TextStyle(fontSize: 16)),
                     ],
