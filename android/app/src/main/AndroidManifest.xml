@@ -3,8 +3,9 @@
    <uses-permission android:name="android.permission.CAMERA"/>
    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+   <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="amond"
+        android:label="아몬드"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
