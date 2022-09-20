@@ -20,7 +20,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
   final bool isLatest = await isLatestVersion();
 
