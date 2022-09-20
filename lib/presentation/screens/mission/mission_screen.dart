@@ -22,14 +22,19 @@ class MissionScreen extends StatelessWidget {
       });
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      itemCount: missionController.missions.length,
-      itemBuilder: (context, index) => Container(
-        // 카드 간의 상하 간격
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        child: MissionCard(
-          mission: missionController.missions[index],
+    return RefreshIndicator(
+      onRefresh: () async {
+        await missionController.fetchMissions();
+      },
+      child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        itemCount: missionController.missions.length,
+        itemBuilder: (context, index) => Container(
+          // 카드 간의 상하 간격
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          child: MissionCard(
+            mission: missionController.missions[index],
+          ),
         ),
       ),
     );
