@@ -1,6 +1,5 @@
 import 'package:amond/data/entity/mission_entity.dart';
 import 'package:amond/data/source/network/api/mission_api.dart';
-import 'package:amond/domain/models/member_info.dart';
 import 'package:amond/domain/repositories/mission_repository.dart';
 
 class MissionRepositoryImpl implements MissionRepository {

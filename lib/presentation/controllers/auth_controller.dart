@@ -19,7 +19,6 @@ enum LoginType { kakao, apple }
 
 class AuthController with ChangeNotifier {
   MemberInfo? _memberInfo;
-  LoginType? _loginType;
   String? _token;
   SharedPreferences? _prefs;
   final MemberUseCases _memberUseCases;
@@ -60,36 +59,38 @@ class AuthController with ChangeNotifier {
     return true;
   }
 
-  /// 토큰 유효성 검사
-  Future<bool> isTokenValid() async {
-    if (_loginType == null) return false;
+  // /// 토큰 유효성 검사
+  // Future<bool> isTokenValid() async {
+  //   final prefs = await this.prefs;
+  //   final loginType = _getLoginTypeFromString(prefs.getString("loginType"));
+  //   if (loginType == null) return false;
 
-    // 카카오
-    if (_loginType == LoginType.kakao) {
-      if (await AuthApi.instance.hasToken()) {
-        try {
-          await UserApi.instance.accessTokenInfo();
-          // 토큰 유효성 체크 성공
-          return true;
-        } catch (error) {
-          if (error is KakaoException && error.isInvalidTokenError()) {
-            // print('토큰 만료 $error');
-            rethrow;
-          } else {
-            // print('토큰 정보 조회 실패 $error');
-            rethrow;
-          }
-        }
-      }
-    }
+  //   // 카카오
+  //   if (loginType == LoginType.kakao) {
+  //     if (await AuthApi.instance.hasToken()) {
+  //       try {
+  //         await UserApi.instance.accessTokenInfo();
+  //         // 토큰 유효성 체크 성공
+  //         return true;
+  //       } catch (error) {
+  //         if (error is KakaoException && error.isInvalidTokenError()) {
+  //           // print('토큰 만료 $error');
+  //           rethrow;
+  //         } else {
+  //           // print('토큰 정보 조회 실패 $error');
+  //           rethrow;
+  //         }
+  //       }
+  //     }
+  //   }
 
-    // 애플
-    else if (_loginType == LoginType.apple) {
-      await FirebaseAuth.instance.currentUser?.getIdToken();
-      return true;
-    }
-    return false;
-  }
+  //   // 애플
+  //   else if (loginType == LoginType.apple) {
+  //     await FirebaseAuth.instance.currentUser?.getIdToken();
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
   /// 카카오로 로그인
   Future<void> loginWithKakaoApp() async {
@@ -174,21 +175,18 @@ class AuthController with ChangeNotifier {
         ],
       );
 
-      print(appleCredential.identityToken);
+      // final oauthCredential = OAuthProvider("apple.com").credential(
+      //   idToken: appleCredential.identityToken,
+      //   accessToken: appleCredential.authorizationCode,
+      // );
 
-      final oauthCredential = OAuthProvider("apple.com").credential(
-        idToken: appleCredential.identityToken,
-        accessToken: appleCredential.authorizationCode,
-      );
-
-      // // Apple로그인을 통해 받은 정보로 파이어베이스에 로그인
+      // Apple로그인을 통해 받은 정보로 파이어베이스에 로그인
       // await FirebaseAuth.instance.signInWithCredential(oauthCredential);
-      // // App 내의 로그인/회원가입 로직
-      // // 애플 계정의 첫번째 로그인이라면 서버에 회원가입 처리
-      // final token = await _memberUseCases.signUp('APPLE', appleCredential.identityToken!);
+      // App 내의 로그인/회원가입 로직
+      final token = await _memberUseCases.signUp('APPLE', appleCredential.identityToken!);
 
-      // await prefs.setString('jwt', token);
-      // await setToken();
+      await prefs.setString('jwt', token);
+      await setToken();
     } catch (error) {
       // print('애플 로그인 실패 $error');
       rethrow;
@@ -209,35 +207,16 @@ class AuthController with ChangeNotifier {
 
   /// 로그아웃 함수
   ///
-  /// 카카오톡은 SDK에서 토큰삭제
-  ///
-  /// 애플은 currentUser를 null로 바꿔서 로그아웃
+  /// [SharedPreferences.getInstance()]에 저장되어 있는 jwt 삭제
   Future<void> logout() async {
     final prefs = await this.prefs;
-
-    if (_loginType == LoginType.kakao) {
-      try {
-        await UserApi.instance.logout();
-        // print('카카오 로그아웃 성공, SDK에서 토큰 삭제');
-        _memberInfo = null;
+    try {
         await prefs.remove('jwt');
       } catch (error) {
-        rethrow;
-      }
-    } else if (_loginType == LoginType.apple) {
-      try {
-        await FirebaseAuth.instance.signOut();
-        // print('애플 로그아웃 성공');
-
-        _memberInfo = null;
-
-        await prefs.remove('jwt');
-      } catch (error) {
-        // print('애플 로그아웃 실패 $error');
+        // print('로그아웃 실패 $error');
         rethrow;
       }
     }
-  }
 
   /// 회원 탈퇴 함수
   ///
@@ -247,7 +226,8 @@ class AuthController with ChangeNotifier {
   /// 각각 회원 탈퇴후 sharedPreferences에서 login정보를 제거
   Future<void> resign() async {
     final prefs = await this.prefs;
-    if (_loginType == LoginType.kakao) {
+    final loginType = _getLoginTypeFromString(prefs.getString("loginType"));
+    if (loginType == LoginType.kakao) {
       try {
         await UserApi.instance.unlink();
         // print('카카오 탈퇴 성공, SDK에서 토큰 삭제');
@@ -255,12 +235,12 @@ class AuthController with ChangeNotifier {
           provider: memberInfo!.provider,
           uid: memberInfo!.uid
         ));
-        await prefs.remove('loginType');
+        await prefs.remove('jwt');
       } catch (error) {
         // print('연결 끊기 실패 $error');
         rethrow;
       }
-    } else if (_loginType == LoginType.apple) {
+    } else if (loginType == LoginType.apple) {
       try {
         // revoke Endpoint
         Uri revokeUri = Uri.parse('https://appleid.apple.com/auth/revoke');

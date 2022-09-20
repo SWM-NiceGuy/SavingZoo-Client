@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:amond/data/entity/mission_entity.dart';
 import 'package:amond/data/source/network/base_url.dart';
-import 'package:amond/domain/models/member_info.dart';
 import 'package:http/http.dart' as http;
 
 class MissionApi {

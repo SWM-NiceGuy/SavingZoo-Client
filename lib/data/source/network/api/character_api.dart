@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:amond/data/source/network/base_url.dart';
-import 'package:amond/domain/models/member_info.dart';
 import 'package:http/http.dart' as http;
 
 class CharacterApi {
@@ -9,7 +8,7 @@ class CharacterApi {
     try {
     final url = Uri.parse('$baseUrl/v1/exp');
     final response = await http.get(url, headers: {
-      'Authrozation': 'Bearer $jwt',
+      'Authorization': 'Bearer $jwt',
     });
     if (response.statusCode >= 400) {
       throw Exception('경험치 불러오기에 실패했습니다.');
