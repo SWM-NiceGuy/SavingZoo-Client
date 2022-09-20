@@ -1,16 +1,12 @@
 import 'package:amond/data/entity/mission_entity.dart';
-import 'package:amond/domain/models/member_info.dart';
 import 'package:amond/domain/repositories/mission_repository.dart';
 import 'package:flutter/material.dart';
 
 class MissionController with ChangeNotifier {
 
   final MissionRepository repository;
-  late MemberInfo me;
 
-  MissionController(this.repository, {required MemberInfo member}) {
-    me = member;
-  }
+  MissionController(this.repository);
 
   var isLoading = true;
   
@@ -23,7 +19,7 @@ class MissionController with ChangeNotifier {
     notifyListeners();
     List<MissionEntity> missions;
     try {
-      missions = await repository.getAllMissions(me);
+      missions = await repository.getAllMissions();
     } catch (error) {
       rethrow;
     }
@@ -39,9 +35,9 @@ class MissionController with ChangeNotifier {
     
     _missions[missionIdx].state = "COMPLETE";
     try {
-      await repository.completeMission(me, missionId);
+      await repository.completeMission(missionId);
     } catch (error) {
-      // 미션 완료 처리에 실패하면 다시 대기 상태로 변경
+      // 미션 완료 처리에 실패하면 다시 완료대기 상태로 변경
       _missions[missionIdx].state = "WAIT";
       rethrow;
     }

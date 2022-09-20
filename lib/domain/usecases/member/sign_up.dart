@@ -6,7 +6,7 @@ class SignUp {
 
   SignUp(this.memberRepository);
 
-  Future<int> call(MemberEntity me) async {
-    return memberRepository.signUp(me);
+  Future<String> call(String provider, String accessToken) async {
+    return memberRepository.signUp(provider, accessToken);
   }
 }

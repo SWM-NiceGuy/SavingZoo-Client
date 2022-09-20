@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:amond/data/entity/member_entity.dart';
+import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/domain/usecases/member/member_use_cases.dart';
 import 'package:amond/utils/apple_client_secret.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,8 +20,11 @@ enum LoginType { kakao, apple }
 class AuthController with ChangeNotifier {
   MemberInfo? _memberInfo;
   LoginType? _loginType;
+  String? _token;
   SharedPreferences? _prefs;
   final MemberUseCases _memberUseCases;
+
+  String? get token => _token;
 
   AuthController(this._memberUseCases);
 
@@ -38,19 +42,19 @@ class AuthController with ChangeNotifier {
   /// 실패하면 [false]를 반환
   Future<bool> setToken() async {
     final prefs = await this.prefs;
-    _loginType = _getLoginTypeFromString(prefs.getString('loginType'));
-    if (_loginType == null) return false;
   try {
-    if (_loginType == LoginType.kakao) {
-      await TokenManagerProvider.instance.manager.getToken();
-      final user = await UserApi.instance.me();
-      _memberInfo = MemberInfo(provider: 'KAKAO', uid: user.id.toString());
-    } else if (_loginType == LoginType.apple) {
-      _memberInfo = MemberInfo(
-          provider: 'APPLE', uid: FirebaseAuth.instance.currentUser!.uid);
+    final token = prefs.getString("jwt");
+    _token = token;
+    // 전역으로 토큰 설정
+
+    jwt = _token;
+    // 토큰이 없다면 [false] 반환
+    if (_token == null) {
+      return false;
     }
+    
   } catch (error) {
-    return false;
+    rethrow;
   }
     notifyListeners();
     return true;
@@ -97,18 +101,15 @@ class AuthController with ChangeNotifier {
         await UserApi.instance.loginWithKakaoTalk();
         // print('카카오톡으로 로그인 성공');
 
-        // 카카오 계정으로 처음 로그인하면
-        final userMe = await UserApi.instance.me();
-        final createdAt = userMe.connectedAt;
+        // 카카오 계정 토큰 정보
+        final tokenInfo = await TokenManagerProvider.instance.manager.getToken();
+        final curToken = tokenInfo!.accessToken;
 
-        // 현재 로그인 시간과 계정 생성 시각 차이가 2초 미만이면 새로운 회원이라고 인지하고 계정생성
-          final responseStatusCode = await _memberUseCases.signUp(MemberEntity(
-            provider: 'KAKAO',
-            uid: userMe.id.toString(),
-            nickname: userMe.kakaoAccount?.profile?.nickname,
-          ));
 
+        final jwt = await _memberUseCases.signUp("KAKAO", curToken);
         await prefs.setString('loginType', 'kakao');
+        // jwt 저장
+        await prefs.setString('jwt', jwt);
         await setToken();
       } catch (error) {
         // print('카카오톡으로 로그인 실패 $error');
@@ -123,20 +124,16 @@ class AuthController with ChangeNotifier {
           await UserApi.instance.loginWithKakaoAccount();
           // print('카카오계정으로 로그인 성공');
           // 카카오 계정으로 처음 로그인하면
-          final userMe = await UserApi.instance.me();
-          final createdAt = userMe.connectedAt;
+          // 카카오 계정 토큰 정보
+        final tokenInfo = await TokenManagerProvider.instance.manager.getToken();
+        final curToken = tokenInfo!.accessToken;
 
-          // 현재 로그인 시간과 계정 생성 시각 차이가 2초 미만이면 새로운 회원이라고 인지하고 계정생성
-          
-            final responseStatusCode =
-                await _memberUseCases.signUp(MemberEntity(
-              provider: 'KAKAO',
-              uid: userMe.id.toString(),
-              nickname: userMe.kakaoAccount?.profile?.nickname,
-            ));
-          
-          await prefs.setString('loginType', 'kakao');
-          await setToken();
+
+        final jwt = await _memberUseCases.signUp("KAKAO", curToken);
+        await prefs.setString('loginType', 'kakao');
+        // jwt 저장
+        await prefs.setString('jwt', jwt);
+        await setToken();
         } catch (error) {
           // print('카카오계정으로 로그인 실패 $error');
           rethrow;
@@ -148,18 +145,15 @@ class AuthController with ChangeNotifier {
         // print('카카오계정으로 로그인 성공');
 
         // 카카오 계정으로 처음 로그인하면
-        final userMe = await UserApi.instance.me();
-        final createdAt = userMe.connectedAt;
+       // 카카오 계정 토큰 정보
+        final tokenInfo = await TokenManagerProvider.instance.manager.getToken();
+        final curToken = tokenInfo!.accessToken;
 
-        // 현재 로그인 시간과 계정 생성 시각 차이가 2초 미만이면 새로운 회원이라고 인지하고 계정생성
-      
-          final responseStatusCode = await _memberUseCases.signUp(MemberEntity(
-            provider: 'KAKAO',
-            uid: userMe.id.toString(),
-            nickname: userMe.kakaoAccount?.profile?.nickname,
-          ));
-        
+
+        final jwt = await _memberUseCases.signUp("KAKAO", curToken);
         await prefs.setString('loginType', 'kakao');
+        // jwt 저장
+        await prefs.setString('jwt', jwt);
         await setToken();
       } catch (error) {
         // print('카카오계정으로 로그인 실패 $error');
@@ -180,25 +174,21 @@ class AuthController with ChangeNotifier {
         ],
       );
 
+      print(appleCredential.identityToken);
+
       final oauthCredential = OAuthProvider("apple.com").credential(
         idToken: appleCredential.identityToken,
         accessToken: appleCredential.authorizationCode,
       );
 
-      // Apple로그인을 통해 받은 정보로 파이어베이스에 로그인
-      await FirebaseAuth.instance.signInWithCredential(oauthCredential);
-      // App 내의 로그인/회원가입 로직
-      // 애플 계정의 첫번째 로그인이라면 서버에 회원가입 처리
-      if (appleCredential.email != null) {
-        _memberUseCases.signUp(MemberEntity(
-            provider: 'APPLE',
-            uid: FirebaseAuth.instance.currentUser!.uid,
-            nickname: (appleCredential.familyName ?? '') +
-                (appleCredential.givenName ?? '')));
-      }
+      // // Apple로그인을 통해 받은 정보로 파이어베이스에 로그인
+      // await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+      // // App 내의 로그인/회원가입 로직
+      // // 애플 계정의 첫번째 로그인이라면 서버에 회원가입 처리
+      // final token = await _memberUseCases.signUp('APPLE', appleCredential.identityToken!);
 
-      await prefs.setString('loginType', 'apple');
-      await setToken();
+      // await prefs.setString('jwt', token);
+      // await setToken();
     } catch (error) {
       // print('애플 로그인 실패 $error');
       rethrow;
@@ -230,7 +220,7 @@ class AuthController with ChangeNotifier {
         await UserApi.instance.logout();
         // print('카카오 로그아웃 성공, SDK에서 토큰 삭제');
         _memberInfo = null;
-        await prefs.remove('loginType');
+        await prefs.remove('jwt');
       } catch (error) {
         rethrow;
       }
@@ -241,7 +231,7 @@ class AuthController with ChangeNotifier {
 
         _memberInfo = null;
 
-        await prefs.remove('loginType');
+        await prefs.remove('jwt');
       } catch (error) {
         // print('애플 로그아웃 실패 $error');
         rethrow;

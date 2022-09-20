@@ -59,21 +59,14 @@ List<SingleChildWidget> viewModels = [
   // AuthController
   ChangeNotifierProvider<AuthController>(
       create: (_) => AuthController(_.read<MemberUseCases>())),
-  
+
   // GrowController
-  ChangeNotifierProxyProvider<AuthController, GrowController>(
-    create: (context) => GrowController(context.read<CharacterUseCases>(),
-        context.read<AuthController>().memberInfo!),
-    update: (context, authController, previous) => GrowController(
-        context.read<CharacterUseCases>(), authController.memberInfo!),
-  ),
+  ChangeNotifierProvider<GrowController>(
+      create: (context) => GrowController(context.read<CharacterUseCases>())),
 
   // MissionController
-  ChangeNotifierProxyProvider<AuthController, MissionController>(
-      create: (context) => MissionController(
-          context.read<MissionRepositoryImpl>(),
-          member: context.read<AuthController>().memberInfo!),
-      update: (context, authController, previous) => MissionController(
-          context.read<MissionRepositoryImpl>(),
-          member: authController.memberInfo!)),
+  ChangeNotifierProvider<MissionController>(
+    create: (context) =>
+        MissionController(context.read<MissionRepositoryImpl>()),
+  )
 ];
