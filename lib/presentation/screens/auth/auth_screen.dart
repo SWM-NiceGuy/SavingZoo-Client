@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:amond/utils/login/get_apple_login_info.dart';
+import 'package:amond/utils/login/get_kakao_login_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,11 +50,13 @@ class _AuthScreenState extends State<AuthScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      // 카카오 로그인 버튼
                       GestureDetector(
                         onTap: () async {
                           try {
                             // 로그인 시도 후 성공하면 MainScreen으로 이동
-                            await authController.loginWithKakaoApp();
+                            final info = await GetKakaoLoginInfo().call();
+                            await authController.login(info.provider, info.accessToken);
                             _navigateToMainScreen();
                           } catch (error) {
                             // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
@@ -81,7 +85,8 @@ class _AuthScreenState extends State<AuthScreen> {
                           onTap: () async {
                             try {
                               // 로그인 시도 후 성공하면 MainScreen으로 이동
-                              await authController.loginWithApple();
+                              final info = await GetAppleLoginInfo().call();
+                              await authController.login(info.provider, info.accessToken);
                               _navigateToMainScreen();
                             } catch (error) {
                               // 의도적인 로그인 취소로 보고 애플 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)

@@ -13,8 +13,8 @@ class MemberRepositoryImpl implements MemberRepository {
   /// DB 회원가입 함수
   ///
   /// response의 json web token을 반환
-  Future<String> signUp(String provider, String accessToken) async {
-    final response =  await memberApi.signUp(provider, accessToken);
+  Future<String> login(String provider, String accessToken) async {
+    final response =  await memberApi.login(provider, accessToken);
     final token = jsonDecode(response.body)["jwt"];
     return token;
   }

@@ -5,7 +5,7 @@ import 'package:amond/data/source/network/base_url.dart';
 import 'package:http/http.dart' as http;
 
 class MemberApi {
-  Future<http.Response> signUp(String provider, String accessToken) async {
+  Future<http.Response> login(String provider, String accessToken) async {
     final url = Uri.parse('$baseUrl/v1/signup');
     final response =
         await http.post(url, body: jsonEncode({

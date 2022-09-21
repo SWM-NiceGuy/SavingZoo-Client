@@ -59,136 +59,17 @@ class AuthController with ChangeNotifier {
     return true;
   }
 
-  // /// 토큰 유효성 검사
-  // Future<bool> isTokenValid() async {
-  //   final prefs = await this.prefs;
-  //   final loginType = _getLoginTypeFromString(prefs.getString("loginType"));
-  //   if (loginType == null) return false;
-
-  //   // 카카오
-  //   if (loginType == LoginType.kakao) {
-  //     if (await AuthApi.instance.hasToken()) {
-  //       try {
-  //         await UserApi.instance.accessTokenInfo();
-  //         // 토큰 유효성 체크 성공
-  //         return true;
-  //       } catch (error) {
-  //         if (error is KakaoException && error.isInvalidTokenError()) {
-  //           // print('토큰 만료 $error');
-  //           rethrow;
-  //         } else {
-  //           // print('토큰 정보 조회 실패 $error');
-  //           rethrow;
-  //         }
-  //       }
-  //     }
-  //   }
-
-  //   // 애플
-  //   else if (loginType == LoginType.apple) {
-  //     await FirebaseAuth.instance.currentUser?.getIdToken();
-  //     return true;
-  //   }
-  //   return false;
-  // }
-
-  /// 카카오로 로그인
-  Future<void> loginWithKakaoApp() async {
-    final prefs = await this.prefs;
-    // 카카오톡 설치 여부 확인
-    // 카카오톡이 설치되어 있으면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
-    if (await isKakaoTalkInstalled()) {
-      try {
-        await UserApi.instance.loginWithKakaoTalk();
-        // print('카카오톡으로 로그인 성공');
-
-        // 카카오 계정 토큰 정보
-        final tokenInfo = await TokenManagerProvider.instance.manager.getToken();
-        final curToken = tokenInfo!.accessToken;
-
-
-        final jwt = await _memberUseCases.signUp("KAKAO", curToken);
-        await prefs.setString('loginType', 'kakao');
-        // jwt 저장
-        await prefs.setString('jwt', jwt);
-        await setToken();
-      } catch (error) {
-        // print('카카오톡으로 로그인 실패 $error');
-
-        // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
-        // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
-        if (error is PlatformException && error.code == 'CANCELED') {
-          rethrow;
-        }
-        // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
-        try {
-          await UserApi.instance.loginWithKakaoAccount();
-          // print('카카오계정으로 로그인 성공');
-          // 카카오 계정으로 처음 로그인하면
-          // 카카오 계정 토큰 정보
-        final tokenInfo = await TokenManagerProvider.instance.manager.getToken();
-        final curToken = tokenInfo!.accessToken;
-
-
-        final jwt = await _memberUseCases.signUp("KAKAO", curToken);
-        await prefs.setString('loginType', 'kakao');
-        // jwt 저장
-        await prefs.setString('jwt', jwt);
-        await setToken();
-        } catch (error) {
-          // print('카카오계정으로 로그인 실패 $error');
-          rethrow;
-        }
-      }
-    } else {
-      try {
-        await UserApi.instance.loginWithKakaoAccount();
-        // print('카카오계정으로 로그인 성공');
-
-        // 카카오 계정으로 처음 로그인하면
-       // 카카오 계정 토큰 정보
-        final tokenInfo = await TokenManagerProvider.instance.manager.getToken();
-        final curToken = tokenInfo!.accessToken;
-
-
-        final jwt = await _memberUseCases.signUp("KAKAO", curToken);
-        await prefs.setString('loginType', 'kakao');
-        // jwt 저장
-        await prefs.setString('jwt', jwt);
-        await setToken();
-      } catch (error) {
-        // print('카카오계정으로 로그인 실패 $error');
-        rethrow;
-      }
-    }
-  }
-
-  /// 애플로 로그인
-  Future<void> loginWithApple() async {
+  Future<void> login(String provider, String accessToken) async {
     final prefs = await this.prefs;
     try {
-      final AuthorizationCredentialAppleID appleCredential =
-          await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-      );
+      // 로그인을 시도하여 서버에서 토큰을 받아온다.
+      final jwt = await _memberUseCases.login(provider, accessToken);
 
-      // final oauthCredential = OAuthProvider("apple.com").credential(
-      //   idToken: appleCredential.identityToken,
-      //   accessToken: appleCredential.authorizationCode,
-      // );
-
-      // Apple로그인을 통해 받은 정보로 파이어베이스에 로그인
-      // await FirebaseAuth.instance.signInWithCredential(oauthCredential);
-      // App 내의 로그인/회원가입 로직
-      final token = await _memberUseCases.signUp('APPLE', appleCredential.identityToken!);
-
-      await prefs.setString('jwt', token);
+      // 토큰, 로그인 타입을 SharedPreferences에 저장
+      await prefs.setString('jwt', jwt);
+      await prefs.setString('loginType', provider);
       await setToken();
     } catch (error) {
-      // print('애플 로그인 실패 $error');
       rethrow;
     }
   }
@@ -207,7 +88,7 @@ class AuthController with ChangeNotifier {
 
   /// 로그아웃 함수
   ///
-  /// [SharedPreferences.getInstance()]에 저장되어 있는 jwt 삭제
+  /// [SharedPreferences]에 저장되어 있는 jwt 삭제
   Future<void> logout() async {
     final prefs = await this.prefs;
     try {

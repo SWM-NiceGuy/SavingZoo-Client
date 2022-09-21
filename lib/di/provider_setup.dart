@@ -10,7 +10,7 @@ import 'package:amond/domain/usecases/character/get_name.dart';
 import 'package:amond/domain/usecases/character/set_name.dart';
 import 'package:amond/domain/usecases/member/member_use_cases.dart';
 import 'package:amond/domain/usecases/member/resign.dart';
-import 'package:amond/domain/usecases/member/sign_up.dart';
+import 'package:amond/domain/usecases/member/login.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow_controller.dart';
 import 'package:amond/presentation/controllers/mission_controller.dart';
@@ -42,7 +42,7 @@ List<SingleChildWidget> dependentModels = [
   ProxyProvider<MemberRepositoryImpl, MemberUseCases>(
     update: (_, repository, __) => MemberUseCases(
       resign: Resign(repository),
-      signUp: SignUp(repository),
+      login: Login(repository),
     ),
   ),
   ProxyProvider<CharacterRepositoryImpl, CharacterUseCases>(
