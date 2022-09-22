@@ -4,5 +4,3 @@ const Map headers = {
         'Content-type': 'application/json',
         'Accept': 'application/json',
       };
-
-late final String? jwt;

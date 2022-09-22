@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:amond/data/source/network/base_url.dart';
+import 'package:amond/utils/auth/auth_info.dart';
 import 'package:http/http.dart' as http;
 
 class CharacterApi {
@@ -8,7 +9,7 @@ class CharacterApi {
     try {
     final url = Uri.parse('$baseUrl/v1/exp');
     final response = await http.get(url, headers: {
-      'Authorization': 'Bearer $jwt',
+      'Authorization': 'Bearer $globalToken',
     });
     if (response.statusCode >= 400) {
       throw Exception('경험치 불러오기에 실패했습니다.');
@@ -31,7 +32,7 @@ class CharacterApi {
       headers: {
         'Content-type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': 'Bearer $jwt',
+        'Authorization': 'Bearer $globalToken',
       },
     );
     final res = jsonDecode(response.body)['exp'];
@@ -42,7 +43,7 @@ class CharacterApi {
     final url = Uri.parse('$baseUrl/v1/nickname');
 
     final response = await http.get(url, headers: {
-      'Authorization': '$jwt',
+      'Authorization': '$globalToken',
     });
     final String? res = jsonDecode(utf8.decode(response.bodyBytes))["nickname"];
     return res;
@@ -51,12 +52,12 @@ class CharacterApi {
   Future<void> setName(String name) async {
     final url = Uri.parse("$baseUrl/v1/nickname");
     
-    final response = await http.post(url, body: jsonEncode({
+    await http.post(url, body: jsonEncode({
       "nickname": name,
     }),  headers: {
         'Content-type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': '$jwt',
+        'Authorization': 'Bearer $globalToken',
       },);
   }
 }

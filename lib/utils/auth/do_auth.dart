@@ -1,5 +1,6 @@
-abstract class GetLoginInfo {
-  Future<LoginInfo> call();
+abstract class DoAuth {
+  Future<LoginInfo> login();
+  Future<Map<String,String>?> resign();
 }
 
 class LoginInfo {

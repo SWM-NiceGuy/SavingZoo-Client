@@ -1,10 +1,11 @@
-import 'package:amond/utils/login/get_login_info.dart';
+import 'package:amond/utils/auth/do_auth.dart';
+
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
-class GetKakaoLoginInfo implements GetLoginInfo {
+class DoKakaoAuth implements DoAuth {
   @override
-  Future<LoginInfo> call() async {
+  Future<LoginInfo> login() async {
     late final String token;
     if (await isKakaoTalkInstalled()) {
       try {
@@ -52,5 +53,17 @@ class GetKakaoLoginInfo implements GetLoginInfo {
 
     return LoginInfo("KAKAO", token);
   }
+  
+  @override
+  Future<Map<String, String>?> resign() async {
+      try {
+        await UserApi.instance.unlink();
+        // print('카카오 탈퇴 성공, SDK에서 토큰 삭제');
+      } catch (error) {
+        // print('연결 끊기 실패 $error');
+        rethrow;
+      }
 
+      return null;
+  }
 }

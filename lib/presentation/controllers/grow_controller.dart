@@ -5,7 +5,6 @@ import 'package:amond/domain/usecases/character/character_use_cases.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/models/avatar.dart';
-import '../../domain/models/member_info.dart';
 
 
 
@@ -128,7 +127,7 @@ class GrowController with ChangeNotifier {
   }
 
   /// 캐릭터 데이터를 불러오는 함수
-  Future<void> fetchData(MemberInfo memberInfo) async {
+  Future<void> fetchData() async {
     var currentExp = await _characterUseCases.getExp();
     // var currentExp = 30;
     var name = await _characterUseCases.getName();

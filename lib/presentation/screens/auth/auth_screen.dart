@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:amond/utils/login/get_apple_login_info.dart';
-import 'package:amond/utils/login/get_kakao_login_info.dart';
+import 'package:amond/utils/auth/do_apple_auth.dart';
+import 'package:amond/utils/auth/do_kakao_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -55,7 +55,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         onTap: () async {
                           try {
                             // 로그인 시도 후 성공하면 MainScreen으로 이동
-                            final info = await GetKakaoLoginInfo().call();
+                            final info = await DoKakaoAuth().login();
                             await authController.login(info.provider, info.accessToken);
                             _navigateToMainScreen();
                           } catch (error) {
@@ -85,7 +85,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           onTap: () async {
                             try {
                               // 로그인 시도 후 성공하면 MainScreen으로 이동
-                              final info = await GetAppleLoginInfo().call();
+                              final info = await DoAppleAuth().login();
                               await authController.login(info.provider, info.accessToken);
                               _navigateToMainScreen();
                             } catch (error) {

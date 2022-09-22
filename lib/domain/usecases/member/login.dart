@@ -5,7 +5,7 @@ class Login {
   Login(this.memberRepository);
 
   Future<String> call(String provider, String accessToken) async {
-    final response = await memberRepository.login(provider, accessToken);
-    return response;
+    final token = await memberRepository.login(provider, accessToken);
+    return token;
   }
 }

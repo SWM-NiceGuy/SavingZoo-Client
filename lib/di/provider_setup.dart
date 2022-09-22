@@ -1,3 +1,4 @@
+
 import 'package:amond/data/repository/character_repository_impl.dart';
 import 'package:amond/data/repository/member_repository_impl.dart';
 import 'package:amond/data/repository/mission_repository_impl.dart';
@@ -14,6 +15,9 @@ import 'package:amond/domain/usecases/member/login.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow_controller.dart';
 import 'package:amond/presentation/controllers/mission_controller.dart';
+import 'package:amond/utils/auth/do_apple_auth.dart';
+import 'package:amond/utils/auth/do_auth.dart';
+import 'package:amond/utils/auth/do_kakao_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import '../domain/usecases/character/change_exp.dart';
@@ -68,5 +72,29 @@ List<SingleChildWidget> viewModels = [
   ChangeNotifierProvider<MissionController>(
     create: (context) =>
         MissionController(context.read<MissionRepositoryImpl>()),
+  ),
+
+  // 회원탈퇴 DI
+  ProxyProvider<AuthController, DoAuth>(
+    create: (context) {
+      final loginType = context.read<AuthController>().loginType;
+      switch (loginType) {
+        case "KAKAO":
+          return DoKakaoAuth();
+        case "APPLE":
+          return DoAppleAuth();
+      }
+      throw Exception('로그인 타입이 지정되지 않았습니다.');
+    },
+    update: (context, value, previous) {
+      final loginType = context.read<AuthController>().loginType;
+      switch (loginType) {
+        case "KAKAO":
+          return DoKakaoAuth();
+        case "APPLE":
+          return DoAppleAuth();
+      }
+      throw Exception('로그인 타입이 지정되지 않았습니다.');
+    },
   )
 ];

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:amond/data/entity/mission_entity.dart';
 import 'package:amond/data/source/network/base_url.dart';
+import 'package:amond/utils/auth/auth_info.dart';
 import 'package:http/http.dart' as http;
 
 class MissionApi {
@@ -10,7 +11,7 @@ class MissionApi {
     final url = Uri.parse('$baseUrl/v1/mission');
 
     final response = await http.get(url, headers: {
-      'Authorization': '$jwt',
+      'Authorization': '$globalToken',
     });
     final Map<String, dynamic> result = jsonDecode(utf8.decode(response.bodyBytes));
     final List<dynamic> missionsList = result["missions"];
@@ -26,7 +27,7 @@ class MissionApi {
     }), headers: {
       'Content-type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': '$jwt',
+      'Authorization': 'Bearer $globalToken',
     });
     if (response.statusCode == 400) {
       throw Exception("미션완료에 실패했습니다. status_code: 400");
