@@ -20,7 +20,7 @@ class MemberApi {
 
   Future<http.Response> resign(String provider,
       [Map<String, String>? additional]) async {
-    final url = Uri.parse('$baseUrl/v1/withdraw');
+    final url = Uri.parse('$baseUrl/api/v1/auth/withdraw');
 
     final Map<String, String> body = additional == null
         ? {
@@ -37,6 +37,7 @@ class MemberApi {
         'Content-type': 'application/json',
         'Accept': 'application/json',
       });
+      print(response.body);
       return response;
     } catch (error) {
       rethrow;
