@@ -1,6 +1,5 @@
-import 'package:amond/data/entity/member_entity.dart';
 
 abstract class MemberRepository {
-  Future<int> signUp(MemberEntity me);
-  Future<int> resign(MemberEntity me);
+  Future<String> login(String provider, String accessToken);
+  Future<void> resign(String provider, [Map<String, String>? additional]);
 }

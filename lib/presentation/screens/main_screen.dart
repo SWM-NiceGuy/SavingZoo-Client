@@ -1,19 +1,16 @@
 import 'dart:io';
 
-import 'package:amond/domain/repositories/mission_repository.dart';
+
 import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/controllers/mission_controller.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
-import 'package:amond/utils/app_version.dart';
+import 'package:amond/utils/auth/do_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:amond/presentation/screens/grow/grow_screen.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-
-import '../../data/repository/mission_repository_impl.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -128,10 +125,12 @@ class _MainScreenState extends State<MainScreen> {
                     'AMOND 계정을 탈퇴하면 저장된 데이터들을 복구할 수 없습니다, 진행하시겠습니까?');
                 if (!check) return;
                 try {
-                  await authController.resign();
+                  final resignResponse = await context.read<DoAuth>().resign();
+                  await authController.resign(resignResponse);
                   Navigator.of(context)
                       .pushReplacementNamed(AuthScreen.routeName);
                 } catch (error) {
+                  print(error);
                   _showLogoutFailDialog(context, '회원탈퇴에 실패했습니다.');
                 }
               },
