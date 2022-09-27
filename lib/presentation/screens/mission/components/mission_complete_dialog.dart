@@ -1,5 +1,4 @@
 import 'package:amond/presentation/controllers/grow_controller.dart';
-import 'package:amond/presentation/controllers/mission_controller.dart';
 import 'package:amond/presentation/screens/grow/components/level_system.dart';
 import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
 import 'package:amond/ui/colors.dart';
@@ -41,7 +40,7 @@ class MissionCompleteDialog extends StatelessWidget {
             ),
             Text(
               "+${reward}XP",
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             LevelSystem(
               width: MediaQuery.of(context).size.width,
@@ -54,9 +53,9 @@ class MissionCompleteDialog extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(growController.characterName ?? "",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
             Text('(${growController.character.avatar.nickname})',
-                style: TextStyle(color: Colors.grey)),
+                style: const TextStyle(color: Colors.grey)),
             Expanded(
               child: Stack(
                 alignment: Alignment.center,

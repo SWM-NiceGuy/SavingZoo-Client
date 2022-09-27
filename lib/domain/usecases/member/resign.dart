@@ -1,4 +1,3 @@
-import 'package:amond/data/entity/member_entity.dart';
 import 'package:amond/domain/repositories/member_repository.dart';
 
 class Resign {
@@ -6,7 +5,7 @@ class Resign {
 
   Resign(this.memberRepository);
 
-  Future<int> call(MemberEntity me) async {
-    return await memberRepository.resign(me);
+  Future<void> call(String provider, [Map<String, String>? additional]) async {
+    await memberRepository.resign(provider, additional);
   }
 }

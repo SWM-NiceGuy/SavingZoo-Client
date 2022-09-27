@@ -1,6 +1,4 @@
 import 'dart:math';
-
-import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow_controller.dart';
 import 'package:amond/presentation/controllers/name_validation.dart';
 import 'package:amond/presentation/screens/grow/components/comment_box.dart';
@@ -25,7 +23,7 @@ class GrowScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final growController = context.watch<GrowController>();
-    final memberInfo = context.read<AuthController>().memberInfo!;
+
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
@@ -35,14 +33,14 @@ class GrowScreen extends StatelessWidget {
     // 데이터가 불러와 있지 않을때 데이터 불러오기
     if (!growController.isDataFetched) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        growController.fetchData(memberInfo);
+        growController.fetchData();
       });
     }
 
-    final missionCompletePopupTextStyle = Theme.of(context)
-        .textTheme
-        .bodyText1
-        ?.copyWith(fontSize: 16.0, height: 1.5);
+    // final missionCompletePopupTextStyle = Theme.of(context)
+    //     .textTheme
+    //     .bodyText1
+    //     ?.copyWith(fontSize: 16.0, height: 1.5);
 
     // void executeMissionComplete(int completedMission) {
 

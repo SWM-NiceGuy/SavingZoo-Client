@@ -1,3 +1,4 @@
+
 import 'package:amond/data/repository/character_repository_impl.dart';
 import 'package:amond/data/repository/member_repository_impl.dart';
 import 'package:amond/data/repository/mission_repository_impl.dart';
@@ -10,10 +11,13 @@ import 'package:amond/domain/usecases/character/get_name.dart';
 import 'package:amond/domain/usecases/character/set_name.dart';
 import 'package:amond/domain/usecases/member/member_use_cases.dart';
 import 'package:amond/domain/usecases/member/resign.dart';
-import 'package:amond/domain/usecases/member/sign_up.dart';
+import 'package:amond/domain/usecases/member/login.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow_controller.dart';
 import 'package:amond/presentation/controllers/mission_controller.dart';
+import 'package:amond/utils/auth/do_apple_auth.dart';
+import 'package:amond/utils/auth/do_auth.dart';
+import 'package:amond/utils/auth/do_kakao_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import '../domain/usecases/character/change_exp.dart';
@@ -42,7 +46,7 @@ List<SingleChildWidget> dependentModels = [
   ProxyProvider<MemberRepositoryImpl, MemberUseCases>(
     update: (_, repository, __) => MemberUseCases(
       resign: Resign(repository),
-      signUp: SignUp(repository),
+      login: Login(repository),
     ),
   ),
   ProxyProvider<CharacterRepositoryImpl, CharacterUseCases>(
@@ -59,21 +63,38 @@ List<SingleChildWidget> viewModels = [
   // AuthController
   ChangeNotifierProvider<AuthController>(
       create: (_) => AuthController(_.read<MemberUseCases>())),
-  
+
   // GrowController
-  ChangeNotifierProxyProvider<AuthController, GrowController>(
-    create: (context) => GrowController(context.read<CharacterUseCases>(),
-        context.read<AuthController>().memberInfo!),
-    update: (context, authController, previous) => GrowController(
-        context.read<CharacterUseCases>(), authController.memberInfo!),
-  ),
+  ChangeNotifierProvider<GrowController>(
+      create: (context) => GrowController(context.read<CharacterUseCases>())),
 
   // MissionController
-  ChangeNotifierProxyProvider<AuthController, MissionController>(
-      create: (context) => MissionController(
-          context.read<MissionRepositoryImpl>(),
-          member: context.read<AuthController>().memberInfo!),
-      update: (context, authController, previous) => MissionController(
-          context.read<MissionRepositoryImpl>(),
-          member: authController.memberInfo!)),
+  ChangeNotifierProvider<MissionController>(
+    create: (context) =>
+        MissionController(context.read<MissionRepositoryImpl>()),
+  ),
+
+  // 회원탈퇴 DI
+  ProxyProvider<AuthController, DoAuth>(
+    create: (context) {
+      final loginType = context.read<AuthController>().loginType;
+      switch (loginType) {
+        case "KAKAO":
+          return DoKakaoAuth();
+        case "APPLE":
+          return DoAppleAuth();
+      }
+      throw Exception('로그인 타입이 지정되지 않았습니다.');
+    },
+    update: (context, value, previous) {
+      final loginType = context.read<AuthController>().loginType;
+      switch (loginType) {
+        case "KAKAO":
+          return DoKakaoAuth();
+        case "APPLE":
+          return DoAppleAuth();
+      }
+      throw Exception('로그인 타입이 지정되지 않았습니다.');
+    },
+  )
 ];

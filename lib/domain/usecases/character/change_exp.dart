@@ -4,8 +4,8 @@ class ChangeExp {
   CharacterRepository expRepository;
   ChangeExp(this.expRepository);
 
-  Future<int> call(String provider, String uid, int exp) async {
-    final resExp = await expRepository.changeExp(provider, uid, exp);
+  Future<int> call(int exp) async {
+    final resExp = await expRepository.changeExp(exp);
     return resExp;
   }
 }
