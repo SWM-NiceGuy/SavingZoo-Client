@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:amond/utils/app_version.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:store_redirect/store_redirect.dart';
 
 class PleaseUpdateScreen extends StatelessWidget {
@@ -15,6 +14,7 @@ class PleaseUpdateScreen extends StatelessWidget {
     Future.delayed(const Duration(seconds: 1), () {
       if (!Navigator.of(context).canPop()) {
         showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (context) {
             return Platform.isIOS
