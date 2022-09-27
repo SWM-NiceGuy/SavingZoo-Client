@@ -34,8 +34,6 @@ class AuthController with ChangeNotifier {
 
     // 전역으로 토큰 설정
     globalToken = _token;
-
-    print(_token);
     // 토큰이 없다면 [false] 반환
     if (_token == null) {
       return false;

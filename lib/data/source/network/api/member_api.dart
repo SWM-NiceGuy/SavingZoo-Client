@@ -37,7 +37,6 @@ class MemberApi {
         'Content-type': 'application/json',
         'Accept': 'application/json',
       });
-      print(response.body);
       return response;
     } catch (error) {
       rethrow;

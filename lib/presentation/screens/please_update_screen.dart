@@ -4,9 +4,11 @@ import 'package:amond/utils/app_version.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:store_redirect/store_redirect.dart';
 
 class PleaseUpdateScreen extends StatelessWidget {
   const PleaseUpdateScreen({Key? key}) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,8 @@ class PleaseUpdateScreen extends StatelessWidget {
                       CupertinoButton(
                           child: const Text("확인"),
                           onPressed: () {
-                            exit(0);
+                            StoreRedirect.redirect(androidAppId: "com.amond.amondApp",
+                    iOSAppId: "1642916442");
                           })
                     ],
                   )
@@ -45,7 +48,8 @@ class PleaseUpdateScreen extends StatelessWidget {
                     actions: [
                       TextButton(
                           onPressed: () {
-                            SystemNavigator.pop();
+                            StoreRedirect.redirect(androidAppId: "com.amond.amondApp",
+                    iOSAppId: "1642916442");
                           },
                           child: const Text("확인"))
                     ],

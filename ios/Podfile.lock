@@ -127,6 +127,8 @@ PODS:
     - Flutter
   - sign_in_with_apple (0.0.1):
     - Flutter
+  - store_redirect (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
@@ -140,6 +142,7 @@ DEPENDENCIES:
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
+  - store_redirect (from `.symlinks/plugins/store_redirect/ios`)
 
 SPEC REPOS:
   trunk:
@@ -181,6 +184,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_ios/ios"
   sign_in_with_apple:
     :path: ".symlinks/plugins/sign_in_with_apple/ios"
+  store_redirect:
+    :path: ".symlinks/plugins/store_redirect/ios"
 
 SPEC CHECKSUMS:
   Firebase: 800f16f07af493d98d017446a315c27af0552f41
@@ -208,6 +213,7 @@ SPEC CHECKSUMS:
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
+  store_redirect: 2977747cf81689a39bd62c248c2deacb7a0d131e
 
 PODFILE CHECKSUM: b5812a94dbb73a271c43f1c704bf72e029ebdbf2
 
