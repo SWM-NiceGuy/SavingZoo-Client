@@ -1,4 +1,6 @@
+import 'package:amond/presentation/screens/mission/components/mission_photo.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MissionDetailBottomBar extends StatelessWidget {
   const MissionDetailBottomBar({
@@ -17,7 +19,15 @@ class MissionDetailBottomBar extends StatelessWidget {
         child: Row(
           children: [
             ElevatedButton(
-              onPressed: () {},
+              // 미션 인증버튼
+              onPressed: () async {
+                final ImagePicker _picker = ImagePicker();
+                XFile? image = await _picker.pickImage(source: ImageSource.camera);
+
+                if (image == null) return;
+                
+                // 미션 업로드 로직
+              },
               style: ButtonStyle(
                 fixedSize: MaterialStateProperty.all(Size(
                     deviceSize.width * 0.65, kBottomNavigationBarHeight - 10)),
@@ -32,7 +42,7 @@ class MissionDetailBottomBar extends StatelessWidget {
                   if (states.contains(MaterialState.pressed)) {
                     return const Color.fromARGB(255, 71, 119, 182);
                   }
-                  return const Color(0xff6BA9FF);
+                  return const Color(0xff96CE5F);
                 }),
               ),
               child: const Text('인증하기', style: TextStyle(fontSize: 24)),

@@ -51,6 +51,7 @@ dependencies:
   firebase_analytics: ^9.3.3
   store_redirect: ^2.0.1
   webview_flutter: ^3.0.4
+  image_picker: ^0.8.5+3
 
 dev_dependencies:
   flutter_test:
