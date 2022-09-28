@@ -2,6 +2,7 @@ import 'package:amond/di/provider_setup.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/main_screen.dart';
+import 'package:amond/presentation/screens/mission/mission_detail_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/presentation/screens/please_update_screen.dart';
 import 'package:amond/presentation/screens/qr_scanner.dart';
@@ -59,13 +60,14 @@ class MyApp extends StatelessWidget {
               } // 사용하려면 Future.delayed 필요
               ,
             )
-            // 앱이 최신버전이 아니라면 업데이트 해달라고 요청
+          // 앱이 최신버전이 아니라면 업데이트 해달라고 요청
           : const PleaseUpdateScreen(),
       routes: {
         AuthScreen.routeName: (context) => const AuthScreen(),
         MainScreen.routeName: (context) => const MainScreen(),
         QrScanner.routeName: (context) => const QrScanner(),
         MissionScreen.routeName: (context) => MissionScreen(),
+        MissionDetailScreen.routeName: (context) => MissionDetailScreen(),
       },
     );
   }

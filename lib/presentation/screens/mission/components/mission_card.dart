@@ -1,5 +1,6 @@
 import 'package:amond/data/entity/mission_entity.dart';
 import 'package:amond/presentation/controllers/mission_controller.dart';
+import 'package:amond/presentation/screens/mission/mission_detail_screen.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,9 +26,10 @@ class _MissionCardState extends State<MissionCard> {
   Widget build(BuildContext context) {
     final missionController = context.read<MissionController>();
     return GestureDetector(
-      onTap: () => setState(() {
-        selected = !selected;
-      }),
+      // 미션카드 터치시
+      onTap: () {
+        Navigator.of(context).pushNamed(MissionDetailScreen.routeName);
+      },
       child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           decoration: BoxDecoration(
@@ -96,29 +98,30 @@ class _MissionCardState extends State<MissionCard> {
                     Image.asset("assets/images/check_icon.png"),
                 ],
               ),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeIn,
-                height: selected ? 100 : 0,
-                child: Scrollbar(
-                  child: ListView(
-                    children: [
-                      const SizedBox(height: 24),
-                      Row(
-                        children: [
-                          Expanded(
-                              child: Text(
-                            widget.mission.content,
-                            style: const TextStyle(
-                                fontSize: 16,
-                                color: Color.fromARGB(255, 102, 102, 102)),
-                          ))
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              )
+              // 미션 내용
+              // AnimatedContainer(
+              //   duration: const Duration(milliseconds: 200),
+              //   curve: Curves.easeIn,
+              //   height: selected ? 100 : 0,
+              //   child: Scrollbar(
+              //     child: ListView(
+              //       children: [
+              //         const SizedBox(height: 24),
+              //         Row(
+              //           children: [
+              //             Expanded(
+              //                 child: Text(
+              //               widget.mission.content,
+              //               style: const TextStyle(
+              //                   fontSize: 16,
+              //                   color: Color.fromARGB(255, 102, 102, 102)),
+              //             ))
+              //           ],
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // )
             ],
           )),
     );
