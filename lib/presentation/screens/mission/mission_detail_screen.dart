@@ -1,7 +1,6 @@
 import 'package:amond/presentation/screens/mission/components/mission_detail_bottom_bar.dart';
 import 'package:amond/presentation/screens/mission/components/mission_example.dart';
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 
 class MissionDetailScreen extends StatelessWidget {
   const MissionDetailScreen({Key? key}) : super(key: key);
@@ -36,17 +35,21 @@ class MissionDetailScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // 미션이유
+                Text(
+                    "배달 음식의 편리함은 포기하기가 어려워요🥲 대신 음식이 담겼던 플라스틱 용기를 깨끗하게 세척하여 환경 보호 해봐요!"),
+                const SizedBox(height: 24),
                 const Text("미션",
                     style:
-                        TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                 // 미션 내용
                 Text("금속캔 세척하고 압착하여 배출하기", style: TextStyle(fontSize: 16)),
                 const SizedBox(height: 24),
-                // 미션 이유
-                // GestureDetector(
-                //     onTap: () {},
-                //     child: const Text("왜 이렇게 해야 하나요?",
-                //         style: TextStyle(decoration: TextDecoration.underline))),
+                const Text("미션 인증 방법",
+                    style:
+                        TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                // 미션 인증 방법
+                Text("음식이 담겼던 플라스틱 용기를 깨끗히 세척 후 사진을 찍어 인증해주세요"),
                 const SizedBox(height: 48),
                 const Text(
                   "미션 인증 예시",
