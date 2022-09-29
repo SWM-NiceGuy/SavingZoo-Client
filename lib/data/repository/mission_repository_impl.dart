@@ -1,5 +1,6 @@
 import 'package:amond/data/entity/mission_entity.dart';
 import 'package:amond/data/source/network/api/mission_api.dart';
+import 'package:amond/domain/models/mission_detail.dart';
 import 'package:amond/domain/repositories/mission_repository.dart';
 
 class MissionRepositoryImpl implements MissionRepository {
@@ -23,5 +24,17 @@ class MissionRepositoryImpl implements MissionRepository {
     } catch (e) {
       rethrow;
     }
+  }
+
+  @override
+  Future<MissionDetail> getMissionDetail(int missionId) {
+    // TODO: implement getMissionDetail
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<bool> submitMission() {
+    // TODO: implement submitMission
+    throw UnimplementedError();
   }
 }

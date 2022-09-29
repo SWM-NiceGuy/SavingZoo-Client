@@ -1,3 +1,4 @@
+import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
 
 class MissionExample extends StatelessWidget {
@@ -19,6 +20,17 @@ class MissionExample extends StatelessWidget {
           child: Image.network(
             imageUrl,
             fit: BoxFit.cover,
+            loadingBuilder: (_, child, loadingProgress) {
+              if (loadingProgress == null) {
+                return child;
+              }
+              return SizedBox(
+                height: deviceSize.height * 0.4,
+                child: const Center(
+                  child: PlatformBasedIndicator(),
+                ),
+              );
+            },
           ),
         ),
       ),

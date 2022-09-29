@@ -1,5 +1,7 @@
 import 'package:amond/data/entity/mission_entity.dart';
+import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/presentation/controllers/mission_controller.dart';
+import 'package:amond/presentation/controllers/mission_detail_controller.dart';
 import 'package:amond/presentation/screens/mission/mission_detail_screen.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +9,7 @@ import 'package:provider/provider.dart';
 
 import 'mission_complete_dialog.dart';
 
-class MissionCard extends StatefulWidget {
+class MissionCard extends StatelessWidget {
   const MissionCard({
     required this.mission,
     Key? key,
@@ -16,19 +18,23 @@ class MissionCard extends StatefulWidget {
   final MissionEntity mission;
 
   @override
-  State<MissionCard> createState() => _MissionCardState();
-}
-
-class _MissionCardState extends State<MissionCard> {
-  bool selected = false;
-
-  @override
-  Widget build(BuildContext context) {
+  build(BuildContext context) {
     final missionController = context.read<MissionController>();
     return GestureDetector(
-      // 미션카드 터치시
+      // 미션카드 터치시 미션 상세 페이지로 이동
       onTap: () {
-        Navigator.of(context).pushNamed(MissionDetailScreen.routeName);
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            // MissionDetailController를 여기서 주입
+            builder: (context) =>
+                ChangeNotifierProvider<MissionDetailController>(
+              create: (_) => MissionDetailController(
+                  context.read<MissionRepositoryImpl>(),
+                  missionId: mission.id),
+              child: MissionDetailScreen(),
+            ),
+          ),
+        );
       },
       child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -53,48 +59,51 @@ class _MissionCardState extends State<MissionCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 미션 아이콘 (아마 사진이 될 것)
-                  widget.mission.imageUrl == ""
+                  mission.imageUrl == ""
                       ? const Icon(
                           Icons.water_drop,
                           size: 48,
                           color: Colors.blue,
                         )
-                      : Image.network(widget.mission.imageUrl,
+                      : Image.network(mission.imageUrl,
                           height: 40, fit: BoxFit.cover),
                   const SizedBox(width: 24),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     // 미션 내용 및 경험치
                     children: [
-                      Text(widget.mission.title,
-                          style: const TextStyle(fontSize: 24, overflow: TextOverflow.ellipsis)),
-                      Text("+${widget.mission.reward}XP",
+                      Text(mission.title,
+                          style: const TextStyle(
+                              fontSize: 24, overflow: TextOverflow.ellipsis)),
+                      Text("+${mission.reward}XP",
                           style: const TextStyle(fontSize: 16)),
                     ],
                   ),
                   const Spacer(),
                   // 미션 성공 여부
-                  if (widget.mission.state == 'WAIT')
+                  if (mission.state == 'WAIT')
                     ElevatedButton(
                       onPressed: () {
                         // 미션 성공 후 팝업
-                        missionController.completeMission(widget.mission.id);
+                        missionController.completeMission(mission.id);
                         showDialog(
                             context: context,
                             builder: (context) {
                               return MissionCompleteDialog(
-                                missionId: widget.mission.id,
-                                reward: widget.mission.reward,
+                                missionId: mission.id,
+                                reward: mission.reward,
                               );
                             });
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.grey.shade100,
-                        elevation: 5
+                          primary: Colors.grey.shade100, elevation: 5),
+                      child: const Text(
+                        "완료하기",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: expTextColor),
                       ),
-                      child: const Text("완료하기", style: TextStyle(fontWeight: FontWeight.bold,color: expTextColor),),
                     ),
-                  if (widget.mission.state == 'COMPLETE')
+                  if (mission.state == 'COMPLETE')
                     Image.asset("assets/images/check_icon.png"),
                 ],
               ),
@@ -111,7 +120,7 @@ class _MissionCardState extends State<MissionCard> {
               //           children: [
               //             Expanded(
               //                 child: Text(
-              //               widget.mission.content,
+              //               mission.content,
               //               style: const TextStyle(
               //                   fontSize: 16,
               //                   color: Color.fromARGB(255, 102, 102, 102)),

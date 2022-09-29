@@ -15,6 +15,7 @@ import 'package:amond/domain/usecases/member/login.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow_controller.dart';
 import 'package:amond/presentation/controllers/mission_controller.dart';
+import 'package:amond/presentation/controllers/mission_detail_controller.dart';
 import 'package:amond/utils/auth/do_apple_auth.dart';
 import 'package:amond/utils/auth/do_auth.dart';
 import 'package:amond/utils/auth/do_kakao_auth.dart';

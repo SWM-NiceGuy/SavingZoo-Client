@@ -1,7 +1,5 @@
 import 'package:amond/data/entity/mission_entity.dart';
-import 'package:amond/presentation/controllers/mission_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import 'components/mission_card.dart';
 
