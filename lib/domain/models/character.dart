@@ -25,6 +25,7 @@ class Character {
 
   CharacterEntity toEntity() => CharacterEntity(
         id: id,
+        name: name,
         nickname: nickname,
         imageUrl: imageUrl,
         currentLevel: level,
@@ -35,8 +36,10 @@ class Character {
   static Character _$CharacterFromEntity(CharacterEntity entity) => Character(
         id: entity.id,
         name: entity.name,
+        level: entity.currentLevel,
         nickname: entity.nickname,
         imageUrl: entity.imageUrl,
+        currentExp: entity.currentExp,
         maxExp: entity.maxExp,
       );
 }

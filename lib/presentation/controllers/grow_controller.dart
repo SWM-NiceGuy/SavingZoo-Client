@@ -28,10 +28,11 @@ class GrowController with ChangeNotifier {
   final int fadeDuration = 1000; // Fade 애니메이션 지속시간
   bool avatarIsVisible = true; // 아바타 보임 유무
 
-  bool heartsIsVisible = false; // 하트 애니메이션 보임 유무
+  bool isHeartVisible = false; // 하트 애니메이션 보임 유무
   bool levelUpEffect = false;
 
   int? increasedExp;
+  Character? currentCharacter;
 
   final heartComment = '사랑을 받으니 무엇이든\n할 수 있을 것만 같아요!';
 
@@ -42,7 +43,7 @@ class GrowController with ChangeNotifier {
   ];
   int _commentOrder = 0;
   String get comment =>
-      heartsIsVisible ? heartComment : _comments[_commentOrder];
+      isHeartVisible ? heartComment : _comments[_commentOrder];
 
   /// 경험치를 증가시킨다
   Future<void> increaseExp(int value) async {
@@ -64,15 +65,9 @@ class GrowController with ChangeNotifier {
     await Future.delayed(Duration(milliseconds: fadeDuration));
 
     // _character = 서버에서 가져온 캐릭터;
-    _character = Character(
-      id: 1,
-      name: '안녕',
-      nickname: '안녕하세요',
-      currentExp: 10,
-      maxExp: 50,
-      level: 2,
-      imageUrl: 'assets/images/second_apple_avatar.png',
-    );
+    _character = currentCharacter!;
+    currentCharacter = null;
+
     avatarIsVisible = true;
     levelUpEffect = true;
     notifyListeners();
@@ -88,37 +83,7 @@ class GrowController with ChangeNotifier {
     notifyListeners();
   }
 
-  /// 하트 버튼 누를 시 하트 효과
-  void showHearts() {
-    if (heartsIsVisible) {
-      return;
-    }
-
-    heartsIsVisible = true;
-    notifyListeners();
-    Future.delayed(const Duration(seconds: 6), () {
-      heartsIsVisible = false;
-      notifyListeners();
-    });
-  }
-
-  void setCharacterName(String name) {
-    _character.name = name;
-    notifyListeners();
-
-    // 서버에 캐릭터 이름 저장
-    _characterUseCases.setName(name);
-  }
-
   /// 캐릭터 데이터를 불러오는 함수
-// {
-// 	캐릭터 ID id
-// 	캐릭터 이미지 image
-// 	캐릭터 닉네임 nickname
-// 	캐릭터 레벨 currentLevel
-// 	캐릭터 현재경험치 currentExp
-// 	캐릭터 최대경험치 maxExp
-// }
   Future<void> fetchData() async {
     // var currentExp = await _characterUseCases.getExp();
     // // var currentExp = 30;
@@ -131,27 +96,6 @@ class GrowController with ChangeNotifier {
 
     // characterName = name;
 
-    final prefs = await SharedPreferences.getInstance();
-
-    var prevCharacterJson = prefs.getString('prevCharacter');
-    // 저장되어 있던 캐릭터 정보가 없으면 서버에서 가져온 캐릭터로 로드
-    if (prevCharacterJson == null) {
-      // 서버에서 가져온 캐릭터
-      _character = Character(
-          id: 1,
-          imageUrl: 'assets/images/first_apple_avatar.png',
-          name: "안녕",
-          nickname: "안녕하세요",
-          maxExp: 30);
-      _isDataFetched = true;
-      _isLoading = false;
-
-      notifyListeners();
-      return;
-    }
-    Character prevCharacter = Character.fromEntity(
-        CharacterEntity.fromJson(jsonDecode(prevCharacterJson)));
-
     // 서버에서 가져온 캐릭터
     var characterFromServer = Character(
         id: 1,
@@ -160,20 +104,38 @@ class GrowController with ChangeNotifier {
         nickname: "안녕하세요",
         maxExp: 30);
 
+    final prefs = await SharedPreferences.getInstance();
+
+    var prevCharacterJson = prefs.getString('prevCharacter');
+    // 저장되어 있던 캐릭터 정보가 없으면 서버에서 가져온 캐릭터로 로드
+    if (prevCharacterJson == null) {
+      // 서버에서 가져온 캐릭터
+      _character = characterFromServer;
+      notifyListeners();
+      return;
+    }
+    Character prevCharacter = Character.fromEntity(
+        CharacterEntity.fromJson(jsonDecode(prevCharacterJson)));
+
     // 저장되어 있던 캐릭터 정보와 서버에서 불러온 캐릭터 정보가 같으면 서버 캐릭터로 로드
     if (prevCharacter.level == characterFromServer.level &&
         prevCharacter.currentExp == characterFromServer.currentExp) {
       _character = characterFromServer;
       _isDataFetched = true;
       _isLoading = false;
+      notifyListeners();
       return;
     }
 
+    // 저장되어 있던 캐릭터와 서버에서 불러온 캐릭터 정보가 다를 때,
+    // 이전 캐릭터로 먼저 로드 후 경험치 증가
+    _character = prevCharacter;
     _isMissionClear = true;
     _isDataFetched = true;
     _isLoading = false;
     increasedExp = (prevCharacter.maxExp - prevCharacter.currentExp) +
         characterFromServer.currentExp;
+    currentCharacter = characterFromServer;
     notifyListeners();
   }
 
@@ -184,6 +146,29 @@ class GrowController with ChangeNotifier {
 
   Future<void> _saveCharacter(Character character) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('prevCharacter', jsonEncode(character.toEntity().toJson()));
+    await prefs.setString(
+        'prevCharacter', jsonEncode(character.toEntity().toJson()));
+  }
+
+    /// 하트 버튼 누를 시 하트 효과
+  void showHearts() {
+    if (isHeartVisible) {
+      return;
+    }
+
+    isHeartVisible = true;
+    notifyListeners();
+    Future.delayed(const Duration(seconds: 6), () {
+      isHeartVisible = false;
+      notifyListeners();
+    });
+  }
+
+  void setCharacterName(String name) {
+    _character.name = name;
+    notifyListeners();
+
+    // 서버에 캐릭터 이름 저장
+    _characterUseCases.setName(name);
   }
 }

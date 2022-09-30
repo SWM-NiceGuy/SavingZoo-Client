@@ -120,7 +120,7 @@ class GrowScreen extends StatelessWidget {
                       ),
                     ),
                     // 하트 버튼을 누르면 하트 표시
-                    if (growController.heartsIsVisible)
+                    if (growController.isHeartVisible)
                       Lottie.asset(
                         'assets/lotties/lottie-hearts.json',
                         repeat: false,
