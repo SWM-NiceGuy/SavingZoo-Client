@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 
 import '../../../../ui/colors.dart';
 
@@ -36,14 +37,14 @@ class ExpBar extends StatelessWidget {
           ),
         ],
       ),
-      child: ClipRRect(
+      child: FAProgressBar(
+        currentValue: percentage * 100,
+        maxValue: 100,
+        // backgroundColor: Colors.grey.shade300,
+        backgroundColor: Colors.transparent,
+        progressColor: expBarColor1,
+        animatedDuration: const Duration(milliseconds: 500),
         borderRadius: BorderRadius.circular(height / 2),
-        child: LinearProgressIndicator(
-          value: percentage,
-          // backgroundColor: Colors.grey.shade300,
-          backgroundColor: Colors.transparent,
-          valueColor: const AlwaysStoppedAnimation(expBarColor1),
-        ),
       ),
     );
   }

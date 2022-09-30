@@ -81,56 +81,10 @@ class MissionCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   // 미션 성공 여부
-                  if (mission.state == 'WAIT')
-                    ElevatedButton(
-                      onPressed: () {
-                        // 미션 성공 후 팝업
-                        missionController.completeMission(mission.id);
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return MissionCompleteDialog(
-                                missionId: mission.id,
-                                reward: mission.reward,
-                              );
-                            });
-                      },
-                      style: ElevatedButton.styleFrom(
-                          primary: Colors.grey.shade100, elevation: 5),
-                      child: const Text(
-                        "완료하기",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: expTextColor),
-                      ),
-                    ),
                   if (mission.state == 'COMPLETE')
                     Image.asset("assets/images/check_icon.png"),
                 ],
               ),
-              // 미션 내용
-              // AnimatedContainer(
-              //   duration: const Duration(milliseconds: 200),
-              //   curve: Curves.easeIn,
-              //   height: selected ? 100 : 0,
-              //   child: Scrollbar(
-              //     child: ListView(
-              //       children: [
-              //         const SizedBox(height: 24),
-              //         Row(
-              //           children: [
-              //             Expanded(
-              //                 child: Text(
-              //               mission.content,
-              //               style: const TextStyle(
-              //                   fontSize: 16,
-              //                   color: Color.fromARGB(255, 102, 102, 102)),
-              //             ))
-              //           ],
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // )
             ],
           )),
     );

@@ -92,23 +92,20 @@ class GrowScreen extends StatelessWidget {
                       width: width,
                       height: 12.0,
                       level: growController.character.level,
-                      currentExp: growController.character.displayExp,
+                      currentExp: growController.character.currentExp,
                       maxExp: growController.character.maxExp,
-                      percentage: growController.character.expPercentage,
-                      leading: growController.hasBadge
-                          ? Image.asset(
-                              'assets/images/pioneer_badge_icon.png',
-                              height: 32.0,
-                            )
-                          : null,
+                      percentage: growController.character.expPct,
                     ),
                   ),
                 ],
               ),
               // 캐릭터 이름
               const SizedBox(height: 24),
-              Text(growController.characterName ?? "", style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-              Text('(${growController.character.avatar.nickname})', style: const TextStyle(color: Colors.grey)),
+              Text(growController.character.name ?? "",
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w500)),
+              Text('(${growController.character.nickname})',
+                  style: const TextStyle(color: Colors.grey)),
               // 캐릭터 이미지
               Expanded(
                 child: Stack(
@@ -119,15 +116,21 @@ class GrowScreen extends StatelessWidget {
                       duration:
                           Duration(milliseconds: growController.fadeDuration),
                       child: Image.asset(
-                        growController.character.avatarPath,
+                        growController.character.imageUrl,
                       ),
                     ),
-                    growController.heartsIsVisible
-                        ? Lottie.asset(
-                            'assets/lotties/lottie-hearts.json',
-                            repeat: false,
-                          )
-                        : const SizedBox(),
+                    // 하트 버튼을 누르면 하트 표시
+                    if (growController.heartsIsVisible)
+                      Lottie.asset(
+                        'assets/lotties/lottie-hearts.json',
+                        repeat: false,
+                      ),
+                    // 레벨업 시 레벨업 효과
+                    if (growController.levelUpEffect)
+                      Lottie.asset(
+                        'assets/lotties/lottie-levelup.json',
+                        repeat: false,
+                      )
                   ],
                 ),
               ),
@@ -162,8 +165,7 @@ class GrowScreen extends StatelessWidget {
                           width: buttonHeight,
                           height: buttonHeight,
                           padding: EdgeInsets.zero,
-                          onPress: () => _toQrScanner(context).then((mission) {
-                          }),
+                          onPress: () => growController.increaseExp(10),
                           child: Image.asset(
                             'assets/images/barcode_icon.png',
                             width: buttonHeight / 2,
