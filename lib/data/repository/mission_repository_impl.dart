@@ -33,8 +33,14 @@ class MissionRepositoryImpl implements MissionRepository {
   }
   
   @override
-  Future<bool> submitMission() {
+  Future<bool> submitMission(String filePath) {
     // TODO: implement submitMission
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<void> uploadMission() {
+    // TODO: implement uploadMission
     throw UnimplementedError();
   }
 }

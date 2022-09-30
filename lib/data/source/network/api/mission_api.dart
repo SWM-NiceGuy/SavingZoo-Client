@@ -5,7 +5,6 @@ import 'package:amond/data/entity/mission_entity.dart';
 import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/auth/auth_info.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 
 class MissionApi {
   Future<Iterable<MissionEntity>> getAllMissions() async {
@@ -42,12 +41,12 @@ class MissionApi {
     }
   }
 
-  Future<void> uploadMission(int missionId, File file) async {
+  Future<void> uploadMission(int missionId, String filePath) async {
     final url = Uri.parse('uri');
     var request = http.MultipartRequest("POST", url);
     request.fields['user'] = 'blah'; // 바디에 필요한 필드
     var pic =
-        await http.MultipartFile.fromPath("file_field", file.path); // 미션 사진
+        await http.MultipartFile.fromPath("file_field", filePath); // 미션 사진
     request.files.add(pic);
 
     var streamedResponse = await request.send();

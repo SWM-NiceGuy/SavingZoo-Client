@@ -47,7 +47,9 @@ class MissionDetailScreen extends StatelessWidget {
         backgroundColor: Colors.white,
       ),
       // 미션 인증 하단 바
-      bottomNavigationBar: MissionDetailBottomBar(reward: mission.reward),
+      bottomNavigationBar: missionDetailController.isLoading 
+      ? const SizedBox(width: 0,height: 0,)
+      : MissionDetailBottomBar(reward: mission.reward),
       body: missionDetailController.isLoading
           ? const Center(child: PlatformBasedIndicator())
           : ListView(
