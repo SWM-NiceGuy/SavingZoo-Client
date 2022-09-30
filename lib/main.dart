@@ -11,6 +11,7 @@ import 'package:amond/secrets/secret.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:amond/utils/app_version.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_common.dart';
@@ -20,6 +21,22 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
+
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  String? firebaseToken = await FirebaseMessaging.instance.getToken();
+  print(firebaseToken);
+
   KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
   final bool isLatest = await isLatestVersion();
 
