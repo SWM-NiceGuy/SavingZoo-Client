@@ -9,7 +9,7 @@ import 'package:amond/presentation/screens/qr_scanner.dart';
 import 'package:amond/presentation/screens/splash_screen.dart';
 import 'package:amond/secrets/secret.dart';
 import 'package:amond/ui/colors.dart';
-import 'package:amond/utils/app_version.dart';
+import 'package:amond/utils/version/app_version.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

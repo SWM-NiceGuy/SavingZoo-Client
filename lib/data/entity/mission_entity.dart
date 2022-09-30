@@ -4,7 +4,6 @@ part 'mission_entity.g.dart';
 
 @JsonSerializable()
 class MissionEntity {
-  // provider, email, nickname, gender, age
   final int id;
   final String title;
   final String content;
