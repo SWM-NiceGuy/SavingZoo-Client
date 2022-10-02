@@ -1,13 +1,10 @@
-import 'package:amond/data/entity/mission_entity.dart';
 import 'package:amond/data/repository/mission_repository_impl.dart';
-import 'package:amond/presentation/controllers/mission_controller.dart';
+import 'package:amond/domain/models/mission_list.dart';
 import 'package:amond/presentation/controllers/mission_detail_controller.dart';
 import 'package:amond/presentation/screens/mission/mission_detail_screen.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import 'mission_complete_dialog.dart';
 
 class MissionCard extends StatelessWidget {
   const MissionCard({
@@ -15,11 +12,10 @@ class MissionCard extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final MissionEntity mission;
+  final MissionList mission;
 
   @override
   build(BuildContext context) {
-    final missionController = context.read<MissionController>();
     return GestureDetector(
       // 미션카드 터치시 미션 상세 페이지로 이동
       onTap: () {
@@ -59,29 +55,27 @@ class MissionCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 미션 아이콘 (아마 사진이 될 것)
-                  mission.imageUrl == ""
+                  mission.iconUrl== ""
                       ? const Icon(
                           Icons.water_drop,
                           size: 48,
                           color: Colors.blue,
                         )
-                      : Image.network(mission.imageUrl,
+                      : Image.network(mission.iconUrl,
                           height: 40, fit: BoxFit.cover),
                   const SizedBox(width: 24),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     // 미션 내용 및 경험치
                     children: [
-                      Text(mission.title,
+                      Text(mission.name,
                           style: const TextStyle(
                               fontSize: 24, overflow: TextOverflow.ellipsis)),
-                      Text("+${mission.reward}XP",
-                          style: const TextStyle(fontSize: 16)),
                     ],
                   ),
                   const Spacer(),
                   // 미션 성공 여부
-                  if (mission.state == 'COMPLETE')
+                  if (mission.state == 'ACCEPTED')
                     Image.asset("assets/images/check_icon.png"),
                 ],
               ),

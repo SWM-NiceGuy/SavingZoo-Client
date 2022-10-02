@@ -50,14 +50,14 @@ List<SingleChildWidget> dependentModels = [
       login: Login(repository),
     ),
   ),
-  ProxyProvider<CharacterRepositoryImpl, CharacterUseCases>(
-    update: (_, repository, __) => CharacterUseCases(
-      changeExp: ChangeExp(repository),
-      getExp: GetExp(repository),
-      setName: SetName(repository),
-      getName: GetName(repository),
-    ),
-  )
+  // ProxyProvider<CharacterRepositoryImpl, CharacterUseCases>(
+  //   update: (_, repository, __) => CharacterUseCases(
+  //     changeExp: ChangeExp(repository),
+  //     getExp: GetExp(repository),
+  //     setName: SetName(repository),
+  //     getName: GetName(repository),
+  //   ),
+  // )
 ];
 
 List<SingleChildWidget> viewModels = [
@@ -67,7 +67,7 @@ List<SingleChildWidget> viewModels = [
 
   // GrowController
   ChangeNotifierProvider<GrowController>(
-      create: (context) => GrowController(context.read<CharacterUseCases>())),
+      create: (context) => GrowController(context.read<CharacterRepositoryImpl>())),
 
   // MissionController
   ChangeNotifierProvider<MissionController>(

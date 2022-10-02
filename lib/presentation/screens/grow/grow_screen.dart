@@ -31,7 +31,7 @@ class GrowScreen extends StatelessWidget {
     final buttonHeight = height * 0.08;
 
     // 데이터가 불러와 있지 않을때 데이터 불러오기
-    if (!growController.isDataFetched) {
+    if (growController.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         growController.fetchData();
       });
@@ -130,6 +130,12 @@ class GrowScreen extends StatelessWidget {
                       Lottie.asset(
                         'assets/lotties/lottie-levelup.json',
                         repeat: false,
+                      ),
+                    // 최대 레벨 별빛 효과
+                    if (growController.character.level == 4)
+                      Lottie.asset(
+                        'assets/lotties/maxlevel-starfall.json',
+                        repeat: true,
                       )
                   ],
                 ),

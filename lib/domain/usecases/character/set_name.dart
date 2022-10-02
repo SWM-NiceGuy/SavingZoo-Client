@@ -4,7 +4,7 @@ class SetName {
   CharacterRepository repository;
   SetName(this.repository);
 
-  Future<void> call(String name) async {
-    await repository.setName(name);
+  Future<void> call(int petId, String name) async {
+    await repository.setName(petId, name);
   }
 }

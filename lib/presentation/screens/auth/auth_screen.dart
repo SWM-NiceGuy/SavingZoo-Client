@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:amond/utils/auth/do_apple_auth.dart';
@@ -64,9 +65,11 @@ class _AuthScreenState extends State<AuthScreen> {
                             if (error is PlatformException &&
                                 error.code == 'CANCELED') {
                               return;
+                            } else if (error is TimeoutException) {
+                              _showLoginFailDialog(context, '로그인 시간이 초과되었습니다.');
                             } else {
                               // 로그인 실패
-                              _showLoginFailDialog(context);
+                              _showLoginFailDialog(context, '로그인에 실패했습니다.');
                             }
                           }
                         },
@@ -94,7 +97,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                   error.code == AuthorizationErrorCode.canceled) {
                                 return;
                               }
-                              _showLoginFailDialog(context);
+                              _showLoginFailDialog(context, '로그인에 실패했습니다.');
                             }
                           },
                           child: Image.asset(
@@ -122,13 +125,13 @@ class _AuthScreenState extends State<AuthScreen> {
   }
 
   /// 로그인 실패시 Dialog를 보여주는 함수
-  void _showLoginFailDialog(BuildContext context) {
+  void _showLoginFailDialog(BuildContext context, String errorMsg) {
     if (Platform.isIOS) {
       showCupertinoDialog(
         context: context,
         builder: (_) {
           return CupertinoAlertDialog(
-            title: const Text('로그인에 실패하였습니다'),
+            title: Text(errorMsg),
             content: const Text('다시 시도해주세요.'),
             actions: [
               CupertinoDialogAction(
@@ -144,7 +147,7 @@ class _AuthScreenState extends State<AuthScreen> {
         context: context,
         builder: (_) {
           return AlertDialog(
-            title: const Text('로그인에 실패하였습니다'),
+            title: Text(errorMsg),
             content: const Text('다시 시도해주세요.'),
             actions: [
               TextButton(

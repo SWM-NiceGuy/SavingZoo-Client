@@ -1,4 +1,5 @@
-import 'package:amond/data/entity/mission_entity.dart';
+import 'package:provider/provider.dart';
+import 'package:amond/presentation/controllers/mission_controller.dart';
 import 'package:flutter/material.dart';
 
 import 'components/mission_card.dart';
@@ -10,32 +11,32 @@ class MissionScreen extends StatelessWidget {
 
   bool isDataFetched = false;
 
-  var missions = [
-    MissionEntity(id: 1, title: 'test1', content: '테스트1', imageUrl: '', reward: 1, state: 'COMPLETE'),
-    MissionEntity(id: 2, title: 'test2', content: '테스트1', imageUrl: '', reward: 1, state: 'COMPLETE'),
-    MissionEntity(id: 3, title: 'test3', content: '테스트1', imageUrl: '', reward: 1, state: 'COMPLETE'),
-    MissionEntity(id: 4, title: 'test4', content: '테스트1', imageUrl: '', reward: 1, state: 'COMPLETE'),
-  ];
+  // var missions = [
+  //   MissionList(id: 1, name: 'test1', iconUrl: '', state: 'ACCEPTED'),
+  //   MissionList(id: 2, name: 'test2', iconUrl: '', state: 'INCOMPLETE'),
+  //   MissionList(id: 3, name: 'test3', iconUrl: '', state: 'COMPLETE'),
+  //   MissionList(id: 4, name: 'test4', iconUrl: '', state: 'COMPLETE'),
+  // ];
 
   @override
   Widget build(BuildContext context) {
-    // final missionController = context.watch<MissionController>();
+    final missionController = context.watch<MissionController>();
 
-    // if (!isDataFetched) {
-    //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //     isDataFetched = true;
-    //     missionController.fetchMissions();
-    //   });
-    // }
+    if (!isDataFetched) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        isDataFetched = true;
+        missionController.fetchMissions();
+      });
+    }
 
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-      itemCount: missions.length,
+      itemCount: missionController.missions.length,
       itemBuilder: (context, index) => Container(
         // 카드 간의 상하 간격
         margin: const EdgeInsets.symmetric(vertical: 8),
         child: MissionCard(
-          mission: missions[index],
+          mission: missionController.missions[index],
         ),
       ),
     );

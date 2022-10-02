@@ -1,6 +1,8 @@
-import 'package:amond/data/entity/mission_entity.dart';
+import 'package:amond/data/entity/mission_detail_entity.dart';
+import 'package:amond/data/entity/mission_list_entity.dart';
 import 'package:amond/data/source/network/api/mission_api.dart';
 import 'package:amond/domain/models/mission_detail.dart';
+import 'package:amond/domain/models/mission_list.dart';
 import 'package:amond/domain/repositories/mission_repository.dart';
 
 class MissionRepositoryImpl implements MissionRepository {
@@ -11,9 +13,9 @@ class MissionRepositoryImpl implements MissionRepository {
 
   /// 유저에게 할당된 모든 미션을 가져온다.
   @override
-  Future<List<MissionEntity>> getAllMissions() async {
+  Future<List<MissionList>> getAllMissions() async {
     final missions = await api.getAllMissions();
-    return missions.toList();  
+    return missions.map((e) => MissionList.fromEntity(e)).toList();  
   }
 
   /// id가 [missionId]인 미션을 완료(COMPLETE) 처리한다.
@@ -27,20 +29,22 @@ class MissionRepositoryImpl implements MissionRepository {
   }
 
   @override
-  Future<MissionDetail> getMissionDetail(int missionId) {
-    // TODO: implement getMissionDetail
-    throw UnimplementedError();
+  Future<MissionDetail> getMissionDetail(int missionId) async {
+    try {
+    final missionDetail = await api.getMissionDetail(missionId);
+    return MissionDetail.fromEntity(missionDetail);
+    } catch (e) {
+      rethrow;
+    }
   }
   
   @override
-  Future<bool> submitMission(String filePath) {
-    // TODO: implement submitMission
-    throw UnimplementedError();
-  }
-  
-  @override
-  Future<void> uploadMission() {
-    // TODO: implement uploadMission
-    throw UnimplementedError();
+  Future<void> submitMission(int missionId, String filePath) async {
+    try {
+      await api.uploadMission(missionId, filePath);
+    }
+    catch (e) {
+      rethrow;
+    }
   }
 }

@@ -3,13 +3,13 @@ import 'dart:convert';
 
 import 'package:amond/data/entity/character_entity.dart';
 import 'package:amond/domain/models/character.dart';
-import 'package:amond/domain/usecases/character/character_use_cases.dart';
+import 'package:amond/domain/repositories/character_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class GrowController with ChangeNotifier {
-  final CharacterUseCases _characterUseCases;
-  GrowController(this._characterUseCases);
+  final CharacterRepository _characterRepository;
+  GrowController(this._characterRepository);
 
   late Character _character;
   Character get character => _character;
@@ -17,8 +17,6 @@ class GrowController with ChangeNotifier {
   bool _isLoading = true;
   bool get isLoading => _isLoading;
 
-  bool _isDataFetched = false;
-  bool get isDataFetched => _isDataFetched;
 
   bool _isMissionClear = false;
   bool get isMissionClear => _isMissionClear;
@@ -111,6 +109,7 @@ class GrowController with ChangeNotifier {
     if (prevCharacterJson == null) {
       // 서버에서 가져온 캐릭터
       _character = characterFromServer;
+      _isLoading = false;
       notifyListeners();
       return;
     }
@@ -121,17 +120,14 @@ class GrowController with ChangeNotifier {
     if (prevCharacter.level == characterFromServer.level &&
         prevCharacter.currentExp == characterFromServer.currentExp) {
       _character = characterFromServer;
-      _isDataFetched = true;
       _isLoading = false;
       notifyListeners();
       return;
     }
 
-    // 저장되어 있던 캐릭터와 서버에서 불러온 캐릭터 정보가 다를 때,
-    // 이전 캐릭터로 먼저 로드 후 경험치 증가
+    // 저장되어 있던 캐릭터와 서버에서 불러온 캐릭터 정보가 다를 때, 이전 캐릭터로 먼저 로드 후 경험치 증가
     _character = prevCharacter;
     _isMissionClear = true;
-    _isDataFetched = true;
     _isLoading = false;
     increasedExp = (prevCharacter.maxExp - prevCharacter.currentExp) +
         characterFromServer.currentExp;
@@ -141,7 +137,7 @@ class GrowController with ChangeNotifier {
 
   /// 서버에서 [memberInfo]의 캐릭터의 경험치를 [value]로 바꿈
   Future<void> changeExpInServer(int value) async {
-    await _characterUseCases.changeExp(value);
+    await _characterRepository.changeExp(value);
   }
 
   Future<void> _saveCharacter(Character character) async {
@@ -150,7 +146,7 @@ class GrowController with ChangeNotifier {
         'prevCharacter', jsonEncode(character.toEntity().toJson()));
   }
 
-    /// 하트 버튼 누를 시 하트 효과
+  /// 하트 버튼 누를 시 하트 효과
   void showHearts() {
     if (isHeartVisible) {
       return;
@@ -169,6 +165,6 @@ class GrowController with ChangeNotifier {
     notifyListeners();
 
     // 서버에 캐릭터 이름 저장
-    _characterUseCases.setName(name);
+    _characterRepository.setName(character.id, name);
   }
 }

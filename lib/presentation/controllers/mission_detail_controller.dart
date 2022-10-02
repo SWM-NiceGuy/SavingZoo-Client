@@ -4,13 +4,13 @@ import 'package:flutter/foundation.dart';
 
 class MissionDetailController with ChangeNotifier {
 
-  final MissionRepository missionRepository;
+  final MissionRepository _missionRepository;
 
   bool _mounted = false;
 
   final int missionId;
 
-  MissionDetailController(this.missionRepository, {required this.missionId});
+  MissionDetailController(this._missionRepository, {required this.missionId});
 
   late final MissionDetail _missionDetail;
   MissionDetail get mission => _missionDetail;
@@ -24,25 +24,25 @@ class MissionDetailController with ChangeNotifier {
   /// 미션 상세 정보를 불러온다.
   Future<void> fetchData() async {
 
-    // _missionDetail = await missionRepository.getMissionDetail(missionId);
+    _missionDetail = await _missionRepository.getMissionDetail(missionId);
 
-    _missionDetail = MissionDetail(
-      name: '금속캔',
-      description:
-          "배달 음식의 편리함은 포기하기가 어려워요🥲 대신 음식이 담겼던 플라스틱 용기를 깨끗하게 세척하여 환경 보호 해봐요!",
-      content: '금속캔 세척하고 압착하여 배출하기',
-      submitGuide: "음식이 담겼던 플라스틱 용기를 깨끗히 세척 후 사진을 찍어 인증해주세요",
-      exampleImageUrls: [
-        'https://metacode.biz/@test/avatar.jpg',
-        'https://metacode.biz/@test/avatar.jpg',
-        'https://metacode.biz/@test/avatar.jpg',
-        'https://metacode.biz/@test/avatar.jpg',
-      ],
-      reward: 8,
-      state: 'INCOMPLETE');
+    // _missionDetail = MissionDetail(
+    //   name: '금속캔',
+    //   description:
+    //       "배달 음식의 편리함은 포기하기가 어려워요🥲 대신 음식이 담겼던 플라스틱 용기를 깨끗하게 세척하여 환경 보호 해봐요!",
+    //   content: '금속캔 세척하고 압착하여 배출하기',
+    //   submitGuide: "음식이 담겼던 플라스틱 용기를 깨끗히 세척 후 사진을 찍어 인증해주세요",
+    //   exampleImageUrls: [
+    //     'https://metacode.biz/@test/avatar.jpg',
+    //     'https://metacode.biz/@test/avatar.jpg',
+    //     'https://metacode.biz/@test/avatar.jpg',
+    //     'https://metacode.biz/@test/avatar.jpg',
+    //   ],
+    //   reward: 8,
+    //   state: 'INCOMPLETE');
 
-    // for test
-    await Future.delayed(const Duration(seconds: 2));
+    // // for test
+    // await Future.delayed(const Duration(seconds: 2));
     if (_mounted) return;
 
     _isLoading = false;

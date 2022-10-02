@@ -1,25 +1,25 @@
-import 'package:amond/data/entity/mission_entity.dart';
+import 'package:amond/domain/models/mission_list.dart';
 import 'package:amond/domain/repositories/mission_repository.dart';
 import 'package:flutter/material.dart';
 
 class MissionController with ChangeNotifier {
 
-  final MissionRepository repository;
+  final MissionRepository _missionRepository;
 
-  MissionController(this.repository);
+  MissionController(this._missionRepository);
 
   var isLoading = true;
   
-  List<MissionEntity> _missions = [];
-  List<MissionEntity> get missions => [..._missions];
+  List<MissionList> _missions = [];
+  List<MissionList> get missions => [..._missions];
 
   /// 미션들을 불러온다.
   Future<void> fetchMissions() async {
     isLoading = true;
     notifyListeners();
-    List<MissionEntity> missions;
+    List<MissionList> missions;
     try {
-      missions = await repository.getAllMissions();
+      missions = await _missionRepository.getAllMissions();
     } catch (error) {
       rethrow;
     }
@@ -35,7 +35,7 @@ class MissionController with ChangeNotifier {
     
     _missions[missionIdx].state = "COMPLETE";
     try {
-      await repository.completeMission(missionId);
+      await _missionRepository.completeMission(missionId);
     } catch (error) {
       // 미션 완료 처리에 실패하면 다시 완료대기 상태로 변경
       _missions[missionIdx].state = "WAIT";

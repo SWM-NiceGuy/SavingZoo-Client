@@ -1,24 +1,37 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:amond/data/entity/mission_entity.dart';
+import 'package:amond/data/entity/mission_detail_entity.dart';
+import 'package:amond/data/entity/mission_list_entity.dart';
 import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/auth/auth_info.dart';
 import 'package:http/http.dart' as http;
 
 class MissionApi {
-  Future<Iterable<MissionEntity>> getAllMissions() async {
-    final url = Uri.parse('$baseUrl/v1/mission');
+  Future<Iterable<MissionListEntity>> getAllMissions() async {
+    final url = Uri.parse('$baseUrl/user/mission/daily');
 
     final response = await http.get(url, headers: {
-      'Authorization': '$globalToken',
+      'Authorization': 'Bearer $globalToken',
     });
     final Map<String, dynamic> result =
         jsonDecode(utf8.decode(response.bodyBytes));
     final List<dynamic> missionsList = result["missions"];
-    Iterable<MissionEntity> missions =
-        missionsList.map((e) => MissionEntity.fromJson(e));
+    Iterable<MissionListEntity> missions =
+        missionsList.map((e) => MissionListEntity.fromJson(e));
     return missions;
+  }
+
+  Future<MissionDetailEntity> getMissionDetail(int missionId) async {
+    final url = Uri.parse('$baseUrl/user/mission/$missionId');
+
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $globalToken',
+    });
+    final Map<String, dynamic> result =
+        jsonDecode(utf8.decode(response.bodyBytes));
+    print(result);
+    final missionDetail = MissionDetailEntity.fromJson(result);
+    return missionDetail;
   }
 
   Future<void> completeMission(int missionId) async {
