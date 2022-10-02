@@ -5,6 +5,7 @@ import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/utils/auth/do_auth.dart';
+import 'package:amond/utils/show_failure_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:amond/presentation/screens/grow/grow_screen.dart';
 import 'package:amond/ui/colors.dart';
@@ -109,7 +110,7 @@ class _MainScreenState extends State<MainScreen> {
                   Navigator.of(context)
                       .pushReplacementNamed(AuthScreen.routeName);
                 } catch (error) {
-                  _showLogoutFailDialog(context, '로그아웃에 실패했습니다');
+                  showFailureDialog(context, '로그아웃에 실패했습니다');
                 }
               },
             ),
@@ -131,7 +132,7 @@ class _MainScreenState extends State<MainScreen> {
                       .pushReplacementNamed(AuthScreen.routeName);
                 } catch (error) {
                   print(error);
-                  _showLogoutFailDialog(context, '회원탈퇴에 실패했습니다.');
+                  showFailureDialog(context, '회원탈퇴에 실패했습니다.');
                 }
               },
             )
@@ -156,41 +157,7 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  void _showLogoutFailDialog(BuildContext context, String errMsg) {
-    if (Platform.isIOS) {
-      showCupertinoDialog(
-        context: context,
-        builder: (_) {
-          return CupertinoAlertDialog(
-            title: Text(errMsg),
-            content: const Text('다시 시도해주세요.'),
-            actions: [
-              CupertinoDialogAction(
-                child: const Text('확인'),
-                onPressed: () => Navigator.of(context).pop(),
-              )
-            ],
-          );
-        },
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: Text(errMsg),
-            content: const Text('다시 시도해주세요.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('확인'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-  }
+  
 
   Future<bool> _checkDialog(BuildContext context, String title,
       [String? content]) async {

@@ -63,7 +63,7 @@ class _CharacterNameInputState extends State<CharacterNameInput> {
               ),
               const Text('캐릭터의 이름을 입력해주세요. (2-8자)'),
               // 캐릭터 이미지
-              Expanded(child: Image.asset(widget.imageUrl)),
+              Expanded(child: Image.network(widget.imageUrl)),
               // 이름 입력 Container
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16),

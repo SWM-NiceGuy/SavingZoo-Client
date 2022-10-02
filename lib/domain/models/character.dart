@@ -7,7 +7,7 @@ class Character {
   final String imageUrl;
   final int level;
   int currentExp;
-  final int maxExp;
+  int maxExp;
 
   double get expPct => currentExp / maxExp;
 
@@ -17,7 +17,7 @@ class Character {
       required this.nickname,
       required this.imageUrl,
       this.level = 1,
-      this.currentExp = 5,
+      this.currentExp = 0,
       required this.maxExp});
 
   factory Character.fromEntity(CharacterEntity entity) =>

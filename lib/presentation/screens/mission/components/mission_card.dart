@@ -16,6 +16,8 @@ class MissionCard extends StatelessWidget {
 
   @override
   build(BuildContext context) {
+    final deviceSize = MediaQuery.of(context).size;
+
     return GestureDetector(
       // 미션카드 터치시 미션 상세 페이지로 이동
       onTap: () {
@@ -53,30 +55,51 @@ class MissionCard extends StatelessWidget {
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // 미션 아이콘 (아마 사진이 될 것)
-                  mission.iconUrl== ""
+                  mission.iconUrl == ""
                       ? const Icon(
                           Icons.water_drop,
                           size: 48,
                           color: Colors.blue,
                         )
-                      : Image.network(mission.iconUrl,
-                          height: 40, fit: BoxFit.cover),
+                      : Image.network(
+                          mission.iconUrl,
+                          height: 40,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (_, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+                            return Image.asset(
+                              'assets/images/img_placeholder.gif',
+                              height: 40,
+                              width: 40,
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        ),
                   const SizedBox(width: 24),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    // 미션 내용 및 경험치
-                    children: [
-                      Text(mission.name,
+                  SizedBox(
+                    width: deviceSize.width * 0.5,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      // 미션 내용 및 경험치
+                      children: [
+                        Text(
+                          mission.name,
                           style: const TextStyle(
-                              fontSize: 24, overflow: TextOverflow.ellipsis)),
-                    ],
+                              fontSize: 20, overflow: TextOverflow.ellipsis),
+                        ),
+                      ],
+                    ),
                   ),
                   const Spacer(),
                   // 미션 성공 여부
                   if (mission.state == 'ACCEPTED')
-                    Image.asset("assets/images/check_icon.png"),
+                  Image.asset("assets/images/check_icon.png"),
                 ],
               ),
             ],

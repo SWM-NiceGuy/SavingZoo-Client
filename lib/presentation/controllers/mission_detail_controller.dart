@@ -3,7 +3,6 @@ import 'package:amond/domain/repositories/mission_repository.dart';
 import 'package:flutter/foundation.dart';
 
 class MissionDetailController with ChangeNotifier {
-
   final MissionRepository _missionRepository;
 
   bool _mounted = false;
@@ -23,7 +22,6 @@ class MissionDetailController with ChangeNotifier {
 
   /// 미션 상세 정보를 불러온다.
   Future<void> fetchData() async {
-
     _missionDetail = await _missionRepository.getMissionDetail(missionId);
 
     // _missionDetail = MissionDetail(
@@ -55,29 +53,35 @@ class MissionDetailController with ChangeNotifier {
     notifyListeners();
 
     // 서버의 STATE가 인증 대기중으로 바뀌어야 함
-    // await missionRepository.submitMission();
-    
-    // for test
-    await Future.delayed(Duration(seconds: 2));
+    try {
+      await _missionRepository.submitMission(missionId, filePath);
 
-    if (_mounted) return;
+      // for test
+      // await Future.delayed(Duration(seconds: 2));
 
-    _missionDetail.state = "WAITING";
+      if (_mounted) return;
 
-    _isSubmitting = false;
-    notifyListeners();
+      _missionDetail.state = "WAIT";
+
+      _isSubmitting = false;
+      notifyListeners();
+    } catch (e) {
+      _isSubmitting = false;
+      notifyListeners();
+      rethrow;
+    }
   }
 
   String get stateToButtonText {
     switch (mission.state) {
       case 'INCOMPLETE':
         return "인증하기";
-      case 'WAITING':
-       return "인증 대기중";
-      case 'ACCEPTED' :
+      case 'WAIT':
+        return "인증 대기중";
+      case 'ACCEPTED':
         return "미션 인증 완료";
       default:
-       return "인증하기";
+        return "인증하기";
     }
   }
 

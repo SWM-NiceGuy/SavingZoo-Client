@@ -98,7 +98,7 @@ class GrowScreen extends StatelessWidget {
                       opacity: growController.avatarIsVisible ? 1.0 : 0.0,
                       duration:
                           Duration(milliseconds: growController.fadeDuration),
-                      child: Image.asset(
+                      child: Image.network(
                         growController.character.imageUrl,
                       ),
                     ),

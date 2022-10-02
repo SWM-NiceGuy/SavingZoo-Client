@@ -1,4 +1,5 @@
 import 'package:amond/presentation/controllers/mission_detail_controller.dart';
+import 'package:amond/utils/show_failure_dialog.dart';
 import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,13 +39,16 @@ class MissionDetailBottomBar extends StatelessWidget {
                               // 카메라로 이미지 선택
                               final ImagePicker picker = ImagePicker();
                               XFile? image =
-                                  await picker.pickImage(source: ImageSource.camera);
+                                  await picker.pickImage(source: ImageSource.camera, imageQuality: 35);
 
                               if (image == null) return;
 
                               // 미션 업로드 로직
                               // 업로드
-                              await controller.submit(image.path);
+                              
+                              controller.submit(image.path).onError((error, stackTrace) {
+                                showFailureDialog(context, '사진 전송에 실패했습니다.');
+                              });
                             }
                           : null,
                       style: ButtonStyle(
@@ -56,6 +60,7 @@ class MissionDetailBottomBar extends StatelessWidget {
                           if (states.contains(MaterialState.pressed)) {
                             return Colors.transparent;
                           }
+                          return null;
                         }),
                         shadowColor:
                             MaterialStateProperty.all(Colors.transparent),
