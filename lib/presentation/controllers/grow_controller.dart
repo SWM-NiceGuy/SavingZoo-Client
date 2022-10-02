@@ -1,35 +1,36 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:amond/data/entity/character_entity.dart';
 import 'package:amond/domain/models/character.dart';
-import 'package:amond/domain/usecases/character/character_use_cases.dart';
+import 'package:amond/domain/repositories/character_repository.dart';
 import 'package:flutter/material.dart';
-
-import '../../domain/models/avatar.dart';
-
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class GrowController with ChangeNotifier {
-  final CharacterUseCases _characterUseCases;
-  GrowController(this._characterUseCases);
+  final CharacterRepository _characterRepository;
+  GrowController(this._characterRepository);
 
   late Character _character;
-  String? characterName;
-
   Character get character => _character;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
 
-  bool _isDataFetched = false;
-  bool get isDataFetched => _isDataFetched;
+  bool _isMissionClear = false;
+  bool get isMissionClear => _isMissionClear;
 
   bool isNewUser = false;
 
-  bool hasBadge = false; // 개척자 배지 보유 여부
-  int fadeDuration = 1000; // Fade 애니메이션 지속시간
+  final int fadeDuration = 1000; // Fade 애니메이션 지속시간
   bool avatarIsVisible = true; // 아바타 보임 유무
 
-  bool heartsIsVisible = false; // 하트 애니메이션 보임 유무
+  bool isHeartVisible = false; // 하트 애니메이션 보임 유무
+  bool levelUpEffect = false;
+
+  int? increasedExp;
+  Character? currentCharacter;
+
   final heartComment = '사랑을 받으니 무엇이든\n할 수 있을 것만 같아요!';
 
   final _comments = [
@@ -39,65 +40,41 @@ class GrowController with ChangeNotifier {
   ];
   int _commentOrder = 0;
   String get comment =>
-      heartsIsVisible ? heartComment : _comments[_commentOrder];
+      isHeartVisible ? heartComment : _comments[_commentOrder];
 
-  void _increaseExpBar(double from, double to) {
-    int durationSeconds = 1; // 경험치 변화 애니메이션 시간
-    int count = 0;
+  /// 캐릭터의 경험치를 증가시키고 UI효과 발생
+  Future<void> increaseExp(int value) async {
+    increasedExp = null;
 
-    Timer.periodic(
-      Duration(milliseconds: (durationSeconds * 1000) ~/ 100),
-      (timer) {
-        count++;
+    // 레벨업 하지 않는 경우
+    if (character.currentExp + value < character.maxExp) {
+      character.currentExp += value;
+      notifyListeners();
+      _saveCharacter(character);
+      return;
+    }
 
-        _character.expPercentage = from + (to - from) * count / 100;
-        notifyListeners();
-
-        if (count == 100) {
-          timer.cancel();
-          _character.expPercentage = to;
-          notifyListeners();
-        }
-
-        if (_character.expPercentage == 1.0) {
-          changeAvatar();
-        }
-      },
-    );
-  }
-
-  /// 경험치를 증가시킨다
-  Future<void> increaseExp(int point) async {
-    _character.increaseExp(point, _increaseExpBar);
-
+    // 레벨업 하는 경우
+    character.currentExp = character.maxExp;
     notifyListeners();
-    await changeExpInServer(_character.currentExp);
-  }
 
-  /// 다음 단계로 아바타를 변화시킨다.
-  /// 2초간 사라진 후 0.5초 동안 다음 아바타를 등장시킨다
-  void changeAvatar() {
-    fadeDuration = 2000;
+    // 캐릭터 fade 애니메이션
     avatarIsVisible = false;
     notifyListeners();
+    await Future.delayed(Duration(milliseconds: fadeDuration));
 
-    Future.delayed(Duration(milliseconds: fadeDuration), () {
-      _character.avatar = avatarList[_character.level + 1];
-      fadeDuration = 500;
-      avatarIsVisible = true;
-      notifyListeners();
+    // _character = 서버에서 가져온 캐릭터;
+    _character = currentCharacter!;
+    currentCharacter = null;
 
-      if (_character.avatar == avatarList.last) {
-        return;
-      }
+    avatarIsVisible = true;
+    levelUpEffect = true;
+    notifyListeners();
 
-      _character.resetExp();
-      notifyListeners();
-
-      if (_character.extraExp > 0) {
-        increaseExp(_character.extraExp);
-      }
-    });
+    await Future.delayed(const Duration(milliseconds: 1000));
+    levelUpEffect = false;
+    notifyListeners();
+    _saveCharacter(character);
   }
 
   void changeComment() {
@@ -105,50 +82,99 @@ class GrowController with ChangeNotifier {
     notifyListeners();
   }
 
-  void showHearts() {
-    if (heartsIsVisible) {
-      return;
-    }
-
-    heartsIsVisible = true;
-    notifyListeners();
-    Future.delayed(const Duration(seconds: 6), () {
-      heartsIsVisible = false;
-      notifyListeners();
-    });
-  }
-
-  void setCharacterName(String name) {
-    characterName = name;
-    notifyListeners();
-    
-    // 서버에 캐릭터 이름 저장
-    _characterUseCases.setName(name);
-  }
-
   /// 캐릭터 데이터를 불러오는 함수
   Future<void> fetchData() async {
-    var currentExp = await _characterUseCases.getExp();
-    // var currentExp = 30;
-    var name = await _characterUseCases.getName();
+    // var currentExp = await _characterUseCases.getExp();
+    // // var currentExp = 30;
+    // var name = await _characterUseCases.getName();
     // characterName = '장금이';
+
+    // characterName = name;
+
+    // 서버에서 가져온 캐릭터
+    // var characterFromServer = await _characterRepository.getCharacter();
+
+    // test용 서버에서 가져온 캐릭터
+    var characterFromServer = Character(
+        id: 1,
+        imageUrl: 'assets/images/first_apple_avatar.png',
+        name: "안녕",
+        nickname: '나야나',
+        currentExp: 5,
+        maxExp: 30);
+
     // 캐릭터 닉네임이 없으면 새로운 유저로 판단
-    if (name == null) {
+    if (characterFromServer.nickname == null) {
       isNewUser = true;
     }
 
-    characterName = name;
-  
-    _character = Character.ofExp(currentExp);
+    final prefs = await SharedPreferences.getInstance();
 
-    _isDataFetched = true;
+    var prevCharacterJson = prefs.getString('prevCharacter');
+    // 저장되어 있던 캐릭터 정보가 없으면 서버에서 가져온 캐릭터로 로드
+    if (prevCharacterJson == null) {
+      // 서버에서 가져온 캐릭터
+      _character = characterFromServer;
+      _isLoading = false;
+      notifyListeners();
+      return;
+    }
+    Character prevCharacter = Character.fromEntity(
+        CharacterEntity.fromJson(jsonDecode(prevCharacterJson)));
+
+    // 저장되어 있던 캐릭터 정보와 서버에서 불러온 캐릭터 정보가 같으면 서버 캐릭터로 로드
+    if (prevCharacter.level == characterFromServer.level &&
+        prevCharacter.currentExp == characterFromServer.currentExp) {
+      _character = characterFromServer;
+      _isLoading = false;
+      notifyListeners();
+      return;
+    }
+
+    // 저장되어 있던 캐릭터와 서버에서 불러온 캐릭터 정보가 다를 때, 이전 캐릭터로 먼저 로드 후 경험치 증가
+    _character = prevCharacter;
+    _isMissionClear = true;
     _isLoading = false;
-
+    // 서버에서 불러온 캐릭터의 레벨이 더 높을 때, 같을 때 구분해서 계산
+    increasedExp = prevCharacter.level < characterFromServer.level
+        ? (prevCharacter.maxExp - prevCharacter.currentExp) +
+            characterFromServer.currentExp
+        : characterFromServer.currentExp - prevCharacter.currentExp;
+    currentCharacter = characterFromServer;
     notifyListeners();
   }
 
   /// 서버에서 [memberInfo]의 캐릭터의 경험치를 [value]로 바꿈
   Future<void> changeExpInServer(int value) async {
-    await _characterUseCases.changeExp(value);
+    await _characterRepository.changeExp(value);
+  }
+
+  /// SharedPreferences 로컬 스토리지에 현재 캐릭터 상태를 저장
+  Future<void> _saveCharacter(Character character) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(
+        'prevCharacter', jsonEncode(character.toEntity().toJson()));
+  }
+
+  /// 하트 버튼 누를 시 하트 효과
+  void showHearts() {
+    if (isHeartVisible) {
+      return;
+    }
+
+    isHeartVisible = true;
+    notifyListeners();
+    Future.delayed(const Duration(seconds: 6), () {
+      isHeartVisible = false;
+      notifyListeners();
+    });
+  }
+
+  void setCharacterName(String nickname) {
+    _character.nickname = nickname;
+    notifyListeners();
+
+    // 서버에 캐릭터 이름 저장
+    _characterRepository.setName(character.id, nickname);
   }
 }

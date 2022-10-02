@@ -1,4 +1,5 @@
 import 'package:amond/data/source/network/api/character_api.dart';
+import 'package:amond/domain/models/character.dart';
 import 'package:amond/domain/repositories/character_repository.dart';
 
 class CharacterRepositoryImpl implements CharacterRepository {
@@ -32,7 +33,17 @@ class CharacterRepositoryImpl implements CharacterRepository {
   }
 
   @override
-  Future<void> setName(String name) async {
-    await characterApi.setName(name);
+  Future<void> setName(int petId, String name) async {
+    await characterApi.setName(petId, name);
+  }
+
+  @override
+  Future<Character> getCharacter() async {
+    try {
+      final characterEntity = await characterApi.getCharacterInfo();
+      return Character.fromEntity(characterEntity);
+    } catch (e) {
+      rethrow;
+    }
   }
 }

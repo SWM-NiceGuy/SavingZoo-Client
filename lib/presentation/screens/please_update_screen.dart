@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:amond/utils/app_version.dart';
+import 'package:amond/utils/version/app_version.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:store_redirect/store_redirect.dart';
@@ -11,7 +11,7 @@ class PleaseUpdateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(const Duration(seconds: 1), () {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!Navigator.of(context).canPop()) {
         showDialog(
           barrierDismissible: false,

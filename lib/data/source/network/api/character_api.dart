@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:amond/data/entity/character_entity.dart';
 import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/auth/auth_info.dart';
 import 'package:http/http.dart' as http;
@@ -43,16 +44,27 @@ class CharacterApi {
     final url = Uri.parse('$baseUrl/v1/nickname');
 
     final response = await http.get(url, headers: {
-      'Authorization': '$globalToken',
+      'Authorization': 'Bearer $globalToken',
     });
     final String? res = jsonDecode(utf8.decode(response.bodyBytes))["nickname"];
     return res;
   }
 
-  Future<void> setName(String name) async {
-    final url = Uri.parse("$baseUrl/v1/nickname");
+  Future<CharacterEntity> getCharacterInfo() async {
+      final url = Uri.parse('$baseUrl/user/pet/info');
+
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $globalToken',
+    });
+    final json = jsonDecode(utf8.decode(response.bodyBytes));
+    return CharacterEntity.fromJson(json);
+  }
+
+  Future<void> setName(int petId, String name) async {
+    final url = Uri.parse("$baseUrl/user/pet/nickname");
     
     await http.post(url, body: jsonEncode({
+      "userPetId": petId,
       "nickname": name,
     }),  headers: {
         'Content-type': 'application/json',

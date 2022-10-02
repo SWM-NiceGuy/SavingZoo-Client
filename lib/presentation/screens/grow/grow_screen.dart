@@ -1,8 +1,8 @@
-import 'dart:math';
 import 'package:amond/presentation/controllers/grow_controller.dart';
 import 'package:amond/presentation/controllers/name_validation.dart';
 import 'package:amond/presentation/screens/grow/components/comment_box.dart';
 import 'package:amond/presentation/screens/grow/components/level_system.dart';
+import 'package:amond/presentation/screens/grow/components/mission_complete_dialog.dart';
 import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
 import 'package:amond/presentation/screens/qr_scanner.dart';
 import 'package:amond/widget/platform_based_indicator.dart';
@@ -31,47 +31,30 @@ class GrowScreen extends StatelessWidget {
     final buttonHeight = height * 0.08;
 
     // 데이터가 불러와 있지 않을때 데이터 불러오기
-    if (!growController.isDataFetched) {
+    if (growController.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         growController.fetchData();
       });
     }
 
-    // final missionCompletePopupTextStyle = Theme.of(context)
-    //     .textTheme
-    //     .bodyText1
-    //     ?.copyWith(fontSize: 16.0, height: 1.5);
-
-    // void executeMissionComplete(int completedMission) {
-
-    //   final title = completedMission == 1 ? 'Mission 1 완수' : 'Mission 2 완수';
-    //   final content = completedMission == 1
-    //       ? WordBreakText(
-    //           'Mission 2를 이어서 완수하시면 경험치를 획득하여 레벨업 하고 선구자 뱃지를 획득하실 수 있습니다!',
-    //           style: missionCompletePopupTextStyle,
-    //           wrapAlignment: WrapAlignment.center,
-    //         )
-    //       : Column(
-    //           children: [
-    //             Text('선구자', style: missionCompletePopupTextStyle),
-    //             const SizedBox(height: 8.0),
-    //             Image.asset('assets/images/pioneer_badge_icon.png'),
-    //           ],
-    //         );
-
-    //   if (completedMission > 0) {
-    //     showPopup(context, title, 30, content,
-    //         () {
-    //       growController.increaseExp(30);
-    //     });
-    //   }
-    // }
-
+    // 캐릭터의 이름이 정해져 있지 않으면 이름 설정 팝업을 띄운다.
     if (growController.isNewUser) {
       growController.isNewUser = false;
-      Future.delayed(const Duration(seconds: 1), () {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!Navigator.of(context).canPop()) {
-          showCharacterNamingPopup(context, growController.setCharacterName);
+          showCharacterNamingPopup(context, growController.setCharacterName,
+              growController.character.imageUrl);
+        }
+      });
+    }
+
+    // 완료한 미션이 있으면 미션 완료 팝업을 띄운다.
+    if (growController.increasedExp != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!Navigator.of(context).canPop()) {
+          showMissionCompleteDialog(context, () async {
+            await growController.increaseExp(growController.increasedExp!);
+          }, growController.increasedExp!);
         }
       });
     }
@@ -92,23 +75,20 @@ class GrowScreen extends StatelessWidget {
                       width: width,
                       height: 12.0,
                       level: growController.character.level,
-                      currentExp: growController.character.displayExp,
+                      currentExp: growController.character.currentExp,
                       maxExp: growController.character.maxExp,
-                      percentage: growController.character.expPercentage,
-                      leading: growController.hasBadge
-                          ? Image.asset(
-                              'assets/images/pioneer_badge_icon.png',
-                              height: 32.0,
-                            )
-                          : null,
+                      percentage: growController.character.expPct,
                     ),
                   ),
                 ],
               ),
               // 캐릭터 이름
               const SizedBox(height: 24),
-              Text(growController.characterName ?? "", style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
-              Text('(${growController.character.avatar.nickname})', style: const TextStyle(color: Colors.grey)),
+              Text(growController.character.nickname ?? "",
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w500)),
+              Text('(${growController.character.name})',
+                  style: const TextStyle(color: Colors.grey)),
               // 캐릭터 이미지
               Expanded(
                 child: Stack(
@@ -119,15 +99,27 @@ class GrowScreen extends StatelessWidget {
                       duration:
                           Duration(milliseconds: growController.fadeDuration),
                       child: Image.asset(
-                        growController.character.avatarPath,
+                        growController.character.imageUrl,
                       ),
                     ),
-                    growController.heartsIsVisible
-                        ? Lottie.asset(
-                            'assets/lotties/lottie-hearts.json',
-                            repeat: false,
-                          )
-                        : const SizedBox(),
+                    // 하트 버튼을 누르면 하트 표시
+                    if (growController.isHeartVisible)
+                      Lottie.asset(
+                        'assets/lotties/lottie-hearts.json',
+                        repeat: false,
+                      ),
+                    // 레벨업 시 레벨업 효과
+                    if (growController.levelUpEffect)
+                      Lottie.asset(
+                        'assets/lotties/lottie-levelup.json',
+                        repeat: false,
+                      ),
+                    // 최대 레벨 별빛 효과
+                    if (growController.character.level == 4)
+                      Lottie.asset(
+                        'assets/lotties/maxlevel-starfall.json',
+                        repeat: true,
+                      )
                   ],
                 ),
               ),
@@ -162,8 +154,7 @@ class GrowScreen extends StatelessWidget {
                           width: buttonHeight,
                           height: buttonHeight,
                           padding: EdgeInsets.zero,
-                          onPress: () => _toQrScanner(context).then((mission) {
-                          }),
+                          onPress: () => growController.increaseExp(10),
                           child: Image.asset(
                             'assets/images/barcode_icon.png',
                             width: buttonHeight / 2,
@@ -223,18 +214,30 @@ class GrowScreen extends StatelessWidget {
   void showCharacterNamingPopup(
     BuildContext context,
     Function(String) onSubmit,
+    String imageUrl,
   ) {
-    final deviceSize = MediaQuery.of(context).size;
-    final screenWidth = deviceSize.width;
-    final screenHeight = deviceSize.height;
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
-        final minSize = min(screenWidth, screenHeight);
         return ChangeNotifierProvider(
             create: (_) => NameValidation(),
-            child: CharacterNameInput(minSize: minSize, onSubmit: onSubmit));
+            child: CharacterNameInput(onSubmit: onSubmit, imageUrl: imageUrl));
+      },
+    );
+  }
+
+  /// 미션 완료 다이얼로그를 띄운다.
+  void showMissionCompleteDialog(
+    BuildContext context,
+    Function onSubmit,
+    int reward,
+  ) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return MissionCompleteDialog(onSubmit: onSubmit, reward: reward);
       },
     );
   }
