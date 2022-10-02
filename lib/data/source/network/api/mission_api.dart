@@ -29,7 +29,6 @@ class MissionApi {
     });
     final Map<String, dynamic> result =
         jsonDecode(utf8.decode(response.bodyBytes));
-    print(result);
     final missionDetail = MissionDetailEntity.fromJson(result);
     return missionDetail;
   }
@@ -57,9 +56,10 @@ class MissionApi {
   Future<void> uploadMission(int missionId, String filePath) async {
     final url = Uri.parse('uri');
     var request = http.MultipartRequest("POST", url);
-    request.fields['user'] = 'blah'; // 바디에 필요한 필드
+    request.headers['Authorization'] = 'Bearer $globalToken'; // 인증 토큰 추가
+    request.fields['missionId'] = missionId.toString(); // 바디에 필요한 필드
     var pic =
-        await http.MultipartFile.fromPath("file_field", filePath); // 미션 사진
+        await http.MultipartFile.fromPath("multipartFile", filePath); // 미션 사진
     request.files.add(pic);
 
     var streamedResponse = await request.send();

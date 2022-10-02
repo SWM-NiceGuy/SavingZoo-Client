@@ -1,5 +1,3 @@
-import 'package:amond/data/entity/mission_detail_entity.dart';
-import 'package:amond/data/entity/mission_list_entity.dart';
 import 'package:amond/data/source/network/api/mission_api.dart';
 import 'package:amond/domain/models/mission_detail.dart';
 import 'package:amond/domain/models/mission_list.dart';

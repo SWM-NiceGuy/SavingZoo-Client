@@ -57,7 +57,6 @@ class CharacterApi {
       'Authorization': 'Bearer $globalToken',
     });
     final json = jsonDecode(utf8.decode(response.bodyBytes));
-    print(json);
     return CharacterEntity.fromJson(json);
   }
 
