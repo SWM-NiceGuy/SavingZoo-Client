@@ -2,8 +2,8 @@ import 'package:amond/data/entity/character_entity.dart';
 
 class Character {
   final int id;
-  String? name;
-  final String nickname;
+  final String name;
+  String? nickname;
   final String imageUrl;
   final int level;
   int currentExp;
@@ -24,21 +24,21 @@ class Character {
       _$CharacterFromEntity(entity);
 
   CharacterEntity toEntity() => CharacterEntity(
-        id: id,
+        petId: id,
         name: name,
         nickname: nickname,
-        imageUrl: imageUrl,
+        image: imageUrl,
         currentLevel: level,
         currentExp: currentExp,
         maxExp: maxExp,
       );
 
   static Character _$CharacterFromEntity(CharacterEntity entity) => Character(
-        id: entity.id,
+        id: entity.petId,
         name: entity.name,
         level: entity.currentLevel,
         nickname: entity.nickname,
-        imageUrl: entity.imageUrl,
+        imageUrl: entity.image,
         currentExp: entity.currentExp,
         maxExp: entity.maxExp,
       );

@@ -5,20 +5,20 @@ part 'character_entity.g.dart';
 @JsonSerializable()
 class CharacterEntity {
 
-  final int id;
-  String? name;
-  final String nickname;
-  final String imageUrl;
+  final int petId;
+  final String name;
+  String? nickname;
+  final String image;
   final int currentLevel;
   final int currentExp;
   final int maxExp;
 
 
   CharacterEntity({
-    required this.id,
-    this.name,
-    required this.nickname,
-    required this.imageUrl,
+    required this.petId,
+    required this.name,
+    this.nickname,
+    required this.image,
     required this.currentLevel,
     required this.currentExp,
     required this.maxExp,

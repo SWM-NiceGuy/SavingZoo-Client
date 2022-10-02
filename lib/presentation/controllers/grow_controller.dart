@@ -17,7 +17,6 @@ class GrowController with ChangeNotifier {
   bool _isLoading = true;
   bool get isLoading => _isLoading;
 
-
   bool _isMissionClear = false;
   bool get isMissionClear => _isMissionClear;
 
@@ -43,8 +42,10 @@ class GrowController with ChangeNotifier {
   String get comment =>
       isHeartVisible ? heartComment : _comments[_commentOrder];
 
-  /// 경험치를 증가시킨다
+  /// 캐릭터의 경험치를 증가시키고 UI효과 발생
   Future<void> increaseExp(int value) async {
+    increasedExp = null;
+
     // 레벨업 하지 않는 경우
     if (character.currentExp + value < character.maxExp) {
       character.currentExp += value;
@@ -87,20 +88,25 @@ class GrowController with ChangeNotifier {
     // // var currentExp = 30;
     // var name = await _characterUseCases.getName();
     // characterName = '장금이';
-    // 캐릭터 닉네임이 없으면 새로운 유저로 판단
-    // if (name == null) {
-    //   isNewUser = true;
-    // }
 
     // characterName = name;
 
     // 서버에서 가져온 캐릭터
+    // var characterFromServer = await _characterRepository.getCharacter();
+
+    // test용 서버에서 가져온 캐릭터
     var characterFromServer = Character(
         id: 1,
         imageUrl: 'assets/images/first_apple_avatar.png',
         name: "안녕",
-        nickname: "안녕하세요",
+        nickname: '나야나',
+        currentExp: 5,
         maxExp: 30);
+
+    // 캐릭터 닉네임이 없으면 새로운 유저로 판단
+    if (characterFromServer.nickname == null) {
+      isNewUser = true;
+    }
 
     final prefs = await SharedPreferences.getInstance();
 
@@ -129,8 +135,11 @@ class GrowController with ChangeNotifier {
     _character = prevCharacter;
     _isMissionClear = true;
     _isLoading = false;
-    increasedExp = (prevCharacter.maxExp - prevCharacter.currentExp) +
-        characterFromServer.currentExp;
+    // 서버에서 불러온 캐릭터의 레벨이 더 높을 때, 같을 때 구분해서 계산
+    increasedExp = prevCharacter.level < characterFromServer.level
+        ? (prevCharacter.maxExp - prevCharacter.currentExp) +
+            characterFromServer.currentExp
+        : characterFromServer.currentExp - prevCharacter.currentExp;
     currentCharacter = characterFromServer;
     notifyListeners();
   }
@@ -140,6 +149,7 @@ class GrowController with ChangeNotifier {
     await _characterRepository.changeExp(value);
   }
 
+  /// SharedPreferences 로컬 스토리지에 현재 캐릭터 상태를 저장
   Future<void> _saveCharacter(Character character) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(
@@ -160,11 +170,11 @@ class GrowController with ChangeNotifier {
     });
   }
 
-  void setCharacterName(String name) {
-    _character.name = name;
+  void setCharacterName(String nickname) {
+    _character.nickname = nickname;
     notifyListeners();
 
     // 서버에 캐릭터 이름 저장
-    _characterRepository.setName(character.id, name);
+    _characterRepository.setName(character.id, nickname);
   }
 }

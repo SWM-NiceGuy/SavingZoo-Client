@@ -44,7 +44,7 @@ class CharacterApi {
     final url = Uri.parse('$baseUrl/v1/nickname');
 
     final response = await http.get(url, headers: {
-      'Authorization': '$globalToken',
+      'Authorization': 'Bearer $globalToken',
     });
     final String? res = jsonDecode(utf8.decode(response.bodyBytes))["nickname"];
     return res;
@@ -54,9 +54,10 @@ class CharacterApi {
       final url = Uri.parse('$baseUrl/user/pet/info');
 
     final response = await http.get(url, headers: {
-      'Authorization': '$globalToken',
+      'Authorization': 'Bearer $globalToken',
     });
     final json = jsonDecode(utf8.decode(response.bodyBytes));
+    print(json);
     return CharacterEntity.fromJson(json);
   }
 
