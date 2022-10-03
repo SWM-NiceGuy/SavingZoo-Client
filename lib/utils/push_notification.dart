@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/auth/auth_info.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,37 +17,44 @@ Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
 
   if (isNewUser != null) return;
 
-  showPlatformDialog<bool>(
+  showPlatformDialog(
       context: context,
       builder: (context) => BasicDialogAlert(
             title: const Text("푸시 알림 설정"),
             content: const Text("미션 수행 인증에 대한 푸시알림을 받아보세요!"),
             actions: <Widget>[
               BasicDialogAction(
-                title: const Text("괜찮아요"),
+                title: const Text("확인"),
                 onPressed: () {
-                  Navigator.pop(context, false);
-                },
-              ),
-              BasicDialogAction(
-                title: const Text("좋아요"),
-                onPressed: () {
-                  Navigator.pop(context, true);
+                  Navigator.pop(context);
                 },
               ),
             ],
-          )).then((isAccepted) async {
-    if (isAccepted == null) return false;
+          )).then((_) async {
+    NotificationSettings permissionSettings;
+    permissionSettings = await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
     // 푸시 알림을 허용했을 때
-    if (isAccepted) {
-      deviceToken = await FirebaseMessaging.instance.getToken();
-      if (deviceToken == null) return false;
-      await sendDeviceToken(deviceToken!);
-      return true;
+    if (permissionSettings.authorizationStatus == AuthorizationStatus.denied) {
+      return false;
     }
+    deviceToken = await FirebaseMessaging.instance.getToken();
+    if (deviceToken == null) return false;
+    await sendDeviceToken(deviceToken!);
+    return true;
   }).then((isAccepted) {
-    SharedPreferences.getInstance()
-        .then((prefs) => prefs.setBool('pushNotificationPermission', true));
+    if (isAccepted) {
+      SharedPreferences.getInstance()
+          .then((prefs) => prefs.setBool('pushNotificationPermission', true));
+    }
     showPlatformDialog(
       context: context,
       builder: (context) => BasicDialogAlert(
@@ -66,6 +75,9 @@ Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
 }
 
 Future<void> sendDeviceToken(String token) async {
+  if (kDebugMode) {
+    print('FM 토큰: $token');
+  }
   final url = Uri.parse('$baseUrl/user/device/token');
   await http.post(
     url,
@@ -89,9 +101,9 @@ Future<void> setPushNotificationPermission(bool value) async {
   var prefs = await SharedPreferences.getInstance();
   prefs.setBool('pushNotificationPermission', value);
   if (value == true) {
-  var deviceToken = await FirebaseMessaging.instance.getToken();
-  if (deviceToken == null) return;
-  sendDeviceToken(deviceToken);
+    var deviceToken = await FirebaseMessaging.instance.getToken();
+    if (deviceToken == null) return;
+    sendDeviceToken(deviceToken);
   } else {
     FirebaseMessaging.instance.deleteToken();
   }

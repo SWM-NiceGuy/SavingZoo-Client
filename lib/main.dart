@@ -25,11 +25,16 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
   final bool isLatest = await isLatestVersion();
 
-  String? firebaseToken = await FirebaseMessaging.instance.getToken();
-  print(firebaseToken);
+  // String? firebaseToken = await FirebaseMessaging.instance.getToken();
+  // if (kDebugMode) {
+  //   print('FCM 토큰: $firebaseToken');
+  // }
 
   runApp(MultiProvider(
     providers: globalProviders,
@@ -87,4 +92,8 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+}
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async{
+
 }

@@ -12,7 +12,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-
   bool? _pushNotificationPermission;
 
   @override
@@ -20,11 +19,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.initState();
     getPushNotificationPermission().then((value) {
       setState(() {
-         _pushNotificationPermission = value;
+        _pushNotificationPermission = value;
       });
     });
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +38,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           // 미션 푸시 알림 설정
           SwitchListTile(
             title: const Text('미션 수행 푸시 알림'),
+            subtitle: const Text(
+              '기기 설정에서 앱 알림 설정을 먼저 확인해주세요!',
+              style: TextStyle(color: Colors.grey),
+            ),
             value: _pushNotificationPermission ?? false,
             onChanged: (bool value) {
               setState(() {

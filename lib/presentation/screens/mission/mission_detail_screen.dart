@@ -59,6 +59,7 @@ class MissionDetailScreen extends StatelessWidget {
       body: missionDetailController.isLoading
           ? const Center(child: PlatformBasedIndicator())
           : ListView(
+              padding: const EdgeInsets.only(bottom: 24),
               children: [
                 // 미션 인증예시 사진1
                 Image.network(
