@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-void showFailureDialog(BuildContext context, String errMsg) {
+void showPlatformBasedDialog(BuildContext context, String title, String content) {
   if (Platform.isIOS) {
     showCupertinoDialog(
       context: context,
       builder: (_) {
         return CupertinoAlertDialog(
-          title: Text(errMsg),
-          content: const Text('다시 시도해주세요.'),
+          title: Text(title),
+          content: Text(content),
           actions: [
             CupertinoDialogAction(
               child: const Text('확인'),
@@ -25,8 +25,8 @@ void showFailureDialog(BuildContext context, String errMsg) {
       context: context,
       builder: (_) {
         return AlertDialog(
-          title: Text(errMsg),
-          content: const Text('다시 시도해주세요.'),
+          title: Text(title),
+          content: Text(content),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),

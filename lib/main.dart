@@ -9,6 +9,7 @@ import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/presentation/screens/please_update_screen.dart';
 import 'package:amond/presentation/screens/qr_scanner.dart';
+import 'package:amond/presentation/screens/settings/settings_screen.dart';
 import 'package:amond/presentation/screens/splash_screen.dart';
 import 'package:amond/secrets/secret.dart';
 import 'package:amond/ui/colors.dart';
@@ -27,8 +28,8 @@ void main() async {
   KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
   final bool isLatest = await isLatestVersion();
 
-  // String? firebaseToken = await FirebaseMessaging.instance.getToken();
-  // print(firebaseToken);
+  String? firebaseToken = await FirebaseMessaging.instance.getToken();
+  print(firebaseToken);
 
   runApp(MultiProvider(
     providers: globalProviders,
@@ -82,6 +83,7 @@ class MyApp extends StatelessWidget {
         MissionScreen.routeName: (context) => MissionScreen(),
         MissionDetailScreen.routeName: (context) => MissionDetailScreen(),
         MissionHistoryScreen.routeName: (context) => MissionHistoryScreen(),
+        SettingsScreen.routeName: (context) => const SettingsScreen(),
       },
     );
   }

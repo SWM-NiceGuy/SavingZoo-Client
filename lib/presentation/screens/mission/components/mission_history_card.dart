@@ -34,7 +34,7 @@ class HistoryCard extends StatelessWidget {
               ),
               const Spacer(),
               // 보상
-              if (history.state == MissionState.accepted)
+              if (history.state == MissionState.completed)
               Text('+ ${history.reward}XP',
                   style: const TextStyle(
                       fontSize: 18,

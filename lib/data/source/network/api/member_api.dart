@@ -29,7 +29,7 @@ class MemberApi {
             'providerType': provider,
             ...additional
           };
-
+    
     try {
       final response = await http.delete(url, body: jsonEncode(body), headers: {
         'Authorization': 'Bearer $globalToken',

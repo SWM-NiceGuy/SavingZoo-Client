@@ -1,12 +1,12 @@
 import 'dart:io';
 
-
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
+import 'package:amond/presentation/screens/settings/settings_screen.dart';
 import 'package:amond/utils/auth/do_auth.dart';
-import 'package:amond/utils/show_failure_dialog.dart';
+import 'package:amond/utils/show_platform_based_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:amond/presentation/screens/grow/grow_screen.dart';
 import 'package:amond/ui/colors.dart';
@@ -39,7 +39,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final authController = context.read<AuthController>();
-    return  Scaffold(
+    return Scaffold(
       drawer: mainDrawer(context, authController),
       appBar: AppBar(
         title: appBarTitle[_screenIndex],
@@ -58,21 +58,20 @@ class _MainScreenState extends State<MainScreen> {
           topLeft: Radius.circular(30),
         ),
         child: Container(
-          decoration: const BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black,
-                blurRadius: 8,
-                offset: Offset(0, -4),
-              )
-            ]
-          ),
+          decoration: const BoxDecoration(boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              blurRadius: 8,
+              offset: Offset(0, -4),
+            )
+          ]),
           child: BottomNavigationBar(
             backgroundColor: Colors.white,
             unselectedItemColor: Colors.grey,
             selectedItemColor: Colors.black,
             items: const [
-              BottomNavigationBarItem(label: '홈', icon: Icon(Icons.home_filled)),
+              BottomNavigationBarItem(
+                  label: '홈', icon: Icon(Icons.home_filled)),
               BottomNavigationBarItem(
                   label: '미션', icon: Icon(Icons.track_changes_outlined))
             ],
@@ -95,10 +94,23 @@ class _MainScreenState extends State<MainScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             ListTile(
-              leading: const Icon(Icons.history, color: blackColor,),
+              leading: const Icon(
+                Icons.history,
+                color: blackColor,
+              ),
               title: const Text('미션수행 기록'),
               onTap: () {
                 Navigator.of(context).pushNamed(MissionHistoryScreen.routeName);
+              },
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.settings,
+                color: blackColor,
+              ),
+              title: const Text('설정'),
+              onTap: () {
+                Navigator.of(context).pushNamed(SettingsScreen.routeName);
               },
             ),
             const Spacer(),
@@ -117,7 +129,8 @@ class _MainScreenState extends State<MainScreen> {
                   Navigator.of(context)
                       .pushReplacementNamed(AuthScreen.routeName);
                 } catch (error) {
-                  showFailureDialog(context, '로그아웃에 실패했습니다');
+                  showPlatformBasedDialog(
+                      context, '로그아웃에 실패했습니다', '다시 시도해주세요.');
                 }
               },
             ),
@@ -139,7 +152,8 @@ class _MainScreenState extends State<MainScreen> {
                       .pushReplacementNamed(AuthScreen.routeName);
                 } catch (error) {
                   print(error);
-                  showFailureDialog(context, '회원탈퇴에 실패했습니다.');
+                  showPlatformBasedDialog(
+                      context, '회원탈퇴에 실패했습니다.', '다시 시도해주세요.');
                 }
               },
             )
@@ -163,8 +177,6 @@ class _MainScreenState extends State<MainScreen> {
       return Future.value(false);
     }
   }
-
-  
 
   Future<bool> _checkDialog(BuildContext context, String title,
       [String? content]) async {
@@ -221,3 +233,5 @@ class _MainScreenState extends State<MainScreen> {
     return response;
   }
 }
+
+

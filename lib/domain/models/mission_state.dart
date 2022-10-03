@@ -1,6 +1,6 @@
 enum MissionState {
   incomplete,
   wait,
-  accepted,
+  completed,
   rejected,
 }

@@ -78,7 +78,7 @@ class MissionDetailController with ChangeNotifier {
         return "인증하기";
       case 'WAIT':
         return "인증 대기중";
-      case 'ACCEPTED':
+      case 'COMPLETED':
         return "미션 인증 완료";
       default:
         return "인증하기";

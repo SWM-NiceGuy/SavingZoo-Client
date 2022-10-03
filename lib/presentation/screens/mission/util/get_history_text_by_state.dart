@@ -8,7 +8,7 @@ Widget getHistoryTextByState(MissionState state) {
       return Container();
     case MissionState.wait:
       return const Text('인증 대기중', style: TextStyle(color: Color(0xff787878)));
-    case MissionState.accepted:
+    case MissionState.completed:
       return const Text('성공', style: TextStyle(color: successColor));
     case MissionState.rejected:
       return const Text('반려', style: TextStyle(color: failureColor));

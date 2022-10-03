@@ -5,6 +5,7 @@ import 'package:amond/presentation/screens/grow/components/level_system.dart';
 import 'package:amond/presentation/screens/grow/components/mission_complete_dialog.dart';
 import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
 import 'package:amond/presentation/screens/qr_scanner.dart';
+import 'package:amond/utils/push_notification.dart';
 import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
@@ -58,6 +59,11 @@ class GrowScreen extends StatelessWidget {
         }
       });
     }
+
+    // 처음 접속하는 유저들에게 푸시 알림 설정을 받음.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showPushNotificationPermissionDialog(context);
+    });
 
     return growController.isLoading
         ? const Center(

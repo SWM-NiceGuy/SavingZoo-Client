@@ -84,28 +84,21 @@ class GrowController with ChangeNotifier {
 
   /// 캐릭터 데이터를 불러오는 함수
   Future<void> fetchData() async {
-    // var currentExp = await _characterUseCases.getExp();
-    // // var currentExp = 30;
-    // var name = await _characterUseCases.getName();
-    // characterName = '장금이';
-
-    // characterName = name;
-
     // 서버에서 가져온 캐릭터
-    // var characterFromServer = await _characterRepository.getCharacter();
+    var characterFromServer = await _characterRepository.getCharacter();
 
-    // if (characterFromServer.maxExp == 0) {
-    //   characterFromServer.maxExp = 30;
-    // }
+    if (characterFromServer.maxExp == 0) {
+      characterFromServer.maxExp = 30;
+    }
 
-    // test용 서버에서 가져온 캐릭터
-    var characterFromServer = Character(
-        id: 1,
-        imageUrl: 'https://cdn.imweb.me/upload/S20211110a3d216dc49446/f7bfffacbb6de.png',
-        name: "안녕",
-        nickname: null,
-        currentExp: 5,
-        maxExp: 30);
+    // // test용 서버에서 가져온 캐릭터
+    // var characterFromServer = Character(
+    //     id: 1,
+    //     imageUrl: 'https://cdn.imweb.me/upload/S20211110a3d216dc49446/f7bfffacbb6de.png',
+    //     name: "안녕",
+    //     nickname: null,
+    //     currentExp: 5,
+    //     maxExp: 30);
 
     // 캐릭터 닉네임이 없으면 새로운 유저로 판단
     if (characterFromServer.nickname == null) {

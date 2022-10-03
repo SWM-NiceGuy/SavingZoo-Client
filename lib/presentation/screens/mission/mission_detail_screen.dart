@@ -55,6 +55,7 @@ class MissionDetailScreen extends StatelessWidget {
             )
           : MissionDetailBottomBar(
               reward: missionDetailController.mission.reward),
+      backgroundColor: Colors.white,
       body: missionDetailController.isLoading
           ? const Center(child: PlatformBasedIndicator())
           : ListView(

@@ -10,7 +10,7 @@ class MissionHistoryScreen extends StatelessWidget {
   static const String routeName = '/mission-history';
 
   List<MissionHistory> histories = [
-    MissionHistory(state: MissionState.accepted, date: DateTime(2022, 10, 1), type: '미션 수행', missionName: '걷기', reward: 10),
+    MissionHistory(state: MissionState.completed, date: DateTime(2022, 10, 1), type: '미션 수행', missionName: '걷기', reward: 10),
         MissionHistory(state: MissionState.wait, date: DateTime(2022, 9, 29), type: '미션 수행', missionName: '걷기', reward: 10),
             MissionHistory(state: MissionState.rejected, date: DateTime(2022, 9, 29), type: '미션 수행', missionName: '걷기', reward: 10),
   ];

@@ -1,5 +1,5 @@
 import 'package:amond/presentation/controllers/mission_detail_controller.dart';
-import 'package:amond/utils/show_failure_dialog.dart';
+import 'package:amond/utils/show_platform_based_dialog.dart';
 import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -47,7 +47,7 @@ class MissionDetailBottomBar extends StatelessWidget {
                               // 업로드
                               
                               controller.submit(image.path).onError((error, stackTrace) {
-                                showFailureDialog(context, '사진 전송에 실패했습니다.');
+                                showPlatformBasedDialog(context, '사진 전송에 실패했습니다.', '다시 시도해주세요.');
                               });
                             }
                           : null,
@@ -86,7 +86,7 @@ class MissionDetailBottomBar extends StatelessWidget {
                     "+${reward}XP",
                     style: const TextStyle(fontSize: 20),
                   ),
-                  if (controller.mission.state == "ACCEPTED")
+                  if (controller.mission.state == "COMPLETED")
                   Image.asset('assets/images/check_icon.png'),
                 ],
               )
