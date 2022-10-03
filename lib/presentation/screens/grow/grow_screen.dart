@@ -142,43 +142,52 @@ class GrowScreen extends StatelessWidget {
                       horizontal: screenMargin,
                       vertical: screenMargin / 1.5,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ShadowButton(
-                          width: buttonHeight,
-                          height: buttonHeight,
-                          padding: EdgeInsets.zero,
-                          onPress: growController.showHearts,
-                          child: Image.asset(
-                            'assets/images/heart_icon.png',
-                            width: buttonHeight / 2,
-                            height: buttonHeight / 2,
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 24),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ShadowButton(
+                            width: buttonHeight,
+                            height: buttonHeight,
+                            padding: EdgeInsets.zero,
+                            onPress: growController.showHearts,
+                            child: Center(
+                                child: Image.asset(
+                                  'assets/images/heart_icon.png',
+                                  width: buttonHeight / 2,
+                                  height: buttonHeight / 2,
+                                  fit: BoxFit.fitHeight,
+                                ),
+                              ),
+
                           ),
-                        ),
-                        ShadowButton(
-                          width: buttonHeight,
-                          height: buttonHeight,
-                          padding: EdgeInsets.zero,
-                          onPress: () => growController.increaseExp(10),
-                          child: Image.asset(
-                            'assets/images/barcode_icon.png',
-                            width: buttonHeight / 2,
-                            height: buttonHeight / 2,
+                          // ShadowButton(
+                          //   width: buttonHeight,
+                          //   height: buttonHeight,
+                          //   padding: EdgeInsets.zero,
+                          //   onPress: () => growController.increaseExp(10),
+                          //   child: Image.asset(
+                          //     'assets/images/barcode_icon.png',
+                          //     width: buttonHeight / 2,
+                          //     height: buttonHeight / 2,
+                          //   ),
+                          // ),
+                          ShadowButton(
+                            width: buttonHeight,
+                            height: buttonHeight,
+                            padding: EdgeInsets.zero,
+                            onPress: growController.changeComment,
+                            child: Center(
+                              child: Image.asset(
+                                'assets/images/comment_icon.png',
+                                width: buttonHeight / 2,
+                                height: buttonHeight / 2,
+                              ),
+                            ),
                           ),
-                        ),
-                        ShadowButton(
-                          width: buttonHeight,
-                          height: buttonHeight,
-                          padding: EdgeInsets.zero,
-                          onPress: growController.changeComment,
-                          child: Image.asset(
-                            'assets/images/comment_icon.png',
-                            width: buttonHeight / 2,
-                            height: buttonHeight / 2,
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],

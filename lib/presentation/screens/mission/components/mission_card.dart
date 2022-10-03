@@ -99,7 +99,7 @@ class MissionCard extends StatelessWidget {
                   const Spacer(),
                   // 미션 성공 여부
                   if (mission.state == 'COMPLETED')
-                  Image.asset("assets/images/check_icon.png"),
+                  Image.asset("assets/images/check_icon.png", width: 40, height: 40),
                 ],
               ),
             ],

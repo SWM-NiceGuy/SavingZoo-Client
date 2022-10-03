@@ -52,28 +52,59 @@ class _MainScreenState extends State<MainScreen> {
         child: bottomNavigationBarScreens[_screenIndex],
       ),
       extendBody: true,
-      bottomNavigationBar: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topRight: Radius.circular(30),
-          topLeft: Radius.circular(30),
-        ),
-        child: Container(
-          decoration: const BoxDecoration(boxShadow: [
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          boxShadow: [
             BoxShadow(
-              color: Colors.black,
-              blurRadius: 8,
-              offset: Offset(0, -4),
-            )
-          ]),
+                color: Colors.white, offset: Offset(-5, -5), blurRadius: 9)
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topRight: Radius.circular(30),
+            topLeft: Radius.circular(30),
+          ),
           child: BottomNavigationBar(
-            backgroundColor: Colors.white,
+            backgroundColor: backgroundColor,
             unselectedItemColor: Colors.grey,
             selectedItemColor: Colors.black,
-            items: const [
+            items: [
               BottomNavigationBarItem(
-                  label: '홈', icon: Icon(Icons.home_filled)),
+                label: '홈',
+                icon: Container(
+                  decoration: const BoxDecoration(boxShadow: [
+                    BoxShadow(
+                        color: Color(0xffA6B4C8),
+                        offset: Offset(3, 5),
+                        blurRadius: 7)
+                  ], shape: BoxShape.circle),
+                  child: Image.asset('assets/images/home_normal.png',
+                      width: 40, height: 40),
+                ),
+                activeIcon: Image.asset(
+                  'assets/images/home_pressed.png',
+                  width: 40,
+                  height: 40,
+                ),
+              ),
               BottomNavigationBarItem(
-                  label: '미션', icon: Icon(Icons.track_changes_outlined))
+                label: '미션',
+                icon: Container(
+                  decoration: const BoxDecoration(boxShadow: [
+                    BoxShadow(
+                        color: Color(0xffA6B4C8),
+                        offset: Offset(3, 5),
+                        blurRadius: 7)
+                  ], shape: BoxShape.circle),
+                  child: Image.asset('assets/images/mission_normal.png',
+                      width: 40, height: 40),
+                ),
+                activeIcon: Image.asset(
+                  'assets/images/mission_pressed.png',
+                  width: 40,
+                  height: 40,
+                ),
+              )
             ],
             onTap: (index) {
               setState(() {
@@ -233,5 +264,3 @@ class _MainScreenState extends State<MainScreen> {
     return response;
   }
 }
-
-

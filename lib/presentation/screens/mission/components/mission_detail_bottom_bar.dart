@@ -90,7 +90,11 @@ class MissionDetailBottomBar extends StatelessWidget {
                     style: const TextStyle(fontSize: 20),
                   ),
                   if (controller.mission.state == "COMPLETED")
-                    Image.asset('assets/images/check_icon.png'),
+                    Image.asset(
+                      'assets/images/check_icon.png',
+                      width: 40,
+                      height: 40,
+                    ),
                 ],
               )
             ],
