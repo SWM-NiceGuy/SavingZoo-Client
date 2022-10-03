@@ -1,5 +1,6 @@
 import 'package:amond/data/source/network/api/mission_api.dart';
 import 'package:amond/domain/models/mission_detail.dart';
+import 'package:amond/domain/models/mission_history.dart';
 import 'package:amond/domain/models/mission_list.dart';
 import 'package:amond/domain/repositories/mission_repository.dart';
 
@@ -44,5 +45,11 @@ class MissionRepositoryImpl implements MissionRepository {
     catch (e) {
       rethrow;
     }
+  }
+
+  @override
+  Future<List<MissionHistory>> getMissionHistories() {
+    // TODO: implement getMissionHistories
+    throw UnimplementedError();
   }
 }

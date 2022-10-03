@@ -1,4 +1,3 @@
-
 import 'package:amond/data/repository/character_repository_impl.dart';
 import 'package:amond/data/repository/member_repository_impl.dart';
 import 'package:amond/data/repository/mission_repository_impl.dart';
@@ -11,6 +10,7 @@ import 'package:amond/domain/usecases/member/login.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow_controller.dart';
 import 'package:amond/presentation/controllers/mission_controller.dart';
+import 'package:amond/presentation/controllers/mission_history_controller.dart';
 import 'package:amond/utils/auth/do_apple_auth.dart';
 import 'package:amond/utils/auth/do_auth.dart';
 import 'package:amond/utils/auth/do_kakao_auth.dart';
@@ -57,16 +57,25 @@ List<SingleChildWidget> dependentModels = [
 List<SingleChildWidget> viewModels = [
   // AuthController
   ChangeNotifierProvider<AuthController>(
-      create: (_) => AuthController(_.read<MemberUseCases>())),
+    create: (_) => AuthController(_.read<MemberUseCases>()),
+  ),
 
   // GrowController
   ChangeNotifierProvider<GrowController>(
-      create: (context) => GrowController(context.read<CharacterRepositoryImpl>())),
+    create: (context) =>
+        GrowController(context.read<CharacterRepositoryImpl>()),
+  ),
 
   // MissionController
   ChangeNotifierProvider<MissionController>(
     create: (context) =>
         MissionController(context.read<MissionRepositoryImpl>()),
+  ),
+
+  // MissionHistoryController
+  ChangeNotifierProvider(
+    create: (context) =>
+        MissionHistoryController(context.read<MissionRepositoryImpl>()),
   ),
 
   // 회원탈퇴 DI
