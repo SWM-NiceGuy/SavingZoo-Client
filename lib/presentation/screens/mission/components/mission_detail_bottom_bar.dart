@@ -29,7 +29,7 @@ class MissionDetailBottomBar extends StatelessWidget {
               controller.isSubmitting
                   ? SizedBox(
                       width: deviceSize.width * 0.65,
-                      child: const PlatformBasedIndicator(),
+                      child: const Center(child: PlatformBasedIndicator()),
                     )
                   : ElevatedButton(
                       // 미션 인증버튼
@@ -38,16 +38,19 @@ class MissionDetailBottomBar extends StatelessWidget {
                           ? () async {
                               // 카메라로 이미지 선택
                               final ImagePicker picker = ImagePicker();
-                              XFile? image =
-                                  await picker.pickImage(source: ImageSource.camera, imageQuality: 35);
+                              XFile? image = await picker.pickImage(
+                                  source: ImageSource.camera, imageQuality: 35);
 
                               if (image == null) return;
 
                               // 미션 업로드 로직
                               // 업로드
-                              
-                              controller.submit(image.path).onError((error, stackTrace) {
-                                showPlatformBasedDialog(context, '사진 전송에 실패했습니다.', '다시 시도해주세요.');
+
+                              controller
+                                  .submit(image.path)
+                                  .onError((error, stackTrace) {
+                                showPlatformBasedDialog(
+                                    context, '사진 전송에 실패했습니다.', '다시 시도해주세요.');
                               });
                             }
                           : null,
@@ -87,7 +90,7 @@ class MissionDetailBottomBar extends StatelessWidget {
                     style: const TextStyle(fontSize: 20),
                   ),
                   if (controller.mission.state == "COMPLETED")
-                  Image.asset('assets/images/check_icon.png'),
+                    Image.asset('assets/images/check_icon.png'),
                 ],
               )
             ],

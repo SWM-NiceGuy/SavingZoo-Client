@@ -36,6 +36,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       body: ListView(
         children: [
+          // 미션 푸시 알림 설정
           SwitchListTile(
             title: const Text('미션 수행 푸시 알림'),
             value: _pushNotificationPermission ?? false,

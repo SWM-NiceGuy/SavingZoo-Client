@@ -92,5 +92,7 @@ Future<void> setPushNotificationPermission(bool value) async {
   var deviceToken = await FirebaseMessaging.instance.getToken();
   if (deviceToken == null) return;
   sendDeviceToken(deviceToken);
+  } else {
+    FirebaseMessaging.instance.deleteToken();
   }
 }
