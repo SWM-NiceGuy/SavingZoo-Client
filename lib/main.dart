@@ -3,6 +3,7 @@ import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/main_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_detail_screen.dart';
+import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/presentation/screens/please_update_screen.dart';
 import 'package:amond/presentation/screens/qr_scanner.dart';
@@ -40,10 +41,10 @@ class MyApp extends StatelessWidget {
       title: '아몬드',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        textTheme: GoogleFonts.montserratTextTheme(
-            Theme.of(context).textTheme.apply(bodyColor: blackColor)),
-        primarySwatch: Colors.blue,
-      ),
+          textTheme: GoogleFonts.montserratTextTheme(
+              Theme.of(context).textTheme.apply(bodyColor: blackColor)),
+          primarySwatch: Colors.blue,
+          scaffoldBackgroundColor: backgroundColor),
 
       /// 앱 시작시 setToken을 통해, 자동로그인 시도
       /// 반환된 값이 [true]라면 MainScreen으로 이동
@@ -68,6 +69,7 @@ class MyApp extends StatelessWidget {
         QrScanner.routeName: (context) => const QrScanner(),
         MissionScreen.routeName: (context) => MissionScreen(),
         MissionDetailScreen.routeName: (context) => MissionDetailScreen(),
+        MissionHistoryScreen.routeName: (context) => MissionHistoryScreen(),
       },
     );
   }

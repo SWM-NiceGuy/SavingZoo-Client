@@ -10,3 +10,6 @@ const expTextColor = Color(0xFF7FC439);
 const blackColor = Color(0xFF343434);
 const darkShadowColor = Color(0xFFC6CEDA);
 const lightShadowColor = Color(0xCDFFFFFF);
+
+const successColor = Color(0xff67CD00);
+const failureColor = Color(0xffD11111);

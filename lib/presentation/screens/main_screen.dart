@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
+import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/utils/auth/do_auth.dart';
 import 'package:amond/utils/show_failure_dialog.dart';
@@ -47,7 +48,6 @@ class _MainScreenState extends State<MainScreen> {
         backgroundColor: backgroundColor,
         iconTheme: const IconThemeData(color: Color(0xFF96CE5F)),
       ),
-      backgroundColor: backgroundColor,
       body: SafeArea(
         child: bottomNavigationBarScreens[_screenIndex],
       ),
@@ -94,6 +94,13 @@ class _MainScreenState extends State<MainScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            ListTile(
+              leading: const Icon(Icons.history, color: blackColor,),
+              title: const Text('미션수행 기록'),
+              onTap: () {
+                Navigator.of(context).pushNamed(MissionHistoryScreen.routeName);
+              },
+            ),
             const Spacer(),
             ListTile(
               leading: const Icon(
