@@ -92,20 +92,20 @@ class GrowController with ChangeNotifier {
     // characterName = name;
 
     // 서버에서 가져온 캐릭터
-    var characterFromServer = await _characterRepository.getCharacter();
+    // var characterFromServer = await _characterRepository.getCharacter();
 
-    if (characterFromServer.maxExp == 0) {
-      characterFromServer.maxExp = 30;
-    }
+    // if (characterFromServer.maxExp == 0) {
+    //   characterFromServer.maxExp = 30;
+    // }
 
     // test용 서버에서 가져온 캐릭터
-    // var characterFromServer = Character(
-    //     id: 1,
-    //     imageUrl: 'assets/images/first_apple_avatar.png',
-    //     name: "안녕",
-    //     nickname: '나야나',
-    //     currentExp: 5,
-    //     maxExp: 30);
+    var characterFromServer = Character(
+        id: 1,
+        imageUrl: 'https://cdn.imweb.me/upload/S20211110a3d216dc49446/f7bfffacbb6de.png',
+        name: "안녕",
+        nickname: null,
+        currentExp: 5,
+        maxExp: 30);
 
     // 캐릭터 닉네임이 없으면 새로운 유저로 판단
     if (characterFromServer.nickname == null) {

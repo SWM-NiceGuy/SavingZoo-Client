@@ -1,5 +1,7 @@
+import 'package:amond/data/repository/character_repository_impl.dart';
 import 'package:amond/di/provider_setup.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
+import 'package:amond/presentation/controllers/grow_controller.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/main_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_detail_screen.dart';
@@ -12,6 +14,7 @@ import 'package:amond/secrets/secret.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:amond/utils/version/app_version.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_common.dart';
@@ -23,6 +26,9 @@ void main() async {
   await Firebase.initializeApp();
   KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
   final bool isLatest = await isLatestVersion();
+
+  // String? firebaseToken = await FirebaseMessaging.instance.getToken();
+  // print(firebaseToken);
 
   runApp(MultiProvider(
     providers: globalProviders,
@@ -44,7 +50,10 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.montserratTextTheme(
               Theme.of(context).textTheme.apply(bodyColor: blackColor)),
           primarySwatch: Colors.blue,
-          scaffoldBackgroundColor: backgroundColor),
+          scaffoldBackgroundColor: backgroundColor,
+          appBarTheme: const AppBarTheme(
+            backgroundColor: backgroundColor,
+          )),
 
       /// 앱 시작시 setToken을 통해, 자동로그인 시도
       /// 반환된 값이 [true]라면 MainScreen으로 이동
@@ -55,7 +64,10 @@ class MyApp extends StatelessWidget {
               builder: (context, snapshot) {
                 return snapshot.hasData
                     ? snapshot.data.toString() == 'true'
-                        ? const MainScreen()
+                        ? ChangeNotifierProvider(
+                            create: (_) => GrowController(
+                                _.read<CharacterRepositoryImpl>()),
+                            child: const MainScreen())
                         : const AuthScreen()
                     : const SplashScreen();
               } // 사용하려면 Future.delayed 필요

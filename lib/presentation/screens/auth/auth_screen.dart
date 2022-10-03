@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:amond/data/repository/character_repository_impl.dart';
+import 'package:amond/presentation/controllers/grow_controller.dart';
 import 'package:amond/utils/auth/do_apple_auth.dart';
 import 'package:amond/utils/auth/do_kakao_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,7 +13,6 @@ import 'package:provider/provider.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/screens/main_screen.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
@@ -35,7 +36,9 @@ class _AuthScreenState extends State<AuthScreen> {
               child: Center(
                 child: Text(
                   'AMOND',
-                  style: TextStyle(fontSize: 22, ),
+                  style: TextStyle(
+                    fontSize: 22,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -57,7 +60,8 @@ class _AuthScreenState extends State<AuthScreen> {
                           try {
                             // 로그인 시도 후 성공하면 MainScreen으로 이동
                             final info = await DoKakaoAuth().login();
-                            await authController.login(info.provider, info.accessToken);
+                            await authController.login(
+                                info.provider, info.accessToken);
                             _navigateToMainScreen();
                           } catch (error) {
                             // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
@@ -81,20 +85,22 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                       ),
                       // 애플 로그인 버튼
-                      if (Platform.isIOS)
-                      const SizedBox(width: 24),
+                      if (Platform.isIOS) const SizedBox(width: 24),
                       if (Platform.isIOS)
                         GestureDetector(
                           onTap: () async {
                             try {
                               // 로그인 시도 후 성공하면 MainScreen으로 이동
                               final info = await DoAppleAuth().login();
-                              await authController.login(info.provider, info.accessToken);
+                              await authController.login(
+                                  info.provider, info.accessToken);
                               _navigateToMainScreen();
                             } catch (error) {
                               // 의도적인 로그인 취소로 보고 애플 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
-                              if (error is SignInWithAppleAuthorizationException &&
-                                  error.code == AuthorizationErrorCode.canceled) {
+                              if (error
+                                      is SignInWithAppleAuthorizationException &&
+                                  error.code ==
+                                      AuthorizationErrorCode.canceled) {
                                 return;
                               }
                               _showLoginFailDialog(context, '로그인에 실패했습니다.');
@@ -121,7 +127,13 @@ class _AuthScreenState extends State<AuthScreen> {
 
   /// MainScreen으로 pushReplacement하는 함수
   void _navigateToMainScreen() {
-    Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => ChangeNotifierProvider(
+        create: (_) => GrowController(_.read<CharacterRepositoryImpl>()),
+        child: const MainScreen(),
+      ),
+    ));
+    // Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
   }
 
   /// 로그인 실패시 Dialog를 보여주는 함수
@@ -172,8 +184,8 @@ class LogoImage extends StatelessWidget {
     final deviceSize = MediaQuery.of(context).size;
     return Image.asset(
       'assets/images/first_apple_avatar.png',
-      width: deviceSize.width*0.5,
-      height: deviceSize.width*0.5,
+      width: deviceSize.width * 0.5,
+      height: deviceSize.width * 0.5,
       fit: BoxFit.cover,
     );
   }

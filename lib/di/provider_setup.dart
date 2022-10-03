@@ -60,11 +60,11 @@ List<SingleChildWidget> viewModels = [
     create: (_) => AuthController(_.read<MemberUseCases>()),
   ),
 
-  // GrowController
-  ChangeNotifierProvider<GrowController>(
-    create: (context) =>
-        GrowController(context.read<CharacterRepositoryImpl>()),
-  ),
+  // // GrowController
+  // ChangeNotifierProvider<GrowController>(
+  //   create: (context) =>
+  //       GrowController(context.read<CharacterRepositoryImpl>()),
+  // ),
 
   // MissionController
   ChangeNotifierProvider<MissionController>(
