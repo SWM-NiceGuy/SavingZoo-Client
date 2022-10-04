@@ -48,8 +48,8 @@ class MissionRepositoryImpl implements MissionRepository {
   }
 
   @override
-  Future<List<MissionHistory>> getMissionHistories() {
-    // TODO: implement getMissionHistories
-    throw UnimplementedError();
+  Future<List<MissionHistory>> getMissionHistories() async {
+    final entityList = await api.getMissionHistories();
+    return entityList.map((e) => MissionHistory.fromEntity(e)).toList();
   }
 }

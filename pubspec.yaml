@@ -56,6 +56,7 @@ dependencies:
   firebase_messaging: ^13.0.4
   flutter_dialogs: ^3.0.0
   flutter_local_notifications: ^11.0.1
+  firebase_crashlytics: ^2.8.12
 
 dev_dependencies:
   flutter_test:

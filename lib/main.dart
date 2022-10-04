@@ -19,7 +19,9 @@ import 'package:amond/utils/push_notification.dart';
 import 'package:amond/utils/version/app_version.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_common.dart';
@@ -31,7 +33,13 @@ void main() async {
   await Firebase.initializeApp();
   
   // Firebase Analytics 추가
+  if (!kDebugMode) {
   FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  }
+
+  // Firebase Crashlytics 추가
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  
 
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
@@ -55,7 +63,7 @@ void main() async {
     providers: globalProviders,
     child: MyApp(isLatest: isLatest),
   ));
-}
+} 
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key, required this.isLatest}) : super(key: key);

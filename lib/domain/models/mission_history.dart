@@ -1,3 +1,4 @@
+import 'package:amond/data/entity/mission_history_entity.dart';
 import 'package:amond/domain/models/mission_state.dart';
 
 class MissionHistory {
@@ -14,4 +15,19 @@ class MissionHistory {
     required this.missionName,
     required this.reward,
   });
+
+  factory MissionHistory.fromEntity(MissionHistoryEntity entity) =>
+      _$MissionHistoryFromEntity(entity);
+
+  // MissionHistoryEntity toEntity() => MissionHistoryEntity();
+
+  static MissionHistory _$MissionHistoryFromEntity(
+          MissionHistoryEntity entity) =>
+      MissionHistory(
+        state: stringToMissionState(entity.state),
+        date: DateTime.fromMillisecondsSinceEpoch(entity.date),
+        type: entity.rewardType,
+        missionName: entity.title,
+        reward: entity.reward,
+      );
 }

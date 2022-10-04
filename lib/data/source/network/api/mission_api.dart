@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:amond/data/entity/mission_detail_entity.dart';
+import 'package:amond/data/entity/mission_history_entity.dart';
 import 'package:amond/data/entity/mission_list_entity.dart';
 import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/auth/auth_info.dart';
@@ -55,19 +56,31 @@ class MissionApi {
 
   Future<void> uploadMission(int missionId, String filePath) async {
     try {
-    final url = Uri.parse('$baseUrl/user/mission/$missionId');
-    var request = http.MultipartRequest("POST", url);
-    request.headers['Authorization'] = 'Bearer $globalToken'; // 인증 토큰 추가
-    // request.fields['missionId'] = missionId.toString(); // 바디에 필요한 필드
-    var pic =
-        await http.MultipartFile.fromPath("multipartFile", filePath); // 미션 사진
-    request.files.add(pic);
+      final url = Uri.parse('$baseUrl/user/mission/$missionId');
+      var request = http.MultipartRequest("POST", url);
+      request.headers['Authorization'] = 'Bearer $globalToken'; // 인증 토큰 추가
+      // request.fields['missionId'] = missionId.toString(); // 바디에 필요한 필드
+      var pic =
+          await http.MultipartFile.fromPath("multipartFile", filePath); // 미션 사진
+      request.files.add(pic);
 
-    var streamedResponse = await request.send();
-    var response = await http.Response.fromStream(streamedResponse);
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
     } catch (e) {
       // print(e);
       throw Exception('사진 전송 실패');
     }
+  }
+
+  Future<List<MissionHistoryEntity>> getMissionHistories() async {
+    final url = Uri.parse('');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $globalToken',
+    });
+    final Map<String, dynamic> result =
+        jsonDecode(utf8.decode(response.bodyBytes));
+    
+    List historiesJson = result['missionHistories'];
+    return historiesJson.map((e) => MissionHistoryEntity.fromJson(e)).toList();
   }
 }

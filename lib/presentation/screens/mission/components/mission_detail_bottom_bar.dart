@@ -38,7 +38,6 @@ class MissionDetailBottomBar extends StatelessWidget {
                       onPressed: controller.mission.state == 'INCOMPLETE' ||
                               controller.mission.state == 'REJECTED'
                           ? () async {
-
                               // FA 로그
                               FirebaseAnalytics.instance.logEvent(
                                   name: '미션_인증_터치',
