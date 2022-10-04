@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:amond/data/entity/character_entity.dart';
 import 'package:amond/domain/models/character.dart';
 import 'package:amond/domain/repositories/character_repository.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -78,6 +79,7 @@ class GrowController with ChangeNotifier {
   }
 
   void changeComment() {
+    FirebaseAnalytics.instance.logEvent(name: '캐릭터_코멘트_변경');
     _commentOrder = (_commentOrder + 1) % _comments.length;
     notifyListeners();
   }
@@ -155,9 +157,14 @@ class GrowController with ChangeNotifier {
 
   /// 하트 버튼 누를 시 하트 효과
   void showHearts() {
+        
     if (isHeartVisible) {
+      FirebaseAnalytics.instance.logEvent(name: '하트버튼_터치', parameters: {'type': '하트 보이는 중 누름'});
       return;
     }
+
+    FirebaseAnalytics.instance.logEvent(name: '하트버튼_터치', parameters: {'type': '하트 안보이는 중 누름'});
+
 
     isHeartVisible = true;
     notifyListeners();

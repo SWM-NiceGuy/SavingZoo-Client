@@ -7,6 +7,7 @@ import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
 import 'package:amond/presentation/screens/qr_scanner.dart';
 import 'package:amond/utils/push_notification.dart';
 import 'package:amond/widget/platform_based_indicator.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -97,8 +98,14 @@ class GrowScreen extends StatelessWidget {
                       opacity: growController.avatarIsVisible ? 1.0 : 0.0,
                       duration:
                           Duration(milliseconds: growController.fadeDuration),
-                      child: Image.network(
-                        growController.character.imageUrl,
+                      child: GestureDetector(
+                        onTap: () {
+                          // FA 로그
+                          FirebaseAnalytics.instance.logEvent(name: '캐릭터_터치');
+                        },
+                        child: Image.network(
+                          growController.character.imageUrl,
+                        ),
                       ),
                     ),
                     // 하트 버튼을 누르면 하트 표시

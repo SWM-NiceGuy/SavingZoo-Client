@@ -17,6 +17,7 @@ import 'package:amond/secrets/secret.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:amond/utils/push_notification.dart';
 import 'package:amond/utils/version/app_version.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -28,8 +29,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-
-  // SharedPreferences.getInstance().then((value) => value.clear());
+  
+  // Firebase Analytics 추가
+  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 

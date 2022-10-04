@@ -3,6 +3,7 @@ import 'package:amond/domain/models/mission_list.dart';
 import 'package:amond/presentation/controllers/mission_detail_controller.dart';
 import 'package:amond/presentation/screens/mission/mission_detail_screen.dart';
 import 'package:amond/ui/colors.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,6 +22,12 @@ class MissionCard extends StatelessWidget {
     return GestureDetector(
       // 미션카드 터치시 미션 상세 페이지로 이동
       onTap: () {
+        // FA 로그
+        FirebaseAnalytics.instance.logEvent(name: '미션카드_터치', parameters: {
+          '미션id': mission.id,
+          '미션이름': mission.name,
+          '상태': mission.state
+        });
         Navigator.of(context).push(
           MaterialPageRoute(
             // MissionDetailController를 여기서 주입

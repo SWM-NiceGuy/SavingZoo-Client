@@ -8,11 +8,11 @@ import 'package:amond/presentation/screens/settings/settings_screen.dart';
 import 'package:amond/utils/auth/do_auth.dart';
 import 'package:amond/utils/push_notification.dart';
 import 'package:amond/utils/show_platform_based_dialog.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:amond/presentation/screens/grow/grow_screen.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
@@ -139,6 +139,8 @@ class _MainScreenState extends State<MainScreen> {
               ),
               title: const Text('미션수행 기록'),
               onTap: () {
+                // FA 로그
+                FirebaseAnalytics.instance.logEvent(name: '미션내역_조회');
                 Navigator.of(context).pushNamed(MissionHistoryScreen.routeName);
               },
             ),
@@ -180,10 +182,12 @@ class _MainScreenState extends State<MainScreen> {
               ),
               title: const Text('AMOND 계정 탈퇴'),
               onTap: () async {
+                FirebaseAnalytics.instance.logEvent(name: '회원탈퇴_터치');
                 bool check;
                 check = await _checkDialog(context, 'AMOND 계정 탈퇴',
                     'AMOND 계정을 탈퇴하면 저장된 데이터들을 복구할 수 없습니다, 진행하시겠습니까?');
                 if (!check) return;
+                FirebaseAnalytics.instance.logEvent(name: '회원탈퇴');
                 try {
                   final resignResponse = await context.read<DoAuth>().resign();
                   await authController.resign(resignResponse);

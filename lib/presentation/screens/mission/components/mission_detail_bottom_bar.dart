@@ -2,6 +2,7 @@ import 'package:amond/presentation/controllers/mission_controller.dart';
 import 'package:amond/presentation/controllers/mission_detail_controller.dart';
 import 'package:amond/utils/show_platform_based_dialog.dart';
 import 'package:amond/widget/platform_based_indicator.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -37,12 +38,43 @@ class MissionDetailBottomBar extends StatelessWidget {
                       onPressed: controller.mission.state == 'INCOMPLETE' ||
                               controller.mission.state == 'REJECTED'
                           ? () async {
+
+                              // FA 로그
+                              FirebaseAnalytics.instance.logEvent(
+                                  name: '미션_인증_터치',
+                                  parameters: {
+                                    '미션id': controller.missionId,
+                                    '미션이름': controller.mission.name,
+                                    '상태': controller.mission.state,
+                                    '보상': controller.mission.reward,
+                                  });
                               // 카메라로 이미지 선택
                               final ImagePicker picker = ImagePicker();
                               XFile? image = await picker.pickImage(
                                   source: ImageSource.camera, imageQuality: 35);
 
-                              if (image == null) return;
+                              if (image == null) {
+                                // FA 로그
+                                FirebaseAnalytics.instance.logEvent(
+                                    name: '미션_인증_취소',
+                                    parameters: {
+                                    '미션id': controller.missionId,
+                                    '미션이름': controller.mission.name,
+                                    '상태': controller.mission.state,
+                                    '보상': controller.mission.reward,
+                                    });
+                                return;
+                              }
+
+                              // FA 로그
+                              FirebaseAnalytics.instance.logEvent(
+                                  name: '미션_인증_제출',
+                                  parameters: {
+                                    '미션id': controller.missionId,
+                                    '미션이름': controller.mission.name,
+                                    '상태': controller.mission.state,
+                                    '보상': controller.mission.reward,
+                                  });
 
                               // 미션 업로드 로직
                               // 업로드

@@ -1,5 +1,6 @@
 import 'package:amond/ui/colors.dart';
 import 'package:amond/utils/push_notification.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -44,6 +45,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             value: _pushNotificationPermission ?? false,
             onChanged: (bool value) {
+              // FA 로그
+              FirebaseAnalytics.instance.logEvent(name: '푸시알림_설정', parameters: {'결과': value ? '켬': '끔'});
+
               setState(() {
                 _pushNotificationPermission = value;
               });
