@@ -27,7 +27,7 @@ class MissionCard extends StatelessWidget {
         FirebaseAnalytics.instance.logEvent(name: '미션카드_터치', parameters: {
           '미션id': mission.id,
           '미션이름': mission.name,
-          '상태': mission.state
+          '상태': mission.state.toString(),
         });
         Navigator.of(context).push(
           MaterialPageRoute(

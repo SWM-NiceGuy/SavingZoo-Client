@@ -36,18 +36,18 @@ class MissionDetailBottomBar extends StatelessWidget {
                     )
                   : ElevatedButton(
                       // 미션 인증버튼
-                      onPressed: controller.mission.state == MissionState.incomplete ||
+                      onPressed: controller.mission.state ==
+                                  MissionState.incomplete ||
                               controller.mission.state == MissionState.rejected
                           ? () async {
                               // FA 로그
-                              FirebaseAnalytics.instance.logEvent(
-                                  name: '미션_인증_터치',
-                                  parameters: {
-                                    '미션id': controller.missionId,
-                                    '미션이름': controller.mission.name,
-                                    '상태': controller.mission.state,
-                                    '보상': controller.mission.reward,
-                                  });
+                              FirebaseAnalytics.instance
+                                  .logEvent(name: '미션_인증_터치', parameters: {
+                                '미션id': controller.missionId,
+                                '미션이름': controller.mission.name,
+                                '상태': controller.mission.state.toString(),
+                                '보상': controller.mission.reward,
+                              });
                               // 카메라로 이미지 선택
                               final ImagePicker picker = ImagePicker();
                               XFile? image = await picker.pickImage(
@@ -55,26 +55,24 @@ class MissionDetailBottomBar extends StatelessWidget {
 
                               if (image == null) {
                                 // FA 로그
-                                FirebaseAnalytics.instance.logEvent(
-                                    name: '미션_인증_취소',
-                                    parameters: {
-                                    '미션id': controller.missionId,
-                                    '미션이름': controller.mission.name,
-                                    '상태': controller.mission.state,
-                                    '보상': controller.mission.reward,
-                                    });
+                                FirebaseAnalytics.instance
+                                    .logEvent(name: '미션_인증_취소', parameters: {
+                                  '미션id': controller.missionId,
+                                  '미션이름': controller.mission.name,
+                                  '상태': controller.mission.state.toString(),
+                                  '보상': controller.mission.reward,
+                                });
                                 return;
                               }
 
                               // FA 로그
-                              FirebaseAnalytics.instance.logEvent(
-                                  name: '미션_인증_제출',
-                                  parameters: {
-                                    '미션id': controller.missionId,
-                                    '미션이름': controller.mission.name,
-                                    '상태': controller.mission.state,
-                                    '보상': controller.mission.reward,
-                                  });
+                              FirebaseAnalytics.instance
+                                  .logEvent(name: '미션_인증_제출', parameters: {
+                                '미션id': controller.missionId,
+                                '미션이름': controller.mission.name,
+                                '상태': controller.mission.state.toString(),
+                                '보상': controller.mission.reward,
+                              });
 
                               // 미션 업로드 로직
                               // 업로드

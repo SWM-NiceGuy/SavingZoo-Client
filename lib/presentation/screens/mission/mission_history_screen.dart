@@ -1,5 +1,4 @@
-import 'package:amond/domain/models/mission_history.dart';
-import 'package:amond/domain/models/mission_state.dart';
+
 import 'package:amond/presentation/controllers/mission_history_controller.dart';
 import 'package:amond/presentation/screens/mission/components/mission_history_card.dart';
 import 'package:amond/ui/colors.dart';
@@ -8,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class MissionHistoryScreen extends StatelessWidget {
-  MissionHistoryScreen({Key? key}) : super(key: key);
+  const MissionHistoryScreen({Key? key}) : super(key: key);
 
   static const String routeName = '/mission-history';
 
@@ -54,7 +53,7 @@ class MissionHistoryScreen extends StatelessWidget {
       body: historyController.isLoading
           ? const Center(child: PlatformBasedIndicator())
           : ListView.builder(
-              itemCount: 3,
+              itemCount: historyController.histories.length,
               itemBuilder: (context, index) =>
                   HistoryCard(history: historyController.histories[index]),
             ),

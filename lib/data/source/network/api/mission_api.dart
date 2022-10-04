@@ -73,7 +73,7 @@ class MissionApi {
   }
 
   Future<List<MissionHistoryEntity>> getMissionHistories() async {
-    final url = Uri.parse('');
+    final url = Uri.parse('$baseUrl/user/mission/history');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $globalToken',
     });

@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
 class MissionDetailScreen extends StatelessWidget {
-  MissionDetailScreen({Key? key}) : super(key: key);
+  const MissionDetailScreen({Key? key}) : super(key: key);
 
   static const String routeName = '/mission-detail';
 

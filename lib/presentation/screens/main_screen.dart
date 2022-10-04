@@ -194,7 +194,6 @@ class _MainScreenState extends State<MainScreen> {
                   Navigator.of(context)
                       .pushReplacementNamed(AuthScreen.routeName);
                 } catch (error) {
-                  print(error);
                   showPlatformBasedDialog(
                       context, '회원탈퇴에 실패했습니다.', '다시 시도해주세요.');
                 }

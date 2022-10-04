@@ -109,8 +109,8 @@ class MyApp extends StatelessWidget {
         MainScreen.routeName: (context) => const MainScreen(),
         QrScanner.routeName: (context) => const QrScanner(),
         MissionScreen.routeName: (context) => MissionScreen(),
-        MissionDetailScreen.routeName: (context) => MissionDetailScreen(),
-        MissionHistoryScreen.routeName: (context) => MissionHistoryScreen(),
+        MissionDetailScreen.routeName: (context) => const MissionDetailScreen(),
+        MissionHistoryScreen.routeName: (context) => const MissionHistoryScreen(),
         SettingsScreen.routeName: (context) => const SettingsScreen(),
       },
     );

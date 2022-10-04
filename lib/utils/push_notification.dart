@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/auth/auth_info.dart';
@@ -131,7 +130,7 @@ Future<void> setUpAndroidForegroundNotification() async {
       ?.createNotificationChannel(androidNotificationChannel);
 
   const android = AndroidInitializationSettings('@drawable/notification_icon');
-  final initialSetting = InitializationSettings(android: android);
+  const initialSetting = InitializationSettings(android: android);
   flutterLocalNotificationsPlugin.initialize(initialSetting);
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -141,7 +140,6 @@ Future<void> setUpAndroidForegroundNotification() async {
     // If `onMessage` is triggered with a notification, construct our own
     // local notification to show to users using the created channel.
     if (notification != null && android != null) {
-      print(android.smallIcon);
       flutterLocalNotificationsPlugin.show(
           0,
           notification.title,

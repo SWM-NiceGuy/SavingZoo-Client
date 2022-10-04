@@ -12,7 +12,6 @@ class DoAppleAuth implements DoAuth {
           AppleIDAuthorizationScopes.fullName,
         ],
       );
-      print('apple id토큰: ${appleCredential.identityToken}');
       return LoginInfo("APPLE", appleCredential.identityToken!);
     } catch (error) {
       // print('애플 로그인 실패 $error');
@@ -33,7 +32,6 @@ class DoAppleAuth implements DoAuth {
           AppleIDAuthorizationScopes.fullName,
         ],
       );
-      print(appleCredential.authorizationCode);
       return <String, String>{
         'authorizationCode': appleCredential.authorizationCode
       };
