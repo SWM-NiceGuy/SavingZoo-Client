@@ -72,10 +72,7 @@ List<SingleChildWidget> viewModels = [
   ),
 
   // MissionHistoryController
-  ChangeNotifierProvider(
-    create: (context) =>
-        MissionHistoryController(context.read<MissionRepositoryImpl>()),
-  ),
+
 
   // 회원탈퇴 DI
   ProxyProvider<AuthController, DoAuth>(

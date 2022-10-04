@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
+import 'package:amond/presentation/controllers/mission_history_controller.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
@@ -141,7 +143,14 @@ class _MainScreenState extends State<MainScreen> {
               onTap: () {
                 // FA 로그
                 FirebaseAnalytics.instance.logEvent(name: '미션내역_조회');
-                Navigator.of(context).pushNamed(MissionHistoryScreen.routeName);
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ChangeNotifierProvider(
+                    create: (context) => MissionHistoryController(
+                      context.read<MissionRepositoryImpl>(),
+                    ),
+                    child: const MissionHistoryScreen(),
+                  ),
+                ));
               },
             ),
             ListTile(
