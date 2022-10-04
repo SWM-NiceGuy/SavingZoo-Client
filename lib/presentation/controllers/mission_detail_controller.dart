@@ -1,4 +1,5 @@
 import 'package:amond/domain/models/mission_detail.dart';
+import 'package:amond/domain/models/mission_state.dart';
 import 'package:amond/domain/repositories/mission_repository.dart';
 import 'package:flutter/foundation.dart';
 
@@ -59,7 +60,7 @@ class MissionDetailController with ChangeNotifier {
       // for test
       // await Future.delayed(Duration(seconds: 2));
 
-      _missionDetail.state = "WAIT";
+      _missionDetail.state = MissionState.wait;
 
       _isSubmitting = false;
       if (_mounted) return;
@@ -74,11 +75,11 @@ class MissionDetailController with ChangeNotifier {
 
   String get stateToButtonText {
     switch (mission.state) {
-      case 'INCOMPLETE':
+      case MissionState.incomplete:
         return "인증하기";
-      case 'WAIT':
+      case MissionState.wait:
         return "인증 대기중";
-      case 'COMPLETED':
+      case MissionState.completed:
         return "미션 인증 완료";
       default:
         return "인증하기";

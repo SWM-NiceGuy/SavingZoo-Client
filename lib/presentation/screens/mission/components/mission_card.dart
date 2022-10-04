@@ -1,5 +1,6 @@
 import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/domain/models/mission_list.dart';
+import 'package:amond/domain/models/mission_state.dart';
 import 'package:amond/presentation/controllers/mission_detail_controller.dart';
 import 'package:amond/presentation/screens/mission/mission_detail_screen.dart';
 import 'package:amond/ui/colors.dart';
@@ -105,10 +106,10 @@ class MissionCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   // 미션 성공 여부
-                  if (mission.state == 'WAIT')
+                  if (mission.state == MissionState.wait)
                     Image.asset("assets/images/grey_check_icon.png",
                         width: 40, height: 40),
-                  if (mission.state == 'COMPLETED')
+                  if (mission.state == MissionState.completed)
                     Image.asset("assets/images/check_icon.png",
                         width: 40, height: 40),
                 ],

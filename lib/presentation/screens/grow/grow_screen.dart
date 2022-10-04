@@ -4,8 +4,6 @@ import 'package:amond/presentation/screens/grow/components/comment_box.dart';
 import 'package:amond/presentation/screens/grow/components/level_system.dart';
 import 'package:amond/presentation/screens/grow/components/mission_complete_dialog.dart';
 import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
-import 'package:amond/presentation/screens/qr_scanner.dart';
-import 'package:amond/utils/push_notification.dart';
 import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';

@@ -27,7 +27,7 @@ class HistoryCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // 기록 내용
-                  Text('${history.type}(${history.missionName})'),
+                  Text('미션 수행(${history.missionName})'),
                   // 성공 여부
                   getHistoryTextByState(history.state) 
                 ],

@@ -1,10 +1,11 @@
 import 'package:amond/data/entity/mission_list_entity.dart';
+import 'package:amond/domain/models/mission_state.dart';
 
 class MissionList {
   int id;
   String name;
   String iconUrl;
-  String state;
+  MissionState state;
 
   MissionList({
     required this.id,
@@ -20,7 +21,7 @@ class MissionList {
         id: id,
         name: name,
         iconUrl: iconUrl,
-        state: state,
+        state: state.toString(),
       );
 
   static MissionList _$MissionListFromEntity(MissionListEntity entity) =>
@@ -28,6 +29,6 @@ class MissionList {
         id: entity.id,
         name: entity.name,
         iconUrl: entity.iconUrl,
-        state: entity.state,
+        state: MissionState.fromString(entity.state),
       );
 }

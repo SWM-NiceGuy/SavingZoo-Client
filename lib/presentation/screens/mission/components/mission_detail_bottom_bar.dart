@@ -1,3 +1,4 @@
+import 'package:amond/domain/models/mission_state.dart';
 import 'package:amond/presentation/controllers/mission_controller.dart';
 import 'package:amond/presentation/controllers/mission_detail_controller.dart';
 import 'package:amond/utils/show_platform_based_dialog.dart';
@@ -123,7 +124,7 @@ class MissionDetailBottomBar extends StatelessWidget {
                     "+${reward}XP",
                     style: const TextStyle(fontSize: 20),
                   ),
-                  if (controller.mission.state == "COMPLETED")
+                  if (controller.mission.state == MissionState.completed)
                     Image.asset(
                       'assets/images/check_icon.png',
                       width: 40,

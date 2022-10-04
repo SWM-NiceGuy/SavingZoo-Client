@@ -24,7 +24,7 @@ class MissionHistory {
   static MissionHistory _$MissionHistoryFromEntity(
           MissionHistoryEntity entity) =>
       MissionHistory(
-        state: stringToMissionState(entity.state),
+        state: MissionState.fromString(entity.state),
         date: DateTime.fromMillisecondsSinceEpoch(entity.date),
         type: entity.rewardType,
         missionName: entity.title,

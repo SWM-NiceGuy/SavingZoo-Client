@@ -1,4 +1,5 @@
 import 'package:amond/data/entity/mission_detail_entity.dart';
+import 'package:amond/domain/models/mission_state.dart';
 
 class MissionDetail {
   String name;
@@ -7,7 +8,7 @@ class MissionDetail {
   List<String> exampleImageUrls;
   String submitGuide;
   int reward;
-  String state;
+  MissionState state;
 
   MissionDetail({
     required this.name,
@@ -29,15 +30,16 @@ class MissionDetail {
       exampleImageUrls: exampleImageUrls,
       submitGuide: submitGuide,
       reward: reward,
-      state: state);
+      state: state.toString());
 
   static MissionDetail _$MissionDetailFromEntity(MissionDetailEntity entity) =>
       MissionDetail(
-          name: entity.name,
-          content: entity.content,
-          description: entity.description,
-          exampleImageUrls: entity.exampleImageUrls,
-          submitGuide: entity.submitGuide,
-          reward: entity.reward,
-          state: entity.state);
+        name: entity.name,
+        content: entity.content,
+        description: entity.description,
+        exampleImageUrls: entity.exampleImageUrls,
+        submitGuide: entity.submitGuide,
+        reward: entity.reward,
+        state: MissionState.fromString(entity.state),
+      );
 }
