@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:amond/data/repository/character_repository_impl.dart';
 import 'package:amond/di/provider_setup.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
@@ -13,6 +15,7 @@ import 'package:amond/presentation/screens/settings/settings_screen.dart';
 import 'package:amond/presentation/screens/splash_screen.dart';
 import 'package:amond/secrets/secret.dart';
 import 'package:amond/ui/colors.dart';
+import 'package:amond/utils/push_notification.dart';
 import 'package:amond/utils/version/app_version.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -26,15 +29,25 @@ void main() async {
 
   await Firebase.initializeApp();
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // SharedPreferences.getInstance().then((value) => value.clear());
+
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
+
+  // 앱 버전 체크
   final bool isLatest = await isLatestVersion();
 
-  // String? firebaseToken = await FirebaseMessaging.instance.getToken();
-  // if (kDebugMode) {
-  //   print('FCM 토큰: $firebaseToken');
-  // }
+  // 푸시 알림 설정
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true, // Required to display a heads up notification
+      badge: true,
+      sound: true,
+    );
+ if (Platform.isAndroid) {
+    await setUpAndroidForegroundNotification();
+  }
 
   runApp(MultiProvider(
     providers: globalProviders,
@@ -94,6 +107,4 @@ class MyApp extends StatelessWidget {
   }
 }
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async{
-
-}
+//  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {}

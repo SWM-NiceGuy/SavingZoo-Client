@@ -43,4 +43,11 @@ class MissionController with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void changeMissionToWait(int id) {
+    var idx = _missions.indexWhere((element) => element.id == id);
+    if (idx < 0) return;
+    _missions[idx].state = 'WAIT';
+    notifyListeners();
+  }
 }

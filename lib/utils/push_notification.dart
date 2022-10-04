@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -107,4 +108,55 @@ Future<void> setPushNotificationPermission(bool value) async {
   } else {
     FirebaseMessaging.instance.deleteToken();
   }
+}
+
+// Android용 새 Notification Channel
+const AndroidNotificationChannel androidNotificationChannel =
+    AndroidNotificationChannel(
+  'high_importance_channel', // 임의의 id
+  'High Importance Notifications', // 설정에 보일 채널명
+  description:
+      'This channel is used for important notifications.', // 설정에 보일 채널 설명
+  importance: Importance.max,
+);
+
+// Notification Channel을 디바이스에 생성
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+Future<void> setUpAndroidForegroundNotification() async {
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(androidNotificationChannel);
+
+  const android = AndroidInitializationSettings('@drawable/notification_icon');
+  final initialSetting = InitializationSettings(android: android);
+  flutterLocalNotificationsPlugin.initialize(initialSetting);
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+
+    // If `onMessage` is triggered with a notification, construct our own
+    // local notification to show to users using the created channel.
+    if (notification != null && android != null) {
+      print(android.smallIcon);
+      flutterLocalNotificationsPlugin.show(
+          0,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+                'high_importance_channel', 'High Importance Notifications',
+                channelDescription:
+                    'This channel is used for important notifications.',
+                icon: android.smallIcon,
+                importance: Importance.high,
+                priority: Priority.high
+                // other properties...
+                ),
+          ));
+    }
+  });
 }

@@ -50,14 +50,13 @@ class DoKakaoAuth implements DoAuth {
         rethrow;
       }
     }
-
+    
     return LoginInfo("KAKAO", token);
   }
   
   @override
   Future<Map<String, String>?> resign() async {
       try {
-        await UserApi.instance.unlink();
         // print('카카오 탈퇴 성공, SDK에서 토큰 삭제');
       } catch (error) {
         // print('연결 끊기 실패 $error');

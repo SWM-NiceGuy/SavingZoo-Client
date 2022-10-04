@@ -42,10 +42,8 @@ class GrowScreen extends StatelessWidget {
     if (growController.isNewUser) {
       growController.isNewUser = false;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!Navigator.of(context).canPop()) {
-          showCharacterNamingPopup(context, growController.setCharacterName,
-              growController.character.imageUrl);
-        }
+        showCharacterNamingPopup(context, growController.setCharacterName,
+            growController.character.imageUrl);
       });
     }
 
@@ -59,11 +57,6 @@ class GrowScreen extends StatelessWidget {
         }
       });
     }
-
-    // 처음 접속하는 유저들에게 푸시 알림 설정을 받음.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      showPushNotificationPermissionDialog(context);
-    });
 
     return growController.isLoading
         ? const Center(
@@ -153,14 +146,13 @@ class GrowScreen extends StatelessWidget {
                             padding: EdgeInsets.zero,
                             onPress: growController.showHearts,
                             child: Center(
-                                child: Image.asset(
-                                  'assets/images/heart_icon.png',
-                                  width: buttonHeight / 2,
-                                  height: buttonHeight / 2,
-                                  fit: BoxFit.fitHeight,
-                                ),
+                              child: Image.asset(
+                                'assets/images/heart_icon.png',
+                                width: buttonHeight / 2,
+                                height: buttonHeight / 2,
+                                fit: BoxFit.fitHeight,
                               ),
-
+                            ),
                           ),
                           // ShadowButton(
                           //   width: buttonHeight,
@@ -214,11 +206,11 @@ class GrowScreen extends StatelessWidget {
   /// QR Scanner로 이동 후 미션 성공 QR을 찍으면 해당 데이터를 반환
   ///
   /// then을 통해 미션성공 처리하면 된다.
-  Future<Object?> _toQrScanner(BuildContext context) async {
-    await _getStatuses();
-    var result = await Navigator.of(context).pushNamed(QrScanner.routeName);
-    return result;
-  }
+  // Future<Object?> _toQrScanner(BuildContext context) async {
+  //   await _getStatuses();
+  //   var result = await Navigator.of(context).pushNamed(QrScanner.routeName);
+  //   return result;
+  // }
 
   // Future<void> _testqr(BuildContext context) async {
   //   await _getStatuses();

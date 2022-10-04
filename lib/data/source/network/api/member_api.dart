@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/auth/auth_info.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class MemberApi {
@@ -36,6 +37,9 @@ class MemberApi {
         'Content-type': 'application/json',
         'Accept': 'application/json',
       });
+      if (kDebugMode) {
+        print('회원탈퇴 응답 : ${response.body}');
+      }
       return response;
     } catch (error) {
       rethrow;

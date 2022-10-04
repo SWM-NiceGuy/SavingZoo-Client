@@ -59,14 +59,14 @@ class MissionDetailController with ChangeNotifier {
       // for test
       // await Future.delayed(Duration(seconds: 2));
 
-      if (_mounted) return;
-
       _missionDetail.state = "WAIT";
 
       _isSubmitting = false;
+      if (_mounted) return;
       notifyListeners();
     } catch (e) {
       _isSubmitting = false;
+      if (_mounted) return;
       notifyListeners();
       rethrow;
     }

@@ -6,6 +6,7 @@ import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/presentation/screens/settings/settings_screen.dart';
 import 'package:amond/utils/auth/do_auth.dart';
+import 'package:amond/utils/push_notification.dart';
 import 'package:amond/utils/show_platform_based_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:amond/presentation/screens/grow/grow_screen.dart';
@@ -38,6 +39,13 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 처음 접속하는 유저들에게 푸시 알림 설정을 받음.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!Navigator.of(context).canPop()) {
+        showPushNotificationPermissionDialog(context);
+      }
+    });
+
     final authController = context.read<AuthController>();
     return Scaffold(
       drawer: mainDrawer(context, authController),
@@ -53,7 +61,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       extendBody: true,
       bottomNavigationBar: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           boxShadow: [
             BoxShadow(
                 color: Colors.white, offset: Offset(-5, -5), blurRadius: 9)
@@ -197,17 +205,17 @@ class _MainScreenState extends State<MainScreen> {
   /// 카메라 권한 확인
   ///
   /// 허락되면 [true], 거부되면 [false]를 반환
-  Future<bool> _getStatuses() async {
-    Map<Permission, PermissionStatus> statuses =
-        await [Permission.storage, Permission.camera].request();
+  // Future<bool> _getStatuses() async {
+  //   Map<Permission, PermissionStatus> statuses =
+  //       await [Permission.storage, Permission.camera].request();
 
-    if (await Permission.camera.isGranted &&
-        await Permission.storage.isGranted) {
-      return Future.value(true);
-    } else {
-      return Future.value(false);
-    }
-  }
+  //   if (await Permission.camera.isGranted &&
+  //       await Permission.storage.isGranted) {
+  //     return Future.value(true);
+  //   } else {
+  //     return Future.value(false);
+  //   }
+  // }
 
   Future<bool> _checkDialog(BuildContext context, String title,
       [String? content]) async {

@@ -1,3 +1,4 @@
+import 'package:amond/presentation/controllers/mission_controller.dart';
 import 'package:amond/presentation/controllers/mission_detail_controller.dart';
 import 'package:amond/utils/show_platform_based_dialog.dart';
 import 'package:amond/widget/platform_based_indicator.dart';
@@ -46,9 +47,11 @@ class MissionDetailBottomBar extends StatelessWidget {
                               // 미션 업로드 로직
                               // 업로드
 
-                              controller
-                                  .submit(image.path)
-                                  .onError((error, stackTrace) {
+                              controller.submit(image.path).then((_) {
+                                context
+                                    .read<MissionController>()
+                                    .changeMissionToWait(controller.missionId);
+                              }).onError((_, __) {
                                 showPlatformBasedDialog(
                                     context, '사진 전송에 실패했습니다.', '다시 시도해주세요.');
                               });
