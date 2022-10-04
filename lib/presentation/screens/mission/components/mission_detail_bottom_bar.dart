@@ -36,8 +36,8 @@ class MissionDetailBottomBar extends StatelessWidget {
                     )
                   : ElevatedButton(
                       // 미션 인증버튼
-                      onPressed: controller.mission.state == 'INCOMPLETE' ||
-                              controller.mission.state == 'REJECTED'
+                      onPressed: controller.mission.state == MissionState.incomplete ||
+                              controller.mission.state == MissionState.rejected
                           ? () async {
                               // FA 로그
                               FirebaseAnalytics.instance.logEvent(
