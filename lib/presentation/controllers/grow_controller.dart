@@ -123,8 +123,8 @@ class GrowController with ChangeNotifier {
         CharacterEntity.fromJson(jsonDecode(prevCharacterJson)));
 
     // 저장되어 있던 캐릭터 정보와 서버에서 불러온 캐릭터 정보가 같으면 서버 캐릭터로 로드
-    if (prevCharacter.level == characterFromServer.level &&
-        prevCharacter.currentExp == characterFromServer.currentExp) {
+    if (prevCharacter.level <= characterFromServer.level &&
+        prevCharacter.currentExp <= characterFromServer.currentExp) {
       _character = characterFromServer;
       _isLoading = false;
       notifyListeners();
@@ -133,6 +133,7 @@ class GrowController with ChangeNotifier {
 
     // 저장되어 있던 캐릭터와 서버에서 불러온 캐릭터 정보가 다를 때, 이전 캐릭터로 먼저 로드 후 경험치 증가
     _character = prevCharacter;
+    _character.nickname = characterFromServer.nickname;
     _isMissionClear = true;
     _isLoading = false;
     // 서버에서 불러온 캐릭터의 레벨이 더 높을 때, 같을 때 구분해서 계산
