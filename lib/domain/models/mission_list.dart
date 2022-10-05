@@ -6,12 +6,14 @@ class MissionList {
   String name;
   String iconUrl;
   MissionState state;
+  int reward;
 
   MissionList({
     required this.id,
     required this.name,
     required this.iconUrl,
     required this.state,
+    required this.reward
   });
 
   factory MissionList.fromEntity(MissionListEntity entity) =>
@@ -22,6 +24,7 @@ class MissionList {
         name: name,
         iconUrl: iconUrl,
         state: state.toString(),
+        reward: reward,
       );
 
   static MissionList _$MissionListFromEntity(MissionListEntity entity) =>
@@ -30,5 +33,6 @@ class MissionList {
         name: entity.name,
         iconUrl: entity.iconUrl,
         state: MissionState.fromString(entity.state),
+        reward: entity.reward
       );
 }

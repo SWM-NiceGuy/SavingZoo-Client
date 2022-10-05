@@ -101,6 +101,11 @@ class MissionCard extends StatelessWidget {
                           style: const TextStyle(
                               fontSize: 20, overflow: TextOverflow.ellipsis),
                         ),
+                        Text(
+                          '+ ${mission.reward}XP',
+                          style: const TextStyle(
+                              fontSize: 20, overflow: TextOverflow.ellipsis),
+                        )
                       ],
                     ),
                   ),

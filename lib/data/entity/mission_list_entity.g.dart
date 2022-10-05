@@ -12,6 +12,7 @@ MissionListEntity _$MissionListEntityFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       iconUrl: json['iconUrl'] as String,
       state: json['state'] as String,
+      reward: json['reward'] as int,
     );
 
 Map<String, dynamic> _$MissionListEntityToJson(MissionListEntity instance) =>
@@ -19,5 +20,6 @@ Map<String, dynamic> _$MissionListEntityToJson(MissionListEntity instance) =>
       'id': instance.id,
       'name': instance.name,
       'iconUrl': instance.iconUrl,
+      'reward': instance.reward,
       'state': instance.state,
     };

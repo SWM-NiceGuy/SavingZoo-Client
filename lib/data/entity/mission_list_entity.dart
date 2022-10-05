@@ -7,13 +7,15 @@ class MissionListEntity {
   final int id;
   final String name;
   final String iconUrl;
+  final int reward;
   String state;
 
   MissionListEntity({
     required this.id,
     required this.name,
     required this.iconUrl,
-    required this.state
+    required this.state,
+    required this.reward,
   });
 
 
