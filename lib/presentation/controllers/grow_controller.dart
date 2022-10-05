@@ -114,6 +114,7 @@ class GrowController with ChangeNotifier {
     if (prevCharacterJson == null) {
       // 서버에서 가져온 캐릭터
       _character = characterFromServer;
+      _saveCharacter(_character);
       _isLoading = false;
       notifyListeners();
       return;

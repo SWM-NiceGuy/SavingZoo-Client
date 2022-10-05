@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:amond/data/entity/character_entity.dart';
 import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/auth/auth_info.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class CharacterApi {
@@ -57,6 +58,9 @@ class CharacterApi {
       'Authorization': 'Bearer $globalToken',
     });
     final json = jsonDecode(utf8.decode(response.bodyBytes));
+    if (kDebugMode) {
+    print('캐릭터 정보 응답: ${response.body}');
+    }
     return CharacterEntity.fromJson(json);
   }
 
