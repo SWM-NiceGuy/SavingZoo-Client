@@ -1,7 +1,7 @@
 import 'package:amond/utils/auth/do_auth.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
-class DoAppleAuth implements DoAuth {
+class DoAppleAuth extends DoAuth {
   @override
   Future<LoginInfo> login() async {
     try {
@@ -32,6 +32,7 @@ class DoAppleAuth implements DoAuth {
           AppleIDAuthorizationScopes.fullName,
         ],
       );
+
       return <String, String>{
         'authorizationCode': appleCredential.authorizationCode
       };

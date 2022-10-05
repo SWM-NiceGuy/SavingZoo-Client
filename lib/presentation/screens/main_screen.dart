@@ -1,17 +1,12 @@
-import 'dart:io';
 
 import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/mission_history_controller.dart';
-import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/presentation/screens/settings/settings_screen.dart';
-import 'package:amond/utils/auth/do_auth.dart';
 import 'package:amond/utils/push_notification.dart';
-import 'package:amond/utils/show_platform_based_dialog.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:amond/presentation/screens/grow/grow_screen.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
@@ -164,50 +159,7 @@ class _MainScreenState extends State<MainScreen> {
               },
             ),
             const Spacer(),
-            ListTile(
-              leading: const Icon(
-                Icons.logout,
-                color: blackColor,
-              ),
-              title: const Text('로그아웃'),
-              onTap: () async {
-                bool check;
-                check = await _checkDialog(context, '로그아웃을 진행합니다');
-                if (!check) return;
-                try {
-                  await authController.logout();
-                  Navigator.of(context)
-                      .pushReplacementNamed(AuthScreen.routeName);
-                } catch (error) {
-                  showPlatformBasedDialog(
-                      context, '로그아웃에 실패했습니다', '다시 시도해주세요.');
-                }
-              },
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.delete_forever,
-                color: blackColor,
-              ),
-              title: const Text('AMOND 계정 탈퇴'),
-              onTap: () async {
-                FirebaseAnalytics.instance.logEvent(name: '회원탈퇴_터치');
-                bool check;
-                check = await _checkDialog(context, 'AMOND 계정 탈퇴',
-                    'AMOND 계정을 탈퇴하면 저장된 데이터들을 복구할 수 없습니다, 진행하시겠습니까?');
-                if (!check) return;
-                FirebaseAnalytics.instance.logEvent(name: '회원탈퇴');
-                try {
-                  final resignResponse = await context.read<DoAuth>().resign();
-                  await authController.resign(resignResponse);
-                  Navigator.of(context)
-                      .pushReplacementNamed(AuthScreen.routeName);
-                } catch (error) {
-                  showPlatformBasedDialog(
-                      context, '회원탈퇴에 실패했습니다.', '다시 시도해주세요.');
-                }
-              },
-            )
+
           ],
         ),
       ),
@@ -229,58 +181,4 @@ class _MainScreenState extends State<MainScreen> {
   //   }
   // }
 
-  Future<bool> _checkDialog(BuildContext context, String title,
-      [String? content]) async {
-    bool response = false;
-    if (Platform.isIOS) {
-      response = await showCupertinoDialog(
-        context: context,
-        builder: (_) {
-          return CupertinoAlertDialog(
-            title: Text(title),
-            content: Text(content ?? ''),
-            actions: [
-              CupertinoDialogAction(
-                child: const Text('네'),
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-              ),
-              CupertinoDialogAction(
-                child: const Text('아니오'),
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-              )
-            ],
-          );
-        },
-      );
-    } else {
-      response = await showDialog(
-        context: context,
-        builder: (_) {
-          return AlertDialog(
-            title: Text(title),
-            content: Text(content ?? ''),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: const Text('네'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: const Text('아니오'),
-              ),
-            ],
-          );
-        },
-      );
-    }
-    return response;
-  }
 }

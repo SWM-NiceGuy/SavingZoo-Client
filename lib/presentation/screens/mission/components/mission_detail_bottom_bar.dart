@@ -109,6 +109,13 @@ class MissionDetailBottomBar extends StatelessWidget {
                           }
                           return const Color(0xff96CE5F);
                         }),
+                        foregroundColor:
+                            MaterialStateProperty.resolveWith((states) {
+                           if (states.contains(MaterialState.disabled)) {
+                            return Colors.white;
+                           }
+                           return null;
+                        }),
                       ),
                       child: Text(controller.stateToButtonText,
                           style: const TextStyle(fontSize: 24)),

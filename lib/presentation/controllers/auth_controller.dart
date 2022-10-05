@@ -90,6 +90,7 @@ class AuthController with ChangeNotifier {
       prefs.remove('loginType');
       prefs.remove('jwt');
       _loginType = null;
+      prefs.clear();
     }
     catch (error) {
       rethrow;

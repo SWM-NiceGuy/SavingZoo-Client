@@ -8,7 +8,6 @@ import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'components/character_name_input.dart';
@@ -196,17 +195,17 @@ class GrowScreen extends StatelessWidget {
   /// 카메라 권한 확인
   ///
   /// 허락되면 [true], 거부되면 [false]를 반환
-  Future<bool> _getStatuses() async {
-    Map<Permission, PermissionStatus> statuses =
-        await [Permission.storage, Permission.camera].request();
+  // Future<bool> _getStatuses() async {
+  //   Map<Permission, PermissionStatus> statuses =
+  //       await [Permission.storage, Permission.camera].request();
 
-    if (await Permission.camera.isGranted &&
-        await Permission.storage.isGranted) {
-      return Future.value(true);
-    } else {
-      return Future.value(false);
-    }
-  }
+  //   if (await Permission.camera.isGranted &&
+  //       await Permission.storage.isGranted) {
+  //     return Future.value(true);
+  //   } else {
+  //     return Future.value(false);
+  //   }
+  // }
 
   /// QR Scanner로 이동 후 미션 성공 QR을 찍으면 해당 데이터를 반환
   ///

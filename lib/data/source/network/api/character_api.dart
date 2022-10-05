@@ -59,7 +59,7 @@ class CharacterApi {
     });
     final json = jsonDecode(utf8.decode(response.bodyBytes));
     if (kDebugMode) {
-    print('캐릭터 정보 응답: ${response.body}');
+    print('캐릭터 정보 응답: $json}');
     }
     return CharacterEntity.fromJson(json);
   }

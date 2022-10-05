@@ -3,7 +3,7 @@ import 'package:amond/utils/auth/do_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
-class DoKakaoAuth implements DoAuth {
+class DoKakaoAuth extends DoAuth {
   @override
   Future<LoginInfo> login() async {
     late final String token;
@@ -50,7 +50,7 @@ class DoKakaoAuth implements DoAuth {
         rethrow;
       }
     }
-    
+
     return LoginInfo("KAKAO", token);
   }
   
@@ -58,6 +58,7 @@ class DoKakaoAuth implements DoAuth {
   Future<Map<String, String>?> resign() async {
       try {
         // print('카카오 탈퇴 성공, SDK에서 토큰 삭제');
+
       } catch (error) {
         // print('연결 끊기 실패 $error');
         rethrow;

@@ -32,9 +32,9 @@ class _MissionPhotoState extends State<MissionPhoto> {
             children: [
               TextButton(
                 onPressed: () async {
-                  final _picker = ImagePicker();
+                  final picker = ImagePicker();
                   XFile? photo =
-                      await _picker.pickImage(source: ImageSource.camera);
+                      await picker.pickImage(source: ImageSource.camera);
                   if (photo == null) return;
                   setState(() {
                     widget.photo = photo;

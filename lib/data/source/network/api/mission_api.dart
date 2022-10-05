@@ -66,9 +66,12 @@ class MissionApi {
 
       var streamedResponse = await request.send();
       var response = await http.Response.fromStream(streamedResponse);
+      if (response.statusCode >= 400) {
+        throw Exception(response.statusCode);
+      }
     } catch (e) {
       // print(e);
-      throw Exception('사진 전송 실패');
+      throw Exception('사진 전송 실패 code: ${e.toString()}');
     }
   }
 

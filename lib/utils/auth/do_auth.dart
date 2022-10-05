@@ -1,3 +1,5 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 abstract class DoAuth {
   Future<LoginInfo> login();
   Future<Map<String,String>?> resign();

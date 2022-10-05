@@ -37,7 +37,7 @@ class MissionCard extends StatelessWidget {
               create: (_) => MissionDetailController(
                   context.read<MissionRepositoryImpl>(),
                   missionId: mission.id),
-              child: MissionDetailScreen(),
+              child: const MissionDetailScreen(),
             ),
           ),
         );
