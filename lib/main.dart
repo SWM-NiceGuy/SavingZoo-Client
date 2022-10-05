@@ -26,7 +26,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_common.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,7 +40,6 @@ void main() async {
   // Firebase Crashlytics 추가
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   
-
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);

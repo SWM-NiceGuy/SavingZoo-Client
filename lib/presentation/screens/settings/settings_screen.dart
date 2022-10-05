@@ -43,83 +43,85 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       body: controller.isLoading
           ? const Center(child: PlatformBasedIndicator())
-          : Column(
-              children: [
-                // 미션 푸시 알림 설정
-                SwitchListTile(
-                  title: const Text('미션 수행 푸시 알림'),
-                  subtitle: const Text(
-                    '기기 설정에서 앱 알림 설정을 먼저 확인해주세요!',
-                    style: TextStyle(color: Colors.grey),
+          : SafeArea(
+            child: Column(
+                children: [
+                  // 미션 푸시 알림 설정
+                  SwitchListTile(
+                    title: const Text('미션 수행 푸시 알림'),
+                    subtitle: const Text(
+                      '기기 설정에서 앱 알림 설정을 먼저 확인해주세요!',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    value: controller.isPushNotificationOn,
+                    onChanged: (bool value) {
+                      // FA 로그
+                      FirebaseAnalytics.instance.logEvent(
+                          name: '푸시알림_설정', parameters: {'결과': value ? '켬' : '끔'});
+          
+                      controller.togglePushNotification(value);
+                    },
+                    secondary: const Icon(Icons.notifications),
                   ),
-                  value: controller.isPushNotificationOn,
-                  onChanged: (bool value) {
-                    // FA 로그
-                    FirebaseAnalytics.instance.logEvent(
-                        name: '푸시알림_설정', parameters: {'결과': value ? '켬' : '끔'});
-
-                    controller.togglePushNotification(value);
-                  },
-                  secondary: const Icon(Icons.notifications),
-                ),
-                const Spacer(),
-                ListTile(
+                  const Spacer(),
+                  ListTile(
+                      leading: const Icon(
+                        Icons.logout,
+                        color: blackColor,
+                      ),
+                      title: const Text('로그아웃'),
+                      onTap: () async {
+                        _checkDialog(context, '로그아웃을 진행합니다').then(
+                          (isAccepted) {
+                            if (!isAccepted) return;
+                            try {
+                              authController.logout().then((_) {
+                                Navigator.of(context).popUntil(
+                                  ModalRoute.withName('/'),
+                                );
+                                Navigator.of(context)
+                                    .pushReplacementNamed(AuthScreen.routeName);
+                              });
+                            } catch (error) {
+                              showPlatformBasedDialog(
+                                  context, '로그아웃에 실패했습니다', '다시 시도해주세요.');
+                            }
+                          },
+                        );
+                      }),
+                  ListTile(
                     leading: const Icon(
-                      Icons.logout,
+                      Icons.delete_forever,
                       color: blackColor,
                     ),
-                    title: const Text('로그아웃'),
+                    title: const Text('AMOND 계정 탈퇴'),
                     onTap: () async {
-                      _checkDialog(context, '로그아웃을 진행합니다').then(
-                        (isAccepted) {
-                          if (!isAccepted) return;
-                          try {
-                            authController.logout().then((_) {
-                              Navigator.of(context).popUntil(
-                                ModalRoute.withName('/'),
-                              );
+                      FirebaseAnalytics.instance.logEvent(name: '회원탈퇴_터치');
+          
+                      _checkDialog(context, 'AMOND 계정 탈퇴',
+                              'AMOND 계정을 탈퇴하면 저장된 데이터들을 복구할 수 없습니다, 진행하시겠습니까?')
+                          .then((isAccepted) {
+                        if (!isAccepted) return;
+          
+                        FirebaseAnalytics.instance.logEvent(name: '회원탈퇴');
+                        try {
+                          context.read<DoAuth>().resign().then((resignResponse) {
+                            authController.resign(resignResponse).then((_) {
                               Navigator.of(context)
-                                  .pushReplacementNamed(AuthScreen.routeName);
+                                  .popUntil(ModalRoute.withName('/'));
+                              Navigator.of(context).pushReplacementNamed(AuthScreen.routeName);
                             });
-                          } catch (error) {
-                            showPlatformBasedDialog(
-                                context, '로그아웃에 실패했습니다', '다시 시도해주세요.');
-                          }
-                        },
-                      );
-                    }),
-                ListTile(
-                  leading: const Icon(
-                    Icons.delete_forever,
-                    color: blackColor,
-                  ),
-                  title: const Text('AMOND 계정 탈퇴'),
-                  onTap: () async {
-                    FirebaseAnalytics.instance.logEvent(name: '회원탈퇴_터치');
-
-                    _checkDialog(context, 'AMOND 계정 탈퇴',
-                            'AMOND 계정을 탈퇴하면 저장된 데이터들을 복구할 수 없습니다, 진행하시겠습니까?')
-                        .then((isAccepted) {
-                      if (!isAccepted) return;
-
-                      FirebaseAnalytics.instance.logEvent(name: '회원탈퇴');
-                      try {
-                        context.read<DoAuth>().resign().then((resignResponse) {
-                          authController.resign(resignResponse).then((_) {
-                            Navigator.of(context)
-                                .popUntil(ModalRoute.withName('/'));
-                            Navigator.of(context).pushReplacementNamed(AuthScreen.routeName);
                           });
-                        });
-                      } catch (error) {
-                        showPlatformBasedDialog(
-                            context, '회원탈퇴에 실패했습니다.', '다시 시도해주세요.');
-                      }
-                    });
-                  },
-                )
-              ],
-            ),
+                        } catch (error) {
+                          showPlatformBasedDialog(
+                              context, '회원탈퇴에 실패했습니다.', '다시 시도해주세요.');
+                        }
+                      });
+                    },
+                  )
+                ],
+              ),
+          ),
     );
   }
 

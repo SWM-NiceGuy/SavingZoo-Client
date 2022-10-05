@@ -21,9 +21,14 @@ Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
       context: context,
       builder: (context) => BasicDialogAlert(
             title: const Text("미션 수행 알림"),
-            content: const Text('''미션 수행을 원활하게 하실 수 있도록 푸시 알림이 제공됩니다.
-
-* 좌측 상단 메뉴의 설정창에서 푸시 알림 설정을 변경하실 수 있습니다'''),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                 Text("미션 수행을 원활하게 하실 수 있도록 푸시 알림이 제공됩니다."),
+                 SizedBox(height: 12),
+                Text('* 좌측 상단 메뉴의 설정창에서 푸시 알림 설정을 변경하실 수 있습니다', style: TextStyle(fontSize: 12)),
+              ],
+            ),
             actions: <Widget>[
               BasicDialogAction(
                 title: const Text("확인"),

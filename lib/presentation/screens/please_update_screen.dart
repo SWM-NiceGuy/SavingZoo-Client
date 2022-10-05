@@ -40,6 +40,7 @@ class PleaseUpdateScreen extends StatelessWidget {
                 : AlertDialog(
                     title: const Text("업데이트가 필요합니다."),
                     content: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         const Text("현재버전 : $appVersion"),
                         Text("최신버전 : $latestVersion")
