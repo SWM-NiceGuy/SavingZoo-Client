@@ -234,7 +234,10 @@ class GrowScreen extends StatelessWidget {
       builder: (context) {
         return ChangeNotifierProvider(
             create: (_) => NameValidation(),
-            child: CharacterNameInput(onSubmit: onSubmit, imageUrl: imageUrl));
+            child: WillPopScope(
+                onWillPop: () async => false,
+                child: CharacterNameInput(
+                    onSubmit: onSubmit, imageUrl: imageUrl)));
       },
     );
   }
