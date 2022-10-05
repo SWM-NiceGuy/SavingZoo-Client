@@ -48,11 +48,9 @@ class GrowScreen extends StatelessWidget {
     // 완료한 미션이 있으면 미션 완료 팝업을 띄운다.
     if (growController.increasedExp != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!Navigator.of(context).canPop()) {
-          showMissionCompleteDialog(context, () async {
-            await growController.increaseExp(growController.increasedExp!);
-          }, growController.increasedExp!);
-        }
+        showMissionCompleteDialog(context, () async {
+          await growController.increaseExp(growController.increasedExp!);
+        }, growController.increasedExp!);
       });
     }
 

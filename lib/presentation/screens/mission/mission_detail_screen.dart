@@ -86,24 +86,24 @@ class MissionDetailScreen extends StatelessWidget {
                     children: [
                       // 미션이유
                       Text(missionDetailController.mission.description),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 36),
                       const Text("미션",
                           style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold)),
+                              fontSize: 20, fontWeight: FontWeight.bold)),
                       // 미션 내용
                       Text(missionDetailController.mission.content,
                           style: const TextStyle(fontSize: 16)),
-                      const SizedBox(height: 24),
-                      const Text("미션 인증 방법",
+                      const SizedBox(height: 36),
+                      const Text("인증 방법",
                           style: TextStyle(
-                              fontSize: 24, fontWeight: FontWeight.bold)),
+                              fontSize: 20, fontWeight: FontWeight.bold)),
                       // 미션 인증 방법
                       Text(missionDetailController.mission.submitGuide),
                       const SizedBox(height: 48),
                       const Text(
                         "미션 인증 예시",
                         style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       )
                     ],
                   ),

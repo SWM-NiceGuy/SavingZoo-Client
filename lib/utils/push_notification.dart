@@ -20,8 +20,10 @@ Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
   showPlatformDialog(
       context: context,
       builder: (context) => BasicDialogAlert(
-            title: const Text("푸시 알림 설정"),
-            content: const Text("미션 수행 인증에 대한 푸시알림을 받아보세요!"),
+            title: const Text("미션 수행 알림"),
+            content: const Text('''미션 수행을 원활하게 하실 수 있도록 푸시 알림이 제공됩니다.
+
+* 좌측 상단 메뉴의 설정창에서 푸시 알림 설정을 변경하실 수 있습니다'''),
             actions: <Widget>[
               BasicDialogAction(
                 title: const Text("확인"),
@@ -42,33 +44,20 @@ Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
       sound: true,
     );
 
-    // 푸시 알림을 허용했을 때
+    // 푸시 알림을 거부했을 때 (iOS)
     if (permissionSettings.authorizationStatus == AuthorizationStatus.denied) {
-      return false;
-    }
-    deviceToken = await FirebaseMessaging.instance.getToken();
-    if (deviceToken == null) return false;
-    await sendDeviceToken(deviceToken!);
-    return true;
-  }).then((isAccepted) {
-    if (isAccepted) {
       SharedPreferences.getInstance()
-          .then((prefs) => prefs.setBool('pushNotificationPermission', true));
+          .then((prefs) => prefs.setBool('pushNotificationPermission', false));
+      return;
     }
-    showPlatformDialog(
-      context: context,
-      builder: (context) => BasicDialogAlert(
-        content: const Text("'설정'에서 푸시알림 설정을 언제든 바꿀 수 있습니다."),
-        actions: [
-          BasicDialogAction(
-            title: const Text('확인'),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          )
-        ],
-      ),
-    );
+
+    // 푸시 알림을 허용했을 때
+    deviceToken = await FirebaseMessaging.instance.getToken();
+    if (deviceToken == null) return;
+    await sendDeviceToken(deviceToken!);
+    SharedPreferences.getInstance()
+        .then((prefs) => prefs.setBool('pushNotificationPermission', true));
+    return;
   });
 
   prefs.setBool('isNewUser', false);

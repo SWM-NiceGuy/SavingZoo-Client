@@ -123,8 +123,8 @@ class GrowController with ChangeNotifier {
         CharacterEntity.fromJson(jsonDecode(prevCharacterJson)));
 
     // 저장되어 있던 캐릭터 정보와 서버에서 불러온 캐릭터 정보가 같으면 서버 캐릭터로 로드
-    if (prevCharacter.level <= characterFromServer.level &&
-        prevCharacter.currentExp <= characterFromServer.currentExp) {
+    if (prevCharacter.level >= characterFromServer.level &&
+        prevCharacter.currentExp >= characterFromServer.currentExp) {
       _character = characterFromServer;
       _isLoading = false;
       notifyListeners();
