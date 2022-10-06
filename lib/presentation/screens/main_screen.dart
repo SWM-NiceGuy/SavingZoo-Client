@@ -1,4 +1,3 @@
-
 import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/mission_history_controller.dart';
@@ -33,6 +32,12 @@ class _MainScreenState extends State<MainScreen> {
   ];
 
   var _screenIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    setUpForegroundNotification(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +164,6 @@ class _MainScreenState extends State<MainScreen> {
               },
             ),
             const Spacer(),
-
           ],
         ),
       ),

@@ -31,15 +31,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-  
-  // Firebase Analytics 추가
+
   if (!kDebugMode) {
-  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+    // Firebase Analytics 추가
+    FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+    // Firebase Crashlytics 추가
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   }
 
-  // Firebase Crashlytics 추가
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-  
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
@@ -48,21 +47,17 @@ void main() async {
   final bool isLatest = await isLatestVersion();
 
   // 푸시 알림 설정
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true, // Required to display a heads up notification
-      badge: true,
-      sound: true,
-    );
- if (Platform.isAndroid) {
-    await setUpAndroidForegroundNotification();
-  }
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true, // Required to display a heads up notification
+    badge: true,
+    sound: true,
+  );
 
   runApp(MultiProvider(
     providers: globalProviders,
     child: MyApp(isLatest: isLatest),
   ));
-} 
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key, required this.isLatest}) : super(key: key);
@@ -70,6 +65,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // 파이어베이스 메시지 
     final authController = context.read<AuthController>();
     return MaterialApp(
       title: '아몬드',
@@ -109,7 +105,8 @@ class MyApp extends StatelessWidget {
         QrScanner.routeName: (context) => const QrScanner(),
         MissionScreen.routeName: (context) => MissionScreen(),
         MissionDetailScreen.routeName: (context) => const MissionDetailScreen(),
-        MissionHistoryScreen.routeName: (context) => const MissionHistoryScreen(),
+        MissionHistoryScreen.routeName: (context) =>
+            const MissionHistoryScreen(),
         SettingsScreen.routeName: (context) => const SettingsScreen(),
       },
     );

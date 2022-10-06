@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:amond/data/source/network/base_url.dart';
+import 'package:amond/presentation/controllers/grow_controller.dart';
+import 'package:amond/presentation/controllers/mission_controller.dart';
 import 'package:amond/utils/auth/auth_info.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -8,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
@@ -24,9 +28,10 @@ Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: const [
-                 Text("미션 수행을 원활하게 하실 수 있도록 푸시 알림이 제공됩니다."),
-                 SizedBox(height: 12),
-                Text('* 좌측 상단 메뉴의 설정창에서 푸시 알림 설정을 변경하실 수 있습니다', style: TextStyle(fontSize: 12)),
+                Text("미션 수행을 원활하게 하실 수 있도록 푸시 알림이 제공됩니다."),
+                SizedBox(height: 12),
+                Text('* 좌측 상단 메뉴의 설정창에서 푸시 알림 설정을 변경하실 수 있습니다',
+                    style: TextStyle(fontSize: 12)),
               ],
             ),
             actions: <Widget>[
@@ -117,38 +122,61 @@ const AndroidNotificationChannel androidNotificationChannel =
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-Future<void> setUpAndroidForegroundNotification() async {
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(androidNotificationChannel);
+Future<void> setUpForegroundNotification(BuildContext context) async {
+  if (Platform.isAndroid) {
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(androidNotificationChannel);
+  }
 
   const android = AndroidInitializationSettings('@drawable/notification_icon');
-  const initialSetting = InitializationSettings(android: android);
+  const ios = DarwinInitializationSettings(
+    requestAlertPermission: true,
+    requestBadgePermission: true,
+    requestSoundPermission: true,
+  );
+  const initialSetting = InitializationSettings(android: android, iOS: ios);
   flutterLocalNotificationsPlugin.initialize(initialSetting);
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
 
+    String? title, body;
+
+    title = notification?.title;
+    body = notification?.body;
+
     // If `onMessage` is triggered with a notification, construct our own
     // local notification to show to users using the created channel.
-    if (notification != null && android != null) {
+    if (notification != null) {
       flutterLocalNotificationsPlugin.show(
           0,
-          notification.title,
-          notification.body,
+          title,
+          body,
           NotificationDetails(
             android: AndroidNotificationDetails(
                 'high_importance_channel', 'High Importance Notifications',
                 channelDescription:
                     'This channel is used for important notifications.',
-                icon: android.smallIcon,
+                icon: android?.smallIcon,
                 importance: Importance.high,
                 priority: Priority.high
                 // other properties...
                 ),
+            iOS: DarwinNotificationDetails(),
           ));
+
+      // 미션 완료 처리
+
+      try{
+      context.read<GrowController>().fetchData();
+      context.read<MissionController>().fetchMissions();
+      } catch (e) {
+        return;
+      }
+      
     }
   });
 }
