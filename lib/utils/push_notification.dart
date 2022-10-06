@@ -150,7 +150,7 @@ Future<void> setUpForegroundNotification(BuildContext context) async {
 
     // If `onMessage` is triggered with a notification, construct our own
     // local notification to show to users using the created channel.
-    if (notification != null) {
+    if (notification != null && android != null) {
       flutterLocalNotificationsPlugin.show(
           0,
           title,
@@ -160,23 +160,22 @@ Future<void> setUpForegroundNotification(BuildContext context) async {
                 'high_importance_channel', 'High Importance Notifications',
                 channelDescription:
                     'This channel is used for important notifications.',
-                icon: android?.smallIcon,
+                icon: android.smallIcon,
                 importance: Importance.high,
                 priority: Priority.high
                 // other properties...
                 ),
-            iOS: DarwinNotificationDetails(),
           ));
 
       // 미션 완료 처리
 
-      try{
+    }
+
+    try {
       context.read<GrowController>().fetchData();
       context.read<MissionController>().fetchMissions();
-      } catch (e) {
-        return;
-      }
-      
+    } catch (e) {
+      return;
     }
   });
 }
