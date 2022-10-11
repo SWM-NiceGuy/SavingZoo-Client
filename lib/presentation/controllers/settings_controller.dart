@@ -1,16 +1,18 @@
 import 'package:amond/utils/push_notification.dart';
 import 'package:flutter/foundation.dart' show ChangeNotifier;
+import 'package:permission_handler/permission_handler.dart';
 
 class SettingsController with ChangeNotifier {
   var _isLoading = true;
 
   bool get isLoading => _isLoading;
 
-  late bool isPushNotificationOn;
+  late bool isPushNotificationGranted;
+  late bool isDevicePushNotificationGranted;
 
   void togglePushNotification(bool value) {
     setPushNotificationPermission(value);
-    isPushNotificationOn = value;
+    isPushNotificationGranted = value;
     
     notifyListeners();
   }
@@ -18,7 +20,8 @@ class SettingsController with ChangeNotifier {
   Future<void> fetchData() async {
     
     // 설정 데이터 불러오기
-    isPushNotificationOn = await getPushNotificationPermission();
+    isPushNotificationGranted = await getPushNotificationPermission();
+    isDevicePushNotificationGranted = await Permission.notification.isGranted;
     
     _isLoading = false;
     notifyListeners();
