@@ -15,8 +15,6 @@ class MissionController with ChangeNotifier {
 
   /// 미션들을 불러온다.
   Future<void> fetchMissions() async {
-    isLoading = true;
-    notifyListeners();
     List<MissionList> missions;
     try {
       missions = await _missionRepository.getAllMissions();
@@ -44,10 +42,10 @@ class MissionController with ChangeNotifier {
 //     notifyListeners();
 //   }
 
-  void changeMissionToWait(int id) {
-    var idx = _missions.indexWhere((element) => element.id == id);
-    if (idx < 0) return;
-    _missions[idx].state = MissionState.wait;
-    notifyListeners();
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    print('미션 스크린 DISPOSE!\n\n\n');
   }
 }

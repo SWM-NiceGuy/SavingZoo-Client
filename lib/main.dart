@@ -88,10 +88,7 @@ class MyApp extends StatelessWidget {
               builder: (context, snapshot) {
                 return snapshot.hasData
                     ? snapshot.data.toString() == 'true'
-                        ? ChangeNotifierProvider(
-                            create: (_) => GrowController(
-                                _.read<CharacterRepositoryImpl>()),
-                            child: const MainScreen())
+                        ? const MainScreen()
                         : const AuthScreen()
                     : const SplashScreen();
               } // 사용하려면 Future.delayed 필요
@@ -103,7 +100,7 @@ class MyApp extends StatelessWidget {
         AuthScreen.routeName: (context) => const AuthScreen(),
         MainScreen.routeName: (context) => const MainScreen(),
         QrScanner.routeName: (context) => const QrScanner(),
-        MissionScreen.routeName: (context) => MissionScreen(),
+        MissionScreen.routeName: (context) => const MissionScreen(),
         MissionDetailScreen.routeName: (context) => const MissionDetailScreen(),
         MissionHistoryScreen.routeName: (context) =>
             const MissionHistoryScreen(),

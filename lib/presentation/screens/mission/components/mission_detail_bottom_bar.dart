@@ -26,7 +26,7 @@ class MissionDetailBottomBar extends StatelessWidget {
         width: double.infinity,
         height: kBottomNavigationBarHeight + 24,
         child: Consumer<MissionDetailController>(
-          builder: (context, controller, _) => Row(
+          builder: (consumerContext, controller, _) => Row(
             children: [
               // 미션 state에 따라 버튼이 달라져야 함
               controller.isSubmitting
@@ -49,6 +49,7 @@ class MissionDetailBottomBar extends StatelessWidget {
                                 '보상': controller.mission.reward,
                               });
                               // 카메라로 이미지 선택
+                              
                               final ImagePicker picker = ImagePicker();
                               XFile? image = await picker.pickImage(
                                   source: ImageSource.camera, imageQuality: 35);
@@ -77,13 +78,10 @@ class MissionDetailBottomBar extends StatelessWidget {
                               // 미션 업로드 로직
                               // 업로드
 
-                              controller.submit(image.path).then((_) {
-                                context
-                                    .read<MissionController>()
-                                    .changeMissionToWait(controller.missionId);
-                              }).onError((_, __) {
+                              controller.submit(image.path).onError((_, __) {
+                                print(_);
                                 showPlatformBasedDialog(
-                                    context, '사진 전송에 실패했습니다.', '다시 시도해주세요.');
+                                    consumerContext, '사진 전송에 실패했습니다.', '다시 시도해주세요.');
                               });
                             }
                           : null,

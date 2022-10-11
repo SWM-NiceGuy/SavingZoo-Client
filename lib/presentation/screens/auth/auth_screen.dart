@@ -128,10 +128,7 @@ class _AuthScreenState extends State<AuthScreen> {
   /// MainScreen으로 pushReplacement하는 함수
   void _navigateToMainScreen() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => ChangeNotifierProvider(
-              create: (_) => GrowController(_.read<CharacterRepositoryImpl>()),
-              child: const MainScreen(),
-            ),
+        builder: (context) => const MainScreen(),
         settings: const RouteSettings(name: "/")));
     // Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
   }

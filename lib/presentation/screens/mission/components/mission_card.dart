@@ -1,6 +1,7 @@
 import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/domain/models/mission_list.dart';
 import 'package:amond/domain/models/mission_state.dart';
+import 'package:amond/presentation/controllers/mission_controller.dart';
 import 'package:amond/presentation/controllers/mission_detail_controller.dart';
 import 'package:amond/presentation/screens/mission/mission_detail_screen.dart';
 import 'package:amond/ui/colors.dart';
@@ -40,7 +41,9 @@ class MissionCard extends StatelessWidget {
               child: const MissionDetailScreen(),
             ),
           ),
-        );
+        ).then((_) {
+          context.read<MissionController>().fetchMissions();
+        });
       },
       child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),

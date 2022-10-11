@@ -1,3 +1,4 @@
+import 'package:amond/data/repository/character_repository_impl.dart';
 import 'package:amond/presentation/controllers/grow_controller.dart';
 import 'package:amond/presentation/controllers/name_validation.dart';
 import 'package:amond/presentation/screens/grow/components/comment_box.dart';
@@ -13,9 +14,21 @@ import 'package:provider/provider.dart';
 import 'components/character_name_input.dart';
 
 class GrowScreen extends StatelessWidget {
+  const GrowScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => GrowController(context.read<CharacterRepositoryImpl>()),
+      child: const GrowScreenWidget(),
+    );
+  }
+}
+
+class GrowScreenWidget extends StatelessWidget {
   static const screenMargin = 24.0;
 
-  const GrowScreen({
+  const GrowScreenWidget({
     Key? key,
   }) : super(key: key);
 
