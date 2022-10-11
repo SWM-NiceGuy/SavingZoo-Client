@@ -1,9 +1,6 @@
-import 'dart:io';
-
-import 'package:amond/data/repository/character_repository_impl.dart';
 import 'package:amond/di/provider_setup.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/controllers/grow_controller.dart';
+
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/main_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_detail_screen.dart';
@@ -15,7 +12,7 @@ import 'package:amond/presentation/screens/settings/settings_screen.dart';
 import 'package:amond/presentation/screens/splash_screen.dart';
 import 'package:amond/secrets/secret.dart';
 import 'package:amond/ui/colors.dart';
-import 'package:amond/utils/push_notification.dart';
+
 import 'package:amond/utils/version/app_version.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -65,7 +62,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // 파이어베이스 메시지 
+    // 파이어베이스 메시지
     final authController = context.read<AuthController>();
     return MaterialApp(
       title: '아몬드',

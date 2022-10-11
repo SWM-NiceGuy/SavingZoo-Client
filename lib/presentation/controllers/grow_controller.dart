@@ -86,6 +86,7 @@ class GrowController with ChangeNotifier {
 
   /// 캐릭터 데이터를 불러오는 함수
   Future<void> fetchData() async {
+    try {
     // 서버에서 가져온 캐릭터
     var characterFromServer = await _characterRepository.getCharacter();
 
@@ -143,6 +144,10 @@ class GrowController with ChangeNotifier {
         : characterFromServer.currentExp - prevCharacter.currentExp;
     currentCharacter = characterFromServer;
     notifyListeners();
+    }
+    catch (e) {
+      rethrow;
+    }
   }
 
   /// 서버에서 [memberInfo]의 캐릭터의 경험치를 [value]로 바꿈

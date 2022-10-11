@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:amond/data/repository/character_repository_impl.dart';
-import 'package:amond/presentation/controllers/grow_controller.dart';
 import 'package:amond/utils/auth/do_apple_auth.dart';
 import 'package:amond/utils/auth/do_kakao_auth.dart';
 import 'package:flutter/cupertino.dart';

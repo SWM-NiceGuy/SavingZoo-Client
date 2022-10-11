@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/settings_controller.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
-import 'package:amond/presentation/screens/main_screen.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:amond/utils/auth/do_auth.dart';
 import 'package:amond/utils/show_platform_based_dialog.dart';

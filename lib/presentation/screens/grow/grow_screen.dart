@@ -1,6 +1,8 @@
 import 'package:amond/data/repository/character_repository_impl.dart';
+import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow_controller.dart';
 import 'package:amond/presentation/controllers/name_validation.dart';
+import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/grow/components/comment_box.dart';
 import 'package:amond/presentation/screens/grow/components/level_system.dart';
 import 'package:amond/presentation/screens/grow/components/mission_complete_dialog.dart';
@@ -8,6 +10,7 @@ import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
 import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +22,8 @@ class GrowScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => GrowController(context.read<CharacterRepositoryImpl>()),
+      create: (context) =>
+          GrowController(context.read<CharacterRepositoryImpl>()),
       child: const GrowScreenWidget(),
     );
   }
@@ -45,7 +49,26 @@ class GrowScreenWidget extends StatelessWidget {
     // 데이터가 불러와 있지 않을때 데이터 불러오기
     if (growController.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        growController.fetchData();
+        growController.fetchData().onError((error, stackTrace) {
+          context.read<AuthController>().logout();
+          showPlatformDialog(
+            context: context,
+            builder: (context) => BasicDialogAlert(
+              title: const Text("로그인 실패"),
+              content: const Text('다시 로그인 해주세요'),
+              actions: <Widget>[
+                BasicDialogAction(
+                  title: const Text("확인"),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.of(context)
+                        .pushReplacementNamed(AuthScreen.routeName);
+                  },
+                ),
+              ],
+            ),
+          );
+        });
       });
     }
 
