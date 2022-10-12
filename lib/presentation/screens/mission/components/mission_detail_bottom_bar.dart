@@ -43,11 +43,12 @@ class MissionDetailBottomBar extends StatelessWidget {
                           ? () async {
                               _isCameraPermissionGranted()
                                   .then((isGranted) async {
-
                                 // 카메라 권한이 거부 되어 있으면
                                 if (!isGranted) {
-                                  _showCameraDialog(context).then((_) {
-                                    openAppSettings();
+                                  _showCameraDialog(context).then((value) {
+                                    if (value != null && value) {
+                                      openAppSettings();
+                                    }
                                   });
                                   return;
                                 }
@@ -62,7 +63,7 @@ class MissionDetailBottomBar extends StatelessWidget {
                                     '상태': controller.mission.state.toString(),
                                     '보상': controller.mission.reward,
                                   });
-                                  
+
                                   // 카메라로 이미지 선택
                                   final ImagePicker picker = ImagePicker();
                                   XFile? image = await picker.pickImage(
@@ -168,17 +169,24 @@ class MissionDetailBottomBar extends StatelessWidget {
     return isGranted;
   }
 
-  Future<void> _showCameraDialog(BuildContext context) {
-    return showPlatformDialog(
+  Future<bool?> _showCameraDialog(BuildContext context) {
+    return showPlatformDialog<bool>(
         context: context,
         builder: (context) => BasicDialogAlert(
-              title: const Text("카메라 권한 확인"),
-              content: const Text('카메라 권한을 확인해주세요.'),
+              title: const Text("카메라 권한 필요"),
+              content: const Text(
+                  '미션 인증을 위해서는 카메라 권한이 필요합니다. 설정창에서 카메라 권한을 허용해 주세요'),
               actions: <Widget>[
                 BasicDialogAction(
-                  title: const Text("확인"),
+                  title: const Text("취소"),
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.pop(context, false);
+                  },
+                ),
+                BasicDialogAction(
+                  title: const Text("설정"),
+                  onPressed: () {
+                    Navigator.pop(context, true);
                   },
                 ),
               ],
