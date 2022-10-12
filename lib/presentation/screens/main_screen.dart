@@ -173,9 +173,9 @@ class _MainScreenState extends State<MainScreen> {
               ),
               title: const Text('개발자에게 문의하기'),
               onTap: () async {
-                if (!await launchUrl(
+                if (await canLaunchUrl(
                     Uri.parse('https://pf.kakao.com/_JLxkxob'))) {
-                  throw 'Could not launch';
+                  launchUrl(Uri.parse('https://pf.kakao.com/_JLxkxob'), mode: LaunchMode.externalApplication);
                 }
               },
             )
