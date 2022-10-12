@@ -18,13 +18,11 @@ import 'package:amond/utils/version/app_version.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_common.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +36,7 @@ void main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   }
 
+  // 로컬 데이터 삭제
   // SharedPreferences.getInstance().then((value) => value.clear());
 
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
