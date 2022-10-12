@@ -53,12 +53,12 @@ class PushNotificationPermissionDialog extends StatelessWidget {
                 children: const [
                   Text(
                     '수행한 미션의 인증 결과를 받으실 수 있어요.',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w100),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w100),
                     textAlign: TextAlign.center,
                   ),
                   Text(
                     '필요없는 알림은 띄우지 않을게요!',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w100),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w100),
                     textAlign: TextAlign.center,
                   ),
                 ],
