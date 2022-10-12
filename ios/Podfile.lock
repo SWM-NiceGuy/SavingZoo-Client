@@ -163,7 +163,7 @@ PODS:
     - Flutter
   - store_redirect (0.0.1):
     - Flutter
-  - webview_flutter_wkwebview (0.0.1):
+  - url_launcher_ios (0.0.1):
     - Flutter
 
 DEPENDENCIES:
@@ -183,7 +183,7 @@ DEPENDENCIES:
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
   - store_redirect (from `.symlinks/plugins/store_redirect/ios`)
-  - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
   trunk:
@@ -237,8 +237,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sign_in_with_apple/ios"
   store_redirect:
     :path: ".symlinks/plugins/store_redirect/ios"
-  webview_flutter_wkwebview:
-    :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
   Firebase: 800f16f07af493d98d017446a315c27af0552f41
@@ -273,8 +273,8 @@ SPEC CHECKSUMS:
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
   store_redirect: 2977747cf81689a39bd62c248c2deacb7a0d131e
-  webview_flutter_wkwebview: b7e70ef1ddded7e69c796c7390ee74180182971f
+  url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
 
-PODFILE CHECKSUM: b5812a94dbb73a271c43f1c704bf72e029ebdbf2
+PODFILE CHECKSUM: 6b9d14789d016b520f558a7e3f2495774f2296cc
 
 COCOAPODS: 1.11.3

@@ -58,6 +58,7 @@ class _SettingsScreenWidgetState extends State<SettingsScreenWidget> {
           : SafeArea(
               child: Column(
                 children: [
+                  // 기기 푸시알림이 켜져 있지 않으면 컨테이너를 보여준다.
                   if (!controller.isDevicePushNotificationGranted)
                     const SettingsAlertContainer(
                         content: '푸시 알림을 받으려면 기기에서 알림을 허용해주세요'),
