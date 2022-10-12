@@ -37,7 +37,6 @@ class SettingsScreenWidget extends StatefulWidget {
 class _SettingsScreenWidgetState extends State<SettingsScreenWidget> {
   @override
   Widget build(BuildContext context) {
-    final authController = context.read<AuthController>();
     final controller = context.watch<SettingsController>();
 
     if (controller.isLoading) {
@@ -99,7 +98,7 @@ class _SettingsScreenWidgetState extends State<SettingsScreenWidget> {
                           (isAccepted) {
                             if (!isAccepted) return;
                             try {
-                              authController.logout().then((_) {
+                              context.read<AuthController>().logout().then((_) {
                                 Navigator.of(context).popUntil(
                                   ModalRoute.withName('/'),
                                 );
@@ -134,7 +133,7 @@ class _SettingsScreenWidgetState extends State<SettingsScreenWidget> {
                               .read<DoAuth>()
                               .resign()
                               .then((resignResponse) {
-                            authController.resign(resignResponse).then((_) {
+                            context.read<AuthController>().resign(resignResponse).then((_) {
                               Navigator.of(context)
                                   .popUntil(ModalRoute.withName('/'));
                               Navigator.of(context)

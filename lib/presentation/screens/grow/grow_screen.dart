@@ -139,12 +139,7 @@ class GrowScreenWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // 하트 버튼을 누르면 하트 표시
-                    if (growController.isHeartVisible)
-                      Lottie.asset(
-                        'assets/lotties/lottie-hearts.json',
-                        repeat: false,
-                      ),
+
                     // 레벨업 시 레벨업 효과
                     if (growController.levelUpEffect)
                       Lottie.asset(
@@ -152,11 +147,18 @@ class GrowScreenWidget extends StatelessWidget {
                         repeat: false,
                       ),
                     // 최대 레벨 별빛 효과
-                    if (growController.character.level == 4)
+                    // if (growController.character.level == 4)
+                    Lottie.asset(
+                      'assets/lotties/maxlevel-starfall.json',
+                      repeat: true,
+                    ),
+                    // 하트 버튼을 누르면 하트 표시
+                    if (context.select<GrowController, bool>(
+                        (value) => value.isHeartVisible))
                       Lottie.asset(
-                        'assets/lotties/maxlevel-starfall.json',
-                        repeat: true,
-                      )
+                        'assets/lotties/lottie-hearts.json',
+                        repeat: false,
+                      ),
                   ],
                 ),
               ),

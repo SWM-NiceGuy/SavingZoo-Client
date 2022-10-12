@@ -63,7 +63,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 파이어베이스 메시지
-    final authController = context.read<AuthController>();
     return MaterialApp(
       title: '아몬드',
       debugShowCheckedModeBanner: false,
@@ -81,7 +80,7 @@ class MyApp extends StatelessWidget {
       /// 반환된 값이 [false]라면 AuthScreen으로 이동
       home: isLatest
           ? FutureBuilder(
-              future: authController.setToken(),
+              future: context.read<AuthController>().setToken(),
               builder: (context, snapshot) {
                 return snapshot.hasData
                     ? snapshot.data.toString() == 'true'
