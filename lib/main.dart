@@ -12,6 +12,7 @@ import 'package:amond/presentation/screens/settings/settings_screen.dart';
 import 'package:amond/presentation/screens/splash_screen.dart';
 import 'package:amond/secrets/secret.dart';
 import 'package:amond/ui/colors.dart';
+import 'package:amond/utils/push_notification.dart';
 
 import 'package:amond/utils/version/app_version.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -23,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_common.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +38,8 @@ void main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   }
 
+  // SharedPreferences.getInstance().then((value) => value.clear());
+
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
@@ -43,12 +47,9 @@ void main() async {
   // 앱 버전 체크
   final bool isLatest = await isLatestVersion();
 
-  // 푸시 알림 설정
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true, // Required to display a heads up notification
-    badge: true,
-    sound: true,
-  );
+  // foreground 푸시 알림 설정
+  await setUpForegroundNotification();
+
 
   runApp(MultiProvider(
     providers: globalProviders,

@@ -165,8 +165,8 @@ class MissionDetailBottomBar extends StatelessWidget {
   }
 
   Future<bool> _isCameraPermissionGranted() async {
-    var isGranted = await Permission.camera.isGranted;
-    return isGranted;
+    var cameraPermission = await Permission.camera.request();
+    return cameraPermission.isGranted;
   }
 
   Future<bool?> _showCameraDialog(BuildContext context) {

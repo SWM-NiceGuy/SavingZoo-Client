@@ -60,7 +60,6 @@ class MissionCompleteDialog extends StatelessWidget {
                 Expanded(
                     child: Image.asset('assets/images/pioneer_badge_icon.png')),
                     const SizedBox(height: 24),
-                // 이름 입력 Container
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -85,7 +84,6 @@ class MissionCompleteDialog extends StatelessWidget {
                     width: constraints.maxWidth * 0.8,
                     height: 50,
                     borderRadius: 100,
-                    // 이름 유효성 검사
                     onPress: () {
                       Navigator.of(context).pop();
                       onSubmit();

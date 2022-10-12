@@ -34,11 +34,6 @@ class _MainScreenState extends State<MainScreen> {
 
   var _screenIndex = 0;
 
-  @override
-  void initState() {
-    super.initState();
-    setUpForegroundNotification(context);
-  }
 
   @override
   Widget build(BuildContext context) {

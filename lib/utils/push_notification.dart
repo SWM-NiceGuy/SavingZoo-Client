@@ -2,16 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:amond/data/source/network/base_url.dart';
-import 'package:amond/presentation/controllers/grow_controller.dart';
-import 'package:amond/presentation/controllers/mission_controller.dart';
 import 'package:amond/utils/auth/auth_info.dart';
+import 'package:amond/utils/push_notification_permission_dialog.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:provider/provider.dart';
+
 import 'package:http/http.dart' as http;
 
 Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
@@ -21,56 +19,36 @@ Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
 
   if (isNewUser != null) return;
 
-  showPlatformDialog(
-      context: context,
-      builder: (context) => BasicDialogAlert(
-            title: const Text("미션 수행 알림"),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Text("미션 수행을 원활하게 하실 수 있도록 푸시 알림이 제공됩니다."),
-                SizedBox(height: 12),
-                Text('* 좌측 상단 메뉴의 설정창에서 푸시 알림 설정을 변경하실 수 있습니다',
-                    style: TextStyle(fontSize: 12)),
-              ],
-            ),
-            actions: <Widget>[
-              BasicDialogAction(
-                title: const Text("확인"),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          )).then((_) async {
-    NotificationSettings permissionSettings;
-    permissionSettings = await FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
-
-    // 푸시 알림을 거부했을 때 (iOS)
-    if (permissionSettings.authorizationStatus == AuthorizationStatus.denied) {
-      SharedPreferences.getInstance()
-          .then((prefs) => prefs.setBool('pushNotificationPermission', false));
-      return;
-    }
-
-    // 푸시 알림을 허용했을 때
-    deviceToken = await FirebaseMessaging.instance.getToken();
-    if (deviceToken == null) return;
-    await sendDeviceToken(deviceToken!);
-    SharedPreferences.getInstance()
-        .then((prefs) => prefs.setBool('pushNotificationPermission', true));
-    return;
-  });
-
   prefs.setBool('isNewUser', false);
+
+  await showDialog(
+      context: context,
+      builder: (context) => const PushNotificationPermissionDialog());
+
+  var permissionSettings = await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  // 푸시 알림을 거부했을 때 (iOS)
+  if (permissionSettings.authorizationStatus == AuthorizationStatus.denied) {
+    SharedPreferences.getInstance()
+        .then((prefs) => prefs.setBool('pushNotificationPermission', false));
+    return;
+  }
+
+  // 푸시 알림을 허용했을 때
+  deviceToken = await FirebaseMessaging.instance.getToken();
+  if (deviceToken == null) return;
+  await sendDeviceToken(deviceToken);
+  SharedPreferences.getInstance()
+      .then((prefs) => prefs.setBool('pushNotificationPermission', true));
+  return;
 }
 
 Future<void> sendDeviceToken(String token) async {
@@ -122,60 +100,62 @@ const AndroidNotificationChannel androidNotificationChannel =
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-Future<void> setUpForegroundNotification(BuildContext context) async {
+Future<void> setUpForegroundNotification() async {
+  // iOS 설정
+  if (Platform.isIOS) {
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true, // Required to display a heads up notification
+      badge: true,
+      sound: true,
+    );
+    return;
+  }
+
+  // Android 설정
   if (Platform.isAndroid) {
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(androidNotificationChannel);
+
+    const android =
+        AndroidInitializationSettings('@drawable/notification_icon');
+
+    const initialSetting = InitializationSettings(android: android);
+    flutterLocalNotificationsPlugin.initialize(initialSetting);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+
+      String? title, body;
+
+      title = notification?.title;
+      body = notification?.body;
+
+      // If `onMessage` is triggered with a notification, construct our own
+      // local notification to show to users using the created channel.
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+            0,
+            title,
+            body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                  'high_importance_channel', 'High Importance Notifications',
+                  channelDescription:
+                      'This channel is used for important notifications.',
+                  icon: android.smallIcon,
+                  importance: Importance.high,
+                  priority: Priority.high
+                  // other properties...
+                  ),
+            ));
+
+        // 미션 완료 처리
+
+      }
+    });
   }
-
-  const android = AndroidInitializationSettings('@drawable/notification_icon');
-  const ios = DarwinInitializationSettings(
-    requestAlertPermission: true,
-    requestBadgePermission: true,
-    requestSoundPermission: true,
-  );
-  const initialSetting = InitializationSettings(android: android, iOS: ios);
-  flutterLocalNotificationsPlugin.initialize(initialSetting);
-
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
-
-    String? title, body;
-
-    title = notification?.title;
-    body = notification?.body;
-
-    // If `onMessage` is triggered with a notification, construct our own
-    // local notification to show to users using the created channel.
-    if (notification != null && android != null) {
-      flutterLocalNotificationsPlugin.show(
-          0,
-          title,
-          body,
-          NotificationDetails(
-            android: AndroidNotificationDetails(
-                'high_importance_channel', 'High Importance Notifications',
-                channelDescription:
-                    'This channel is used for important notifications.',
-                icon: android.smallIcon,
-                importance: Importance.high,
-                priority: Priority.high
-                // other properties...
-                ),
-          ));
-
-      // 미션 완료 처리
-
-    }
-
-    try {
-      context.read<GrowController>().fetchData();
-      context.read<MissionController>().fetchMissions();
-    } catch (e) {
-      return;
-    }
-  });
 }
