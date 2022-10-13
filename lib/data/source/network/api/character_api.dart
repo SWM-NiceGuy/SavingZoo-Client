@@ -59,7 +59,7 @@ class CharacterApi {
     });
     final json = jsonDecode(utf8.decode(response.bodyBytes));
     if (kDebugMode) {
-    print('캐릭터 정보 응답: $json}');
+      print('캐릭터 정보 응답: $json}');
     }
     return CharacterEntity.fromJson(json);
   }
@@ -79,5 +79,33 @@ class CharacterApi {
         'Authorization': 'Bearer $globalToken',
       },
     );
+  }
+
+  Future<CharacterEntity?> getPlayResult(int petId) async {
+    final url = Uri.parse("$baseUrl/user/pet/play");
+
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        "userPetId": petId,
+      }),
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $globalToken',
+      },
+    );
+
+    Map<String, dynamic> json = jsonDecode(utf8.decode(response.bodyBytes));
+    if (kDebugMode) {
+      print('캐릭터 놀아주기 결과: $json');
+    }
+
+    var resultPetInfo = json['petInfo'];
+    if (resultPetInfo == null) {
+      return null;
+    }
+
+    return CharacterEntity.fromJson(resultPetInfo);
   }
 }

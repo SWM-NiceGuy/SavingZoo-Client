@@ -6,4 +6,5 @@ abstract class CharacterRepository {
   Future<String?> getName();
   Future<Character> getCharacter();
   Future<void> setName(int petId, String name);
+  Future<Character?> playWithCharacter(int petId);
 }

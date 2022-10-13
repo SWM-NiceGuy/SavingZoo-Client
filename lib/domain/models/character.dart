@@ -8,17 +8,22 @@ class Character {
   final int level;
   int currentExp;
   int maxExp;
+  int? remainedTime;
+  bool? isPlayReady;
 
   double get expPct => currentExp / maxExp;
 
-  Character(
-      {required this.id,
-      required this.name,
-      required this.nickname,
-      required this.imageUrl,
-      this.level = 1,
-      this.currentExp = 0,
-      required this.maxExp});
+  Character({
+    required this.id,
+    required this.name,
+    required this.nickname,
+    required this.imageUrl,
+    this.level = 1,
+    this.currentExp = 0,
+    required this.maxExp,
+    this.remainedTime,
+    this.isPlayReady,
+  });
 
   factory Character.fromEntity(CharacterEntity entity) =>
       _$CharacterFromEntity(entity);
@@ -41,5 +46,6 @@ class Character {
         imageUrl: entity.image,
         currentExp: entity.currentExp,
         maxExp: entity.maxExp,
+        remainedTime: entity.remainedPlayTime,
       );
 }

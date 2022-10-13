@@ -24,11 +24,4 @@ class MissionController with ChangeNotifier {
     isLoading = false;
     notifyListeners();
   }
-
-  // @override
-  // void dispose() {
-  //   // TODO: implement dispose
-  //   super.dispose();
-  //   print('미션 스크린 DISPOSE!\n\n\n');
-  // }
 }
