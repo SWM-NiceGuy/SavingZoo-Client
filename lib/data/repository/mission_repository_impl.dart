@@ -50,6 +50,7 @@ class MissionRepositoryImpl implements MissionRepository {
   @override
   Future<List<MissionHistory>> getMissionHistories() async {
     final entityList = await api.getMissionHistories();
+    entityList.sort((a, b) => b.date - a.date);
     return entityList.map((e) => MissionHistory.fromEntity(e)).toList();
   }
 }

@@ -4,7 +4,7 @@ import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 
 class ShadowButton extends StatefulWidget {
-  final VoidCallback onPress;
+  final VoidCallback? onPress;
   final double width;
   final double height;
   final EdgeInsets? padding;
@@ -38,20 +38,23 @@ class _ShadowButtonState extends State<ShadowButton> {
       padding: widget.padding ?? EdgeInsets.all(minSize / 5),
       child: GestureDetector(
         onTapUp: (details) {
-          widget.onPress();
+          if (widget.onPress == null) return;
+          widget.onPress!();
           setState(() => bgColor = backgroundColor);
         },
         onTapCancel: () {
+          if (widget.onPress == null) return;
           setState(() => bgColor = backgroundColor);
         },
         onTapDown: (details) {
+          if (widget.onPress == null) return;
           setState(() => bgColor = darkShadowColor.withOpacity(0.7));
         },
         child: Container(
           width: widget.width,
           height: widget.height,
           decoration: BoxDecoration(
-            color: bgColor,
+            color: widget.onPress != null ? bgColor : darkShadowColor.withOpacity(0.7),
             borderRadius: BorderRadius.circular(borderRadius),
             boxShadow: [
               BoxShadow(
