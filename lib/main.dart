@@ -1,9 +1,6 @@
-import 'dart:io';
-
-import 'package:amond/data/repository/character_repository_impl.dart';
 import 'package:amond/di/provider_setup.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/controllers/grow_controller.dart';
+
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/main_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_detail_screen.dart';
@@ -16,11 +13,11 @@ import 'package:amond/presentation/screens/splash_screen.dart';
 import 'package:amond/secrets/secret.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:amond/utils/push_notification.dart';
+
 import 'package:amond/utils/version/app_version.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -31,15 +28,17 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
-  
-  // Firebase Analytics 추가
+
   if (!kDebugMode) {
-  FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+    // Firebase Analytics 추가
+    FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+    // Firebase Crashlytics 추가
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   }
 
-  // Firebase Crashlytics 추가
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-  
+  // 로컬 데이터 삭제
+  // SharedPreferences.getInstance().then((value) => value.clear());
+
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
@@ -47,22 +46,15 @@ void main() async {
   // 앱 버전 체크
   final bool isLatest = await isLatestVersion();
 
-  // 푸시 알림 설정
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true, // Required to display a heads up notification
-      badge: true,
-      sound: true,
-    );
- if (Platform.isAndroid) {
-    await setUpAndroidForegroundNotification();
-  }
+  // foreground 푸시 알림 설정
+  await setUpForegroundNotification();
+
 
   runApp(MultiProvider(
     providers: globalProviders,
     child: MyApp(isLatest: isLatest),
   ));
-} 
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key, required this.isLatest}) : super(key: key);
@@ -70,7 +62,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final authController = context.read<AuthController>();
+    // 파이어베이스 메시지
     return MaterialApp(
       title: '아몬드',
       debugShowCheckedModeBanner: false,
@@ -88,14 +80,11 @@ class MyApp extends StatelessWidget {
       /// 반환된 값이 [false]라면 AuthScreen으로 이동
       home: isLatest
           ? FutureBuilder(
-              future: authController.setToken(),
+              future: context.read<AuthController>().setToken(),
               builder: (context, snapshot) {
                 return snapshot.hasData
                     ? snapshot.data.toString() == 'true'
-                        ? ChangeNotifierProvider(
-                            create: (_) => GrowController(
-                                _.read<CharacterRepositoryImpl>()),
-                            child: const MainScreen())
+                        ? const MainScreen()
                         : const AuthScreen()
                     : const SplashScreen();
               } // 사용하려면 Future.delayed 필요
@@ -107,9 +96,10 @@ class MyApp extends StatelessWidget {
         AuthScreen.routeName: (context) => const AuthScreen(),
         MainScreen.routeName: (context) => const MainScreen(),
         QrScanner.routeName: (context) => const QrScanner(),
-        MissionScreen.routeName: (context) => MissionScreen(),
+        MissionScreen.routeName: (context) => const MissionScreen(),
         MissionDetailScreen.routeName: (context) => const MissionDetailScreen(),
-        MissionHistoryScreen.routeName: (context) => const MissionHistoryScreen(),
+        MissionHistoryScreen.routeName: (context) =>
+            const MissionHistoryScreen(),
         SettingsScreen.routeName: (context) => const SettingsScreen(),
       },
     );

@@ -8,8 +8,6 @@ import 'package:amond/domain/usecases/member/member_use_cases.dart';
 import 'package:amond/domain/usecases/member/resign.dart';
 import 'package:amond/domain/usecases/member/login.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/controllers/mission_controller.dart';
-import 'package:amond/presentation/controllers/settings_controller.dart';
 import 'package:amond/utils/auth/do_apple_auth.dart';
 import 'package:amond/utils/auth/do_auth.dart';
 import 'package:amond/utils/auth/do_kakao_auth.dart';
@@ -60,17 +58,9 @@ List<SingleChildWidget> viewModels = [
   ),
 
   // SettingsController
-  ChangeNotifierProvider<SettingsController>(
-    create: (_) => SettingsController(),
-  ),
-
-  // MissionController
-  ChangeNotifierProvider<MissionController>(
-    create: (context) =>
-        MissionController(context.read<MissionRepositoryImpl>()),
-  ),
-
-  // MissionHistoryController
+  // ChangeNotifierProvider<SettingsController>(
+  //   create: (_) => SettingsController(),
+  // ),
 
   // 회원탈퇴 DI
   ProxyProvider<AuthController, DoAuth>(

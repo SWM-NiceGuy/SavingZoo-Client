@@ -1,0 +1,87 @@
+import 'dart:async';
+
+import 'package:amond/presentation/controllers/grow_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class PlayTimer extends StatefulWidget {
+  const PlayTimer({Key? key, required this.time}) : super(key: key);
+
+  final int time;
+
+  @override
+  State<PlayTimer> createState() => _PlayTimerState();
+}
+
+class _PlayTimerState extends State<PlayTimer> {
+  late int _time;
+  Timer? _timer;
+
+  String format(int t) {
+    Duration d = Duration(seconds: t);
+    return d.toString().split('.').first.padLeft(8, "0");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _time = widget.time;
+    if (_time != 0) {
+      _startTimer();
+    }
+  }
+
+  @override
+  void didUpdateWidget(PlayTimer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_timer?.isActive ?? false) {
+      return;
+    }
+    _time = widget.time;
+    if (_time != 0) {
+      _startTimer();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _time > 0
+        ? Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: const Color(0xffEEBBB5),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              format(_time),
+              style: const TextStyle(color: Colors.white),
+            ),
+          )
+        : const SizedBox();
+  }
+
+  void _startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_time == 0) {
+          setState(() {
+            timer.cancel();
+          });
+          context.read<GrowController>().togglePlayButton(isActive: true);
+        } else {
+          setState(() {
+            _time--;
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer?.cancel();
+  }
+}

@@ -1,4 +1,3 @@
-
 import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/mission_history_controller.dart';
@@ -11,6 +10,7 @@ import 'package:amond/presentation/screens/grow/grow_screen.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -24,7 +24,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   List<Widget> bottomNavigationBarScreens = [
     const GrowScreen(),
-    MissionScreen(),
+    const MissionScreen(),
   ];
 
   List<Widget> appBarTitle = [
@@ -33,6 +33,7 @@ class _MainScreenState extends State<MainScreen> {
   ];
 
   var _screenIndex = 0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -101,8 +102,11 @@ class _MainScreenState extends State<MainScreen> {
                         offset: Offset(3, 5),
                         blurRadius: 7)
                   ], shape: BoxShape.circle),
-                  child: Image.asset('assets/images/mission_normal.png',
-                      width: 40, height: 40),
+                  child: Image.asset(
+                    'assets/images/mission_normal.png',
+                    width: 40,
+                    height: 40,
+                  ),
                 ),
                 activeIcon: Image.asset(
                   'assets/images/mission_pressed.png',
@@ -129,6 +133,7 @@ class _MainScreenState extends State<MainScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            // 미션수행 기록
             ListTile(
               leading: const Icon(
                 Icons.history,
@@ -148,6 +153,7 @@ class _MainScreenState extends State<MainScreen> {
                 ));
               },
             ),
+            // 설정
             ListTile(
               leading: const Icon(
                 Icons.settings,
@@ -158,8 +164,20 @@ class _MainScreenState extends State<MainScreen> {
                 Navigator.of(context).pushNamed(SettingsScreen.routeName);
               },
             ),
-            const Spacer(),
-
+            // 개발자에 문의하기
+            ListTile(
+              leading: const Icon(
+                Icons.question_answer_rounded,
+                color: blackColor,
+              ),
+              title: const Text('의견 보내기'),
+              onTap: () async {
+                if (await canLaunchUrl(
+                    Uri.parse('https://pf.kakao.com/_JLxkxob'))) {
+                  launchUrl(Uri.parse('https://pf.kakao.com/_JLxkxob'), mode: LaunchMode.externalApplication);
+                }
+              },
+            )
           ],
         ),
       ),

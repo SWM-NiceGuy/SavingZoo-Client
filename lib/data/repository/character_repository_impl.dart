@@ -46,4 +46,14 @@ class CharacterRepositoryImpl implements CharacterRepository {
       rethrow;
     }
   }
+  
+  @override
+  Future<Character?> playWithCharacter(int petId) async {
+    final resultCharacterEntity = await characterApi.getPlayResult(petId);
+    if (resultCharacterEntity == null) {
+      return null;
+    }
+
+    return Character.fromEntity(resultCharacterEntity);
+  }
 }

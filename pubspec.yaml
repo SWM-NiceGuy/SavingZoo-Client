@@ -45,18 +45,17 @@ dependencies:
   firebase_auth: ^3.7.0
   firebase_core: ^1.21.1
   http: ^0.13.5
-  jose: ^0.3.2
   json_annotation: ^4.6.0
   google_fonts: ^3.0.1
   firebase_analytics: ^9.3.3
   store_redirect: ^2.0.1
-  webview_flutter: ^3.0.4
   image_picker: ^0.8.5+3
   flutter_animation_progress_bar: ^2.2.1
   firebase_messaging: ^13.0.4
   flutter_dialogs: ^3.0.0
   flutter_local_notifications: ^11.0.1
   firebase_crashlytics: ^2.8.12
+  url_launcher: ^6.1.6
 
 dev_dependencies:
   flutter_test:

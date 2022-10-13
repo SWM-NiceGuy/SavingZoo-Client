@@ -12,6 +12,8 @@ class CharacterEntity {
   final int currentLevel;
   final int currentExp;
   final int maxExp;
+  final int? remainedPlayTime;
+  final bool? isPlayReady;  
 
 
   CharacterEntity({
@@ -22,6 +24,8 @@ class CharacterEntity {
     required this.currentLevel,
     required this.currentExp,
     required this.maxExp,
+    this.remainedPlayTime,
+    this.isPlayReady
   });
 
   factory CharacterEntity.fromJson(Map<String, dynamic> json) => _$CharacterEntityFromJson(json);

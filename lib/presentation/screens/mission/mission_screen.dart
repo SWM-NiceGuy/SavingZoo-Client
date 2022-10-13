@@ -1,3 +1,4 @@
+import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:provider/provider.dart';
 import 'package:amond/presentation/controllers/mission_controller.dart';
 import 'package:flutter/material.dart';
@@ -5,26 +6,29 @@ import 'package:flutter/material.dart';
 import 'components/mission_card.dart';
 
 class MissionScreen extends StatelessWidget {
-  MissionScreen({Key? key}) : super(key: key);
+  const MissionScreen({Key? key}) : super(key: key);
 
   static const String routeName = "/mission";
 
-  bool isDataFetched = false;
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) =>
+          MissionController(context.read<MissionRepositoryImpl>()),
+      child: const MissionScreenWidget(),
+    );
+  }
+}
 
-  // var missions = [
-  //   MissionList(id: 1, name: 'test1', iconUrl: '', state: 'ACCEPTED'),
-  //   MissionList(id: 2, name: 'test2', iconUrl: '', state: 'INCOMPLETE'),
-  //   MissionList(id: 3, name: 'test3', iconUrl: '', state: 'COMPLETE'),
-  //   MissionList(id: 4, name: 'test4', iconUrl: '', state: 'COMPLETE'),
-  // ];
+class MissionScreenWidget extends StatelessWidget {
+  const MissionScreenWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final missionController = context.watch<MissionController>();
 
-    if (!isDataFetched) {
+    if (missionController.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        isDataFetched = true;
         missionController.fetchMissions();
       });
     }

@@ -12,14 +12,15 @@ class GrowController with ChangeNotifier {
   final CharacterRepository _characterRepository;
   GrowController(this._characterRepository);
 
+  bool _mounted = true;
+
   late Character _character;
   Character get character => _character;
 
   bool _isLoading = true;
   bool get isLoading => _isLoading;
 
-  bool _isMissionClear = false;
-  bool get isMissionClear => _isMissionClear;
+  bool isMissionClear = false;
 
   bool isNewUser = false;
 
@@ -29,8 +30,15 @@ class GrowController with ChangeNotifier {
   bool isHeartVisible = false; // 하트 애니메이션 보임 유무
   bool levelUpEffect = false;
 
+  bool playButtonEnabled = true;
+
   int? increasedExp;
   Character? currentCharacter;
+
+  int remainedPlayTime = 0;
+  bool get canPlay => remainedPlayTime <= 0;
+
+  final int _heartVisibleTime = 6;
 
   final heartComment = '사랑을 받으니 무엇이든\n할 수 있을 것만 같아요!';
 
@@ -85,69 +93,80 @@ class GrowController with ChangeNotifier {
   }
 
   /// 캐릭터 데이터를 불러오는 함수
-  Future<void> fetchData() async {
-    // 서버에서 가져온 캐릭터
-    var characterFromServer = await _characterRepository.getCharacter();
-
-    if (characterFromServer.maxExp == 0) {
-      characterFromServer.maxExp = 30;
-    }
-
-    // // test용 서버에서 가져온 캐릭터
-    // var characterFromServer = Character(
-    //     id: 1,
-    //     imageUrl: 'https://cdn.imweb.me/upload/S20211110a3d216dc49446/f7bfffacbb6de.png',
-    //     name: "안녕",
-    //     nickname: null,
-    //     currentExp: 5,
-    //     maxExp: 30);
-
-    // 캐릭터 닉네임이 없으면 새로운 유저로 판단
-    if (characterFromServer.nickname == null) {
-      isNewUser = true;
-    }
-
-    final prefs = await SharedPreferences.getInstance();
-
-    var prevCharacterJson = prefs.getString('prevCharacter');
-    // 저장되어 있던 캐릭터 정보가 없으면 서버에서 가져온 캐릭터로 로드
-    if (prevCharacterJson == null) {
+  Future<void> fetchData({bool missionClear = true}) async {
+    try {
       // 서버에서 가져온 캐릭터
-      _character = characterFromServer;
-      _saveCharacter(_character);
+      var characterFromServer = await _characterRepository.getCharacter();
+
+      // 놀아주기 남은 시간 설정
+      remainedPlayTime = characterFromServer.remainedTime ?? 0;
+      if (remainedPlayTime <= 0) {
+        playButtonEnabled = true;
+      } else {
+        playButtonEnabled = false;
+      }
+
+      if (characterFromServer.maxExp == 0) {
+        characterFromServer.maxExp = 30;
+      }
+
+      // // test용 서버에서 가져온 캐릭터
+      // var characterFromServer = Character(
+      //     id: 1,
+      //     imageUrl: 'https://cdn.imweb.me/upload/S20211110a3d216dc49446/f7bfffacbb6de.png',
+      //     name: "안녕",
+      //     nickname: null,
+      //     currentExp: 5,
+      //     maxExp: 30);
+
+      // 캐릭터 닉네임이 없으면 새로운 유저로 판단
+      if (characterFromServer.nickname == null) {
+        isNewUser = true;
+      }
+
+      final prefs = await SharedPreferences.getInstance();
+
+      var prevCharacterJson = prefs.getString('prevCharacter');
+      // 저장되어 있던 캐릭터 정보가 없으면 서버에서 가져온 캐릭터로 로드
+      if (prevCharacterJson == null) {
+        // 서버에서 가져온 캐릭터
+        _character = characterFromServer;
+        _saveCharacter(_character);
+        _isLoading = false;
+        notifyListeners();
+        return;
+      }
+      Character prevCharacter = Character.fromEntity(
+          CharacterEntity.fromJson(jsonDecode(prevCharacterJson)));
+
+      // 저장되어 있던 캐릭터 정보와 서버에서 불러온 캐릭터 정보가 같으면 서버 캐릭터로 로드
+      if (prevCharacter.level >= characterFromServer.level &&
+          prevCharacter.currentExp >= characterFromServer.currentExp) {
+        _character = characterFromServer;
+        _isLoading = false;
+        notifyListeners();
+        return;
+      }
+
+      // 저장되어 있던 캐릭터와 서버에서 불러온 캐릭터 정보가 다를 때, 이전 캐릭터로 먼저 로드 후 경험치 증가
+      _character = prevCharacter;
+      _character.nickname = characterFromServer.nickname;
       _isLoading = false;
+      // 서버에서 불러온 캐릭터의 레벨이 더 높을 때, 같을 때 구분해서 계산
+      increasedExp = prevCharacter.level < characterFromServer.level
+          ? (prevCharacter.maxExp - prevCharacter.currentExp) +
+              characterFromServer.currentExp
+          : characterFromServer.currentExp - prevCharacter.currentExp;
+      currentCharacter = characterFromServer;
+      if (missionClear) {
+        isMissionClear = true;
+      } else {
+        increaseExp(increasedExp!);
+      }
       notifyListeners();
-      return;
+    } catch (e) {
+      rethrow;
     }
-    Character prevCharacter = Character.fromEntity(
-        CharacterEntity.fromJson(jsonDecode(prevCharacterJson)));
-
-    // 저장되어 있던 캐릭터 정보와 서버에서 불러온 캐릭터 정보가 같으면 서버 캐릭터로 로드
-    if (prevCharacter.level >= characterFromServer.level &&
-        prevCharacter.currentExp >= characterFromServer.currentExp) {
-      _character = characterFromServer;
-      _isLoading = false;
-      notifyListeners();
-      return;
-    }
-
-    // 저장되어 있던 캐릭터와 서버에서 불러온 캐릭터 정보가 다를 때, 이전 캐릭터로 먼저 로드 후 경험치 증가
-    _character = prevCharacter;
-    _character.nickname = characterFromServer.nickname;
-    _isMissionClear = true;
-    _isLoading = false;
-    // 서버에서 불러온 캐릭터의 레벨이 더 높을 때, 같을 때 구분해서 계산
-    increasedExp = prevCharacter.level < characterFromServer.level
-        ? (prevCharacter.maxExp - prevCharacter.currentExp) +
-            characterFromServer.currentExp
-        : characterFromServer.currentExp - prevCharacter.currentExp;
-    currentCharacter = characterFromServer;
-    notifyListeners();
-  }
-
-  /// 서버에서 [memberInfo]의 캐릭터의 경험치를 [value]로 바꿈
-  Future<void> changeExpInServer(int value) async {
-    await _characterRepository.changeExp(value);
   }
 
   /// SharedPreferences 로컬 스토리지에 현재 캐릭터 상태를 저장
@@ -158,21 +177,34 @@ class GrowController with ChangeNotifier {
   }
 
   /// 하트 버튼 누를 시 하트 효과
-  void showHearts() {
-        
-    if (isHeartVisible) {
-      FirebaseAnalytics.instance.logEvent(name: '하트버튼_터치', parameters: {'type': '하트 보이는 중 누름'});
+  void playWithCharacter() async {
+    // 놀아주고 난 후 캐릭터 API 응답
+    Character? resultCharacter =
+        await _characterRepository.playWithCharacter(_character.id);
+
+    // 쿨타임이 남아 있으면 함수 끝
+    if (resultCharacter == null) {
       return;
     }
 
-    FirebaseAnalytics.instance.logEvent(name: '하트버튼_터치', parameters: {'type': '하트 안보이는 중 누름'});
+    // 경험치가 올라간 캐릭터를 서버에 저장
+    await fetchData(missionClear: false);
 
+    if (isHeartVisible) {
+      FirebaseAnalytics.instance
+          .logEvent(name: '하트버튼_터치', parameters: {'type': '하트 보이는 중 누름'});
+      return;
+    }
+
+    FirebaseAnalytics.instance
+        .logEvent(name: '하트버튼_터치', parameters: {'type': '하트 안보이는 중 누름'});
 
     isHeartVisible = true;
-    notifyListeners();
-    Future.delayed(const Duration(seconds: 6), () {
+    Future.delayed(Duration(seconds: _heartVisibleTime), () {
       isHeartVisible = false;
-      notifyListeners();
+      if (_mounted) {
+        notifyListeners();
+      }
     });
   }
 
@@ -182,5 +214,19 @@ class GrowController with ChangeNotifier {
 
     // 서버에 캐릭터 이름 저장
     _characterRepository.setName(character.id, nickname);
+  }
+
+  void togglePlayButton({required bool isActive}) {
+    playButtonEnabled = isActive;
+    if (isActive) {
+    remainedPlayTime = 0;
+    }
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _mounted = false;
   }
 }

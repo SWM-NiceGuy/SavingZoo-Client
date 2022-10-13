@@ -15,6 +15,8 @@ CharacterEntity _$CharacterEntityFromJson(Map<String, dynamic> json) =>
       currentLevel: json['currentLevel'] as int,
       currentExp: json['currentExp'] as int,
       maxExp: json['maxExp'] as int,
+      remainedPlayTime: json['remainedPlayTime'] as int?,
+      isPlayReady: json['isPlayReady'] as bool?,
     );
 
 Map<String, dynamic> _$CharacterEntityToJson(CharacterEntity instance) =>
@@ -26,4 +28,6 @@ Map<String, dynamic> _$CharacterEntityToJson(CharacterEntity instance) =>
       'currentLevel': instance.currentLevel,
       'currentExp': instance.currentExp,
       'maxExp': instance.maxExp,
+      'remainedPlayTime': instance.remainedPlayTime,
+      'isPlayReady': instance.isPlayReady,
     };
