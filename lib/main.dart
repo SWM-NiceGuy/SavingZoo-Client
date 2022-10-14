@@ -44,7 +44,7 @@ void main() async {
   KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
 
   // 앱 버전 체크
-  final bool isLatest = await isLatestVersion();
+  // final bool isLatest = await isLatestVersion();
 
   // foreground 푸시 알림 설정
   await setUpForegroundNotification();
@@ -52,7 +52,7 @@ void main() async {
 
   runApp(MultiProvider(
     providers: globalProviders,
-    child: MyApp(isLatest: isLatest),
+    child: MyApp(isLatest: true),
   ));
 }
 
