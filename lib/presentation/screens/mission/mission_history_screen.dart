@@ -1,4 +1,3 @@
-
 import 'package:amond/presentation/controllers/mission_history_controller.dart';
 import 'package:amond/presentation/screens/mission/components/mission_history_card.dart';
 import 'package:amond/ui/colors.dart';
@@ -52,11 +51,13 @@ class MissionHistoryScreen extends StatelessWidget {
       ),
       body: historyController.isLoading
           ? const Center(child: PlatformBasedIndicator())
-          : ListView.builder(
-              itemCount: historyController.histories.length,
-              itemBuilder: (context, index) =>
-                  HistoryCard(history: historyController.histories[index]),
-            ),
+          : historyController.histories.isNotEmpty
+              ? ListView.builder(
+                  itemCount: historyController.histories.length,
+                  itemBuilder: (context, index) =>
+                      HistoryCard(history: historyController.histories[index]),
+                )
+              : const Center(child: Text('아직 수행하신 미션이 없습니다.'),),
     );
   }
 }

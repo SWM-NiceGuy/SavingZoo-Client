@@ -10,21 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="59d0401e-3d7b-4866-b882-4743c1583303" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/Podfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/data/source/network/api/member_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/data/source/network/api/member_api.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/presentation/controllers/mission_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/presentation/controllers/mission_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/presentation/controllers/mission_detail_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/presentation/controllers/mission_detail_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/presentation/screens/mission/components/mission_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/presentation/screens/mission/components/mission_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/presentation/screens/mission/components/mission_detail_bottom_bar.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/presentation/screens/mission/components/mission_detail_bottom_bar.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/utils/auth/do_apple_auth.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/utils/auth/do_apple_auth.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../lib/utils/auth/do_kakao_auth.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/utils/auth/do_kakao_auth.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/presentation/controllers/grow_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/presentation/controllers/grow_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../lib/presentation/screens/grow/grow_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/presentation/screens/grow/grow_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../lib/utils/push_notification.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../lib/utils/push_notification.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
