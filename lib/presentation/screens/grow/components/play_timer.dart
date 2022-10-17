@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PlayTimer extends StatefulWidget {
-  const PlayTimer({Key? key, required this.time, required this.width}) : super(key: key);
+  const PlayTimer({Key? key, required this.time, required this.width})
+      : super(key: key);
 
   final int time;
   final double width;
@@ -22,8 +23,6 @@ class _PlayTimerState extends State<PlayTimer> {
     Duration d = Duration(seconds: t);
     return d.toString().split('.').first.padLeft(8, "0");
   }
-
-
 
   @override
   void initState() {

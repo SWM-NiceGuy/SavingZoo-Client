@@ -52,7 +52,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     // 처음 접속하는 유저들에게 푸시 알림 설정을 받음.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-        showPushNotificationPermissionDialog(context);
+      showPushNotificationPermissionDialog(context);
     });
 
     final authController = context.read<AuthController>();
@@ -183,10 +183,9 @@ class _MainScreenState extends State<MainScreen> {
               ),
               title: const Text('의견 보내기'),
               onTap: () async {
-                if (await canLaunchUrl(
-                    Uri.parse('https://pf.kakao.com/_JLxkxob/chat'))) {
-                  launchUrl(Uri.parse('https://pf.kakao.com/_JLxkxob/chat'),
-                      mode: LaunchMode.externalApplication);
+                final url = Uri.parse('https://pf.kakao.com/_JLxkxob/chat');
+                if (await canLaunchUrl(url)) {
+                  launchUrl(url, mode: LaunchMode.externalApplication);
                 }
               },
             )

@@ -28,6 +28,7 @@ Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
 
   prefs.setBool(newUserKey, false);
 
+
   await showDialog(
       context: context,
       builder: (context) => const PushNotificationPermissionDialog());
@@ -47,6 +48,7 @@ Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
     SharedPreferences.getInstance()
         .then((prefs) => prefs.setBool(pushNotificationPermissionKey, false));
     _sendPushNotification(false);
+
     return;
   }
 
@@ -54,6 +56,7 @@ Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
   SharedPreferences.getInstance()
       .then((prefs) => prefs.setBool(pushNotificationPermissionKey, true));
   _sendPushNotification(true);
+
   return;
 }
 

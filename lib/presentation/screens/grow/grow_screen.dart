@@ -1,6 +1,7 @@
 import 'package:amond/data/repository/character_repository_impl.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow_controller.dart';
+
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/grow/components/character_image_widget.dart';
 import 'package:amond/presentation/screens/grow/components/comment_box.dart';
@@ -8,12 +9,14 @@ import 'package:amond/presentation/screens/grow/components/effects/heart_effect.
 import 'package:amond/presentation/screens/grow/components/effects/level_up_effect.dart';
 import 'package:amond/presentation/screens/grow/components/effects/starfall_effect.dart';
 import 'package:amond/presentation/screens/grow/components/level_widget.dart';
+
 import 'package:amond/presentation/screens/grow/components/play_timer.dart';
 import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
 import 'package:amond/utils/dialogs/dialogs.dart';
 import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
+
 import 'package:provider/provider.dart';
 
 class GrowScreen extends StatelessWidget {
@@ -198,5 +201,4 @@ class GrowScreenWidget extends StatelessWidget {
             ],
           );
   }
-
 }
