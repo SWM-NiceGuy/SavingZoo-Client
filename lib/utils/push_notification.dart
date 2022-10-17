@@ -12,11 +12,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:http/http.dart' as http;
 
-const String pushNotificationPermissionString = 'pushNotificationPermission';
+const String pushNotificationPermissionKey = 'pushNotificationPermission';
+const String newUserKey = 'isNewUser-1.2.2';
 
 Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
   var prefs = await SharedPreferences.getInstance();
-  var isNewUser = prefs.getBool('isNewUser');
+  var isNewUser = prefs.getBool(newUserKey);
   String? deviceToken;
 
   if (isNewUser != null) return;
@@ -25,7 +26,7 @@ Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
   if (deviceToken == null) return;
   await _sendDeviceToken(deviceToken);
 
-  prefs.setBool('isNewUser', false);
+  prefs.setBool(newUserKey, false);
 
   await showDialog(
       context: context,
@@ -44,14 +45,14 @@ Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
   // 푸시 알림을 거부했을 때 (iOS)
   if (permissionSettings.authorizationStatus == AuthorizationStatus.denied) {
     SharedPreferences.getInstance()
-        .then((prefs) => prefs.setBool(pushNotificationPermissionString, false));
+        .then((prefs) => prefs.setBool(pushNotificationPermissionKey, false));
     _sendPushNotification(false);
     return;
   }
 
   // 푸시 알림을 허용했을 때
   SharedPreferences.getInstance()
-      .then((prefs) => prefs.setBool(pushNotificationPermissionString, true));
+      .then((prefs) => prefs.setBool(pushNotificationPermissionKey, true));
   _sendPushNotification(true);
   return;
 }
@@ -87,14 +88,14 @@ Future<void> _sendPushNotification(bool enable) async {
 
 Future<bool> getPushNotificationPermission() async {
   var prefs = await SharedPreferences.getInstance();
-  var pushNotificationPermission = prefs.getBool(pushNotificationPermissionString);
+  var pushNotificationPermission = prefs.getBool(pushNotificationPermissionKey);
   if (pushNotificationPermission == null) return false;
   return pushNotificationPermission;
 }
 
 Future<void> setPushNotificationPermission(bool value) async {
   var prefs = await SharedPreferences.getInstance();
-  prefs.setBool(pushNotificationPermissionString, value);
+  prefs.setBool(pushNotificationPermissionKey, value);
   if (value == true) {
     var deviceToken = await FirebaseMessaging.instance.getToken();
     if (deviceToken == null) return;

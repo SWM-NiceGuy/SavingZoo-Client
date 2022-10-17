@@ -24,7 +24,7 @@ class PleaseUpdateScreen extends StatelessWidget {
                     content: Column(
                       children: [
                         const Text("현재버전 : $appVersion"),
-                        Text("최신버전 : $latestVersion")
+                        Text("최신버전 : $currentAppStatus")
                       ],
                     ),
                     actions: [
@@ -43,7 +43,7 @@ class PleaseUpdateScreen extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Text("현재버전 : $appVersion"),
-                        Text("최신버전 : $latestVersion")
+                        Text("최신버전 : $currentAppStatus")
                       ],
                     ),
                     actions: [

@@ -1,7 +1,6 @@
 import 'package:amond/data/repository/character_repository_impl.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow_controller.dart';
-import 'package:amond/presentation/controllers/name_validation.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/grow/components/character_image_widget.dart';
 import 'package:amond/presentation/screens/grow/components/comment_box.dart';
@@ -9,15 +8,13 @@ import 'package:amond/presentation/screens/grow/components/effects/heart_effect.
 import 'package:amond/presentation/screens/grow/components/effects/level_up_effect.dart';
 import 'package:amond/presentation/screens/grow/components/effects/starfall_effect.dart';
 import 'package:amond/presentation/screens/grow/components/level_widget.dart';
-import 'package:amond/presentation/screens/grow/components/mission_complete_dialog.dart';
 import 'package:amond/presentation/screens/grow/components/play_timer.dart';
 import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
+import 'package:amond/utils/dialogs/dialogs.dart';
 import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:provider/provider.dart';
-
-import 'components/character_name_input.dart';
 
 class GrowScreen extends StatelessWidget {
   const GrowScreen({Key? key}) : super(key: key);
@@ -80,7 +77,7 @@ class GrowScreenWidget extends StatelessWidget {
     if (growController.isNewUser) {
       growController.isNewUser = false;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        showCharacterNamingPopup(context, growController.setCharacterName,
+        showCharacterNamingDialog(context, growController.setCharacterName,
             growController.character.imageUrl);
       });
     }
@@ -202,82 +199,4 @@ class GrowScreenWidget extends StatelessWidget {
           );
   }
 
-  /// 캐릭터 이름 입력 팝업을 띄운다.
-  void showCharacterNamingPopup(
-    BuildContext context,
-    Function(String) onSubmit,
-    String imageUrl,
-  ) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return ChangeNotifierProvider(
-            create: (_) => NameValidation(),
-            child: WillPopScope(
-                onWillPop: () async => false,
-                child: CharacterNameInput(
-                    onSubmit: onSubmit, imageUrl: imageUrl)));
-      },
-    );
-  }
-
-  /// 미션 완료 다이얼로그를 띄운다.
-  void showMissionCompleteDialog(
-    BuildContext context,
-    Function onSubmit,
-    int reward,
-  ) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return MissionCompleteDialog(onSubmit: onSubmit, reward: reward);
-      },
-    );
-  }
 }
-
-// class TestAnimation extends StatefulWidget {
-//   const TestAnimation({
-//     Key? key,
-//   }) : super(key: key);
-
-//   @override
-//   State<TestAnimation> createState() => _TestAnimationState();
-// }
-
-// class _TestAnimationState extends State<TestAnimation> with SingleTickerProviderStateMixin{
-
-//   late AnimationController _animationController;
-
-//   @override
-//   void initState() {
-//     _animationController = AnimationController(vsync: this, duration: const Duration(seconds: 2))..repeat();
-//     super.initState();
-//   }
-
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Positioned(
-//       child: PositionedTransition(child: Text('테스트', style: TextStyle(fontSize: 18),), rect: RelativeRectTween(
-//                 begin: RelativeRect.fromSize(
-//                     const Rect.fromLTWH(0, 0, 10, 10), Size(10, 10)),
-//                 end: RelativeRect.fromSize(
-//                     Rect.fromLTWH(biggest.width - bigLogo,
-//                         biggest.height - bigLogo, bigLogo, bigLogo),
-//                     biggest),
-//               ).animate(CurvedAnimation(
-//                 parent: _controller,
-//                 curve: Curves.elasticInOut,
-//               )),,),
-//     );
-//   }
-
-//   @override
-//   void dispose() {
-// }
-//     _animationController.dispose();
-//     super.dispose();
-//   }

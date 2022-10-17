@@ -160,9 +160,9 @@ class GrowController with ChangeNotifier {
               characterFromServer.currentExp
           : characterFromServer.currentExp - prevCharacter.currentExp;
       currentCharacter = characterFromServer;
-      if (missionClear) {
-        isMissionClear = true;
-      } else {
+      
+      isMissionClear = missionClear;
+      if (!missionClear) {
         increaseExp(increasedExp!);
       }
       notifyListeners();
