@@ -96,18 +96,18 @@ class GrowController with ChangeNotifier {
   Future<void> fetchData({bool missionClear = true}) async {
     try {
       // 서버에서 가져온 캐릭터
-      // var characterFromServer = await _characterRepository.getCharacter();
+      var characterFromServer = await _characterRepository.getCharacter();
 
       // test용 서버에서 가져온 캐릭터
-      var characterFromServer = Character(
-          id: 1,
-          imageUrl:
-              'https://cdn.imweb.me/upload/S20211110a3d216dc49446/f7bfffacbb6de.png',
-          name: "안녕",
-          nickname: null,
-          currentExp: 5,
-          maxExp: 30,
-          remainedTime: 5);
+      // var characterFromServer = Character(
+      //     id: 1,
+      //     imageUrl:
+      //         'https://cdn.imweb.me/upload/S20211110a3d216dc49446/f7bfffacbb6de.png',
+      //     name: "안녕",
+      //     nickname: null,
+      //     currentExp: 5,
+      //     maxExp: 30,
+      //     remainedTime: 5);
 
       // 놀아주기 남은 시간 설정
       remainedPlayTime = characterFromServer.remainedTime ?? 0;
@@ -181,19 +181,19 @@ class GrowController with ChangeNotifier {
   /// 하트 버튼 누를 시 하트 효과
   void playWithCharacter() async {
     // 놀아주고 난 후 캐릭터 API 응답
-    // Character? resultCharacter =
-    //     await _characterRepository.playWithCharacter(_character.id);
+    Character? resultCharacter =
+        await _characterRepository.playWithCharacter(_character.id);
 
     // test용 서버에서 가져온 캐릭터
-    var resultCharacter = Character(
-        id: 1,
-        imageUrl:
-            'https://cdn.imweb.me/upload/S20211110a3d216dc49446/f7bfffacbb6de.png',
-        name: "안녕",
-        nickname: null,
-        currentExp: 5,
-        maxExp: 30,
-        remainedTime: 30);
+    // var resultCharacter = Character(
+    //     id: 1,
+    //     imageUrl:
+    //         'https://cdn.imweb.me/upload/S20211110a3d216dc49446/f7bfffacbb6de.png',
+    //     name: "안녕",
+    //     nickname: null,
+    //     currentExp: 5,
+    //     maxExp: 30,
+    //     remainedTime: 30);
 
     // 쿨타임이 남아 있으면 함수 끝
     if (resultCharacter == null) {

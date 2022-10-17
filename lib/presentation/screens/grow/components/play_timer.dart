@@ -51,15 +51,17 @@ class _PlayTimerState extends State<PlayTimer> {
     return _time > 0
         ? Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            width: widget.width + 16,
+            width: widget.width + 20,
             decoration: BoxDecoration(
               color: const Color(0xffEEBBB5),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Center(
-              child: Text(
-                format(_time),
-                style: const TextStyle(color: Colors.white),
+              child: FittedBox(
+                child: Text(
+                  format(_time),
+                  style: const TextStyle(color: Colors.white),
+                ),
               ),
             ),
           )

@@ -15,7 +15,6 @@ import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
 import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import 'components/character_name_input.dart';
@@ -78,13 +77,13 @@ class GrowScreenWidget extends StatelessWidget {
     }
 
     // 캐릭터의 이름이 정해져 있지 않으면 이름 설정 팝업을 띄운다.
-    // if (growController.isNewUser) {
-    //   growController.isNewUser = false;
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     showCharacterNamingPopup(context, growController.setCharacterName,
-    //         growController.character.imageUrl);
-    //   });
-    // }
+    if (growController.isNewUser) {
+      growController.isNewUser = false;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showCharacterNamingPopup(context, growController.setCharacterName,
+            growController.character.imageUrl);
+      });
+    }
 
     // 완료한 미션이 있으면 미션 완료 팝업을 띄운다.
     if (growController.isMissionClear) {
@@ -142,51 +141,56 @@ class GrowScreenWidget extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 24),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      child: Column(
                         children: [
-                          Stack(
-                            clipBehavior: Clip.none,
-                            alignment: Alignment.center,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
+                              Stack(
+                                clipBehavior: Clip.none,
+                                alignment: Alignment.center,
+                                children: [
+                                  ShadowButton(
+                                    width: buttonHeight,
+                                    height: buttonHeight,
+                                    padding: EdgeInsets.zero,
+                                    onPress: growController.playButtonEnabled
+                                        ? growController.playWithCharacter
+                                        : null,
+                                    child: Center(
+                                      child: Image.asset(
+                                        'assets/images/heart_icon.png',
+                                        width: buttonHeight / 2,
+                                        height: buttonHeight / 2,
+                                        fit: BoxFit.fitHeight,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: -45,
+                                    child: PlayTimer(
+                                      time: growController.remainedPlayTime,
+                                      width: buttonHeight,
+                                    ),
+                                  ),
+                                ],
+                              ),
                               ShadowButton(
                                 width: buttonHeight,
                                 height: buttonHeight,
                                 padding: EdgeInsets.zero,
-                                onPress: growController.playButtonEnabled
-                                    ? growController.playWithCharacter
-                                    : null,
+                                onPress: growController.changeComment,
                                 child: Center(
                                   child: Image.asset(
-                                    'assets/images/heart_icon.png',
+                                    'assets/images/comment_icon.png',
                                     width: buttonHeight / 2,
                                     height: buttonHeight / 2,
-                                    fit: BoxFit.fitHeight,
                                   ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: -35,
-                                child: PlayTimer(
-                                  time: growController.remainedPlayTime,
-                                  width: buttonHeight,
                                 ),
                               ),
                             ],
                           ),
-                          ShadowButton(
-                            width: buttonHeight,
-                            height: buttonHeight,
-                            padding: EdgeInsets.zero,
-                            onPress: growController.changeComment,
-                            child: Center(
-                              child: Image.asset(
-                                'assets/images/comment_icon.png',
-                                width: buttonHeight / 2,
-                                height: buttonHeight / 2,
-                              ),
-                            ),
-                          ),
+                          const SizedBox(height: 10),
                         ],
                       ),
                     ),
@@ -233,3 +237,47 @@ class GrowScreenWidget extends StatelessWidget {
     );
   }
 }
+
+// class TestAnimation extends StatefulWidget {
+//   const TestAnimation({
+//     Key? key,
+//   }) : super(key: key);
+
+//   @override
+//   State<TestAnimation> createState() => _TestAnimationState();
+// }
+
+// class _TestAnimationState extends State<TestAnimation> with SingleTickerProviderStateMixin{
+
+//   late AnimationController _animationController;
+
+//   @override
+//   void initState() {
+//     _animationController = AnimationController(vsync: this, duration: const Duration(seconds: 2))..repeat();
+//     super.initState();
+//   }
+
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Positioned(
+//       child: PositionedTransition(child: Text('테스트', style: TextStyle(fontSize: 18),), rect: RelativeRectTween(
+//                 begin: RelativeRect.fromSize(
+//                     const Rect.fromLTWH(0, 0, 10, 10), Size(10, 10)),
+//                 end: RelativeRect.fromSize(
+//                     Rect.fromLTWH(biggest.width - bigLogo,
+//                         biggest.height - bigLogo, bigLogo, bigLogo),
+//                     biggest),
+//               ).animate(CurvedAnimation(
+//                 parent: _controller,
+//                 curve: Curves.elasticInOut,
+//               )),,),
+//     );
+//   }
+
+//   @override
+//   void dispose() {
+// }
+//     _animationController.dispose();
+//     super.dispose();
+//   }
