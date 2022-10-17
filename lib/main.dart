@@ -50,10 +50,6 @@ void main() async {
   // foreground 푸시 알림 설정
   await setUpForegroundNotification();
 
-  // foreground 푸시 알림 설정
-  await setUpForegroundNotification();
-
-
 
   runApp(MultiProvider(
     providers: globalProviders,

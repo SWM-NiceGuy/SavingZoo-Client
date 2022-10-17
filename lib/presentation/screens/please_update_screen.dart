@@ -24,7 +24,7 @@ class PleaseUpdateScreen extends StatelessWidget {
                     content: Column(
                       children: [
                         const Text("현재버전 : $appVersion"),
-                        Text("최신버전 : $currentAppStatus")
+                        Text("최신버전 : ${currentAppStatus!.latestVersion}")
                       ],
                     ),
                     actions: [
@@ -37,24 +37,27 @@ class PleaseUpdateScreen extends StatelessWidget {
                     ],
                   )
                 // Android 팝업
-                : AlertDialog(
-                    title: const Text("업데이트가 필요합니다."),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Text("현재버전 : $appVersion"),
-                        Text("최신버전 : $currentAppStatus")
+                : WillPopScope(
+                  onWillPop: () async => false,
+                  child: AlertDialog(
+                      title: const Text("업데이트가 필요합니다."),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text("현재버전 : $appVersion"),
+                          Text("최신버전 : ${currentAppStatus!.latestVersion}")
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              StoreRedirect.redirect(androidAppId: "com.amond.amondApp",
+                      iOSAppId: "1642916442");
+                            },
+                            child: const Text("확인"))
                       ],
                     ),
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            StoreRedirect.redirect(androidAppId: "com.amond.amondApp",
-                    iOSAppId: "1642916442");
-                          },
-                          child: const Text("확인"))
-                    ],
-                  );
+                );
           },
         );
       }
