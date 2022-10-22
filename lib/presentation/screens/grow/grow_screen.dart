@@ -1,7 +1,7 @@
 import 'package:amond/data/repository/character_repository_impl.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow_controller.dart';
-import 'package:amond/presentation/controllers/name_validation.dart';
+
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/grow/components/character_image_widget.dart';
 import 'package:amond/presentation/screens/grow/components/comment_box.dart';
@@ -9,16 +9,15 @@ import 'package:amond/presentation/screens/grow/components/effects/heart_effect.
 import 'package:amond/presentation/screens/grow/components/effects/level_up_effect.dart';
 import 'package:amond/presentation/screens/grow/components/effects/starfall_effect.dart';
 import 'package:amond/presentation/screens/grow/components/level_widget.dart';
-import 'package:amond/presentation/screens/grow/components/mission_complete_dialog.dart';
+
 import 'package:amond/presentation/screens/grow/components/play_timer.dart';
 import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
+import 'package:amond/utils/dialogs/dialogs.dart';
 import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
-import 'package:lottie/lottie.dart';
-import 'package:provider/provider.dart';
 
-import 'components/character_name_input.dart';
+import 'package:provider/provider.dart';
 
 class GrowScreen extends StatelessWidget {
   const GrowScreen({Key? key}) : super(key: key);
@@ -81,7 +80,7 @@ class GrowScreenWidget extends StatelessWidget {
     if (growController.isNewUser) {
       growController.isNewUser = false;
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        showCharacterNamingPopup(context, growController.setCharacterName,
+        showCharacterNamingDialog(context, growController.setCharacterName,
             growController.character.imageUrl);
       });
     }
@@ -142,50 +141,56 @@ class GrowScreenWidget extends StatelessWidget {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 24),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      child: Column(
                         children: [
-                          Stack(
-                            clipBehavior: Clip.none,
-                            alignment: Alignment.center,
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
+                              Stack(
+                                clipBehavior: Clip.none,
+                                alignment: Alignment.center,
+                                children: [
+                                  ShadowButton(
+                                    width: buttonHeight,
+                                    height: buttonHeight,
+                                    padding: EdgeInsets.zero,
+                                    onPress: growController.playButtonEnabled
+                                        ? growController.playWithCharacter
+                                        : null,
+                                    child: Center(
+                                      child: Image.asset(
+                                        'assets/images/heart_icon.png',
+                                        width: buttonHeight / 2,
+                                        height: buttonHeight / 2,
+                                        fit: BoxFit.fitHeight,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: -45,
+                                    child: PlayTimer(
+                                      time: growController.remainedPlayTime,
+                                      width: buttonHeight,
+                                    ),
+                                  ),
+                                ],
+                              ),
                               ShadowButton(
                                 width: buttonHeight,
                                 height: buttonHeight,
                                 padding: EdgeInsets.zero,
-                                onPress: growController.playButtonEnabled
-                                    ? growController.playWithCharacter
-                                    : null,
+                                onPress: growController.changeComment,
                                 child: Center(
                                   child: Image.asset(
-                                    'assets/images/heart_icon.png',
+                                    'assets/images/comment_icon.png',
                                     width: buttonHeight / 2,
                                     height: buttonHeight / 2,
-                                    fit: BoxFit.fitHeight,
                                   ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: -35,
-                                child: PlayTimer(
-                                  time: growController.remainedPlayTime,
                                 ),
                               ),
                             ],
                           ),
-                          ShadowButton(
-                            width: buttonHeight,
-                            height: buttonHeight,
-                            padding: EdgeInsets.zero,
-                            onPress: growController.changeComment,
-                            child: Center(
-                              child: Image.asset(
-                                'assets/images/comment_icon.png',
-                                width: buttonHeight / 2,
-                                height: buttonHeight / 2,
-                              ),
-                            ),
-                          ),
+                          const SizedBox(height: 10),
                         ],
                       ),
                     ),
@@ -195,40 +200,5 @@ class GrowScreenWidget extends StatelessWidget {
               ),
             ],
           );
-  }
-
-  /// 캐릭터 이름 입력 팝업을 띄운다.
-  void showCharacterNamingPopup(
-    BuildContext context,
-    Function(String) onSubmit,
-    String imageUrl,
-  ) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return ChangeNotifierProvider(
-            create: (_) => NameValidation(),
-            child: WillPopScope(
-                onWillPop: () async => false,
-                child: CharacterNameInput(
-                    onSubmit: onSubmit, imageUrl: imageUrl)));
-      },
-    );
-  }
-
-  /// 미션 완료 다이얼로그를 띄운다.
-  void showMissionCompleteDialog(
-    BuildContext context,
-    Function onSubmit,
-    int reward,
-  ) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return MissionCompleteDialog(onSubmit: onSubmit, reward: reward);
-      },
-    );
   }
 }

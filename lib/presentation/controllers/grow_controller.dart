@@ -98,6 +98,17 @@ class GrowController with ChangeNotifier {
       // 서버에서 가져온 캐릭터
       var characterFromServer = await _characterRepository.getCharacter();
 
+      // test용 서버에서 가져온 캐릭터
+      // var characterFromServer = Character(
+      //     id: 1,
+      //     imageUrl:
+      //         'https://cdn.imweb.me/upload/S20211110a3d216dc49446/f7bfffacbb6de.png',
+      //     name: "안녕",
+      //     nickname: null,
+      //     currentExp: 5,
+      //     maxExp: 30,
+      //     remainedTime: 5);
+
       // 놀아주기 남은 시간 설정
       remainedPlayTime = characterFromServer.remainedTime ?? 0;
       if (remainedPlayTime <= 0) {
@@ -109,15 +120,6 @@ class GrowController with ChangeNotifier {
       if (characterFromServer.maxExp == 0) {
         characterFromServer.maxExp = 30;
       }
-
-      // // test용 서버에서 가져온 캐릭터
-      // var characterFromServer = Character(
-      //     id: 1,
-      //     imageUrl: 'https://cdn.imweb.me/upload/S20211110a3d216dc49446/f7bfffacbb6de.png',
-      //     name: "안녕",
-      //     nickname: null,
-      //     currentExp: 5,
-      //     maxExp: 30);
 
       // 캐릭터 닉네임이 없으면 새로운 유저로 판단
       if (characterFromServer.nickname == null) {
@@ -158,9 +160,9 @@ class GrowController with ChangeNotifier {
               characterFromServer.currentExp
           : characterFromServer.currentExp - prevCharacter.currentExp;
       currentCharacter = characterFromServer;
-      if (missionClear) {
-        isMissionClear = true;
-      } else {
+
+      isMissionClear = missionClear;
+      if (!missionClear) {
         increaseExp(increasedExp!);
       }
       notifyListeners();
@@ -181,6 +183,17 @@ class GrowController with ChangeNotifier {
     // 놀아주고 난 후 캐릭터 API 응답
     Character? resultCharacter =
         await _characterRepository.playWithCharacter(_character.id);
+
+    // test용 서버에서 가져온 캐릭터
+    // var resultCharacter = Character(
+    //     id: 1,
+    //     imageUrl:
+    //         'https://cdn.imweb.me/upload/S20211110a3d216dc49446/f7bfffacbb6de.png',
+    //     name: "안녕",
+    //     nickname: null,
+    //     currentExp: 5,
+    //     maxExp: 30,
+    //     remainedTime: 30);
 
     // 쿨타임이 남아 있으면 함수 끝
     if (resultCharacter == null) {
@@ -219,7 +232,7 @@ class GrowController with ChangeNotifier {
   void togglePlayButton({required bool isActive}) {
     playButtonEnabled = isActive;
     if (isActive) {
-    remainedPlayTime = 0;
+      remainedPlayTime = 0;
     }
     notifyListeners();
   }

@@ -12,14 +12,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:http/http.dart' as http;
 
+const String pushNotificationPermissionKey = 'pushNotificationPermission';
+const String newUserKey = 'isNewUser-1.2.2';
+
 Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
   var prefs = await SharedPreferences.getInstance();
-  var isNewUser = prefs.getBool('isNewUser');
+  var isNewUser = prefs.getBool(newUserKey);
   String? deviceToken;
 
   if (isNewUser != null) return;
 
-  prefs.setBool('isNewUser', false);
+  deviceToken = await FirebaseMessaging.instance.getToken();
+  if (deviceToken == null) return;
+  await _sendDeviceToken(deviceToken);
+
+  prefs.setBool(newUserKey, false);
+
 
   await showDialog(
       context: context,
@@ -38,20 +46,21 @@ Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
   // 푸시 알림을 거부했을 때 (iOS)
   if (permissionSettings.authorizationStatus == AuthorizationStatus.denied) {
     SharedPreferences.getInstance()
-        .then((prefs) => prefs.setBool('pushNotificationPermission', false));
+        .then((prefs) => prefs.setBool(pushNotificationPermissionKey, false));
+    _sendPushNotification(false);
+
     return;
   }
 
   // 푸시 알림을 허용했을 때
-  deviceToken = await FirebaseMessaging.instance.getToken();
-  if (deviceToken == null) return;
-  await sendDeviceToken(deviceToken);
   SharedPreferences.getInstance()
-      .then((prefs) => prefs.setBool('pushNotificationPermission', true));
+      .then((prefs) => prefs.setBool(pushNotificationPermissionKey, true));
+  _sendPushNotification(true);
+
   return;
 }
 
-Future<void> sendDeviceToken(String token) async {
+Future<void> _sendDeviceToken(String token) async {
   if (kDebugMode) {
     print('FM 토큰: $token');
   }
@@ -67,23 +76,35 @@ Future<void> sendDeviceToken(String token) async {
   );
 }
 
+Future<void> _sendPushNotification(bool enable) async {
+  final url = Uri.parse('$baseUrl/user/device/push');
+  await http.post(
+    url,
+    body: jsonEncode({"allowPush": enable}),
+    headers: {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $globalToken',
+    },
+  );
+}
+
 Future<bool> getPushNotificationPermission() async {
   var prefs = await SharedPreferences.getInstance();
-  var pushNotificationPermission = prefs.getBool('pushNotificationPermission');
+  var pushNotificationPermission = prefs.getBool(pushNotificationPermissionKey);
   if (pushNotificationPermission == null) return false;
   return pushNotificationPermission;
 }
 
 Future<void> setPushNotificationPermission(bool value) async {
   var prefs = await SharedPreferences.getInstance();
-  prefs.setBool('pushNotificationPermission', value);
+  prefs.setBool(pushNotificationPermissionKey, value);
   if (value == true) {
     var deviceToken = await FirebaseMessaging.instance.getToken();
     if (deviceToken == null) return;
-    sendDeviceToken(deviceToken);
-  } else {
-    FirebaseMessaging.instance.deleteToken();
+    _sendDeviceToken(deviceToken);
   }
+  _sendPushNotification(value);
 }
 
 // Android용 새 Notification Channel

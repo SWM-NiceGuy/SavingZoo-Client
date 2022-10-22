@@ -7,12 +7,13 @@ import 'package:amond/presentation/screens/mission/mission_detail_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/presentation/screens/please_update_screen.dart';
-import 'package:amond/presentation/screens/qr_scanner.dart';
 import 'package:amond/presentation/screens/settings/settings_screen.dart';
 import 'package:amond/presentation/screens/splash_screen.dart';
 import 'package:amond/secrets/secret.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:amond/utils/push_notification.dart';
+import 'package:amond/utils/version/app_status.dart';
+
 
 import 'package:amond/utils/version/app_version.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -44,7 +45,7 @@ void main() async {
   KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
 
   // 앱 버전 체크
-  final bool isLatest = await isLatestVersion();
+  final appStatus = await getAppStatus();
 
   // foreground 푸시 알림 설정
   await setUpForegroundNotification();
@@ -52,17 +53,16 @@ void main() async {
 
   runApp(MultiProvider(
     providers: globalProviders,
-    child: MyApp(isLatest: isLatest),
+    child: MyApp(appStatus: appStatus),
   ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key, required this.isLatest}) : super(key: key);
-  final bool isLatest;
+  const MyApp({Key? key, required this.appStatus}) : super(key: key);
+  final AppStatus appStatus;
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // 파이어베이스 메시지
     return MaterialApp(
       title: '아몬드',
       debugShowCheckedModeBanner: false,
@@ -78,7 +78,7 @@ class MyApp extends StatelessWidget {
       /// 앱 시작시 setToken을 통해, 자동로그인 시도
       /// 반환된 값이 [true]라면 MainScreen으로 이동
       /// 반환된 값이 [false]라면 AuthScreen으로 이동
-      home: isLatest
+      home: appStatus.isLatest() || !appStatus.required
           ? FutureBuilder(
               future: context.read<AuthController>().setToken(),
               builder: (context, snapshot) {
@@ -90,12 +90,11 @@ class MyApp extends StatelessWidget {
               } // 사용하려면 Future.delayed 필요
               ,
             )
-          // 앱이 최신버전이 아니라면 업데이트 해달라고 요청
+          // 앱이 최신버전이 아니라면 업데이트 요청
           : const PleaseUpdateScreen(),
       routes: {
         AuthScreen.routeName: (context) => const AuthScreen(),
         MainScreen.routeName: (context) => const MainScreen(),
-        QrScanner.routeName: (context) => const QrScanner(),
         MissionScreen.routeName: (context) => const MissionScreen(),
         MissionDetailScreen.routeName: (context) => const MissionDetailScreen(),
         MissionHistoryScreen.routeName: (context) =>

@@ -4,7 +4,9 @@ import 'package:amond/presentation/controllers/mission_history_controller.dart';
 import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/presentation/screens/settings/settings_screen.dart';
+import 'package:amond/utils/dialogs/dialogs.dart';
 import 'package:amond/utils/push_notification.dart';
+import 'package:amond/utils/version/app_version.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:amond/presentation/screens/grow/grow_screen.dart';
 import 'package:amond/ui/colors.dart';
@@ -34,14 +36,23 @@ class _MainScreenState extends State<MainScreen> {
 
   var _screenIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+
+    // 앱 업데이트가 있으면 다이얼로그를 통해 알려줌.
+    if (!currentAppStatus!.isLatest()) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showUpdateDialog(context);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     // 처음 접속하는 유저들에게 푸시 알림 설정을 받음.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!Navigator.of(context).canPop()) {
-        showPushNotificationPermissionDialog(context);
-      }
+      showPushNotificationPermissionDialog(context);
     });
 
     final authController = context.read<AuthController>();
@@ -172,9 +183,9 @@ class _MainScreenState extends State<MainScreen> {
               ),
               title: const Text('의견 보내기'),
               onTap: () async {
-                if (await canLaunchUrl(
-                    Uri.parse('https://pf.kakao.com/_JLxkxob'))) {
-                  launchUrl(Uri.parse('https://pf.kakao.com/_JLxkxob'), mode: LaunchMode.externalApplication);
+                final url = Uri.parse('https://pf.kakao.com/_JLxkxob/chat');
+                if (await canLaunchUrl(url)) {
+                  launchUrl(url, mode: LaunchMode.externalApplication);
                 }
               },
             )
@@ -183,20 +194,4 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
-
-  /// 카메라 권한 확인
-  ///
-  /// 허락되면 [true], 거부되면 [false]를 반환
-  // Future<bool> _getStatuses() async {
-  //   Map<Permission, PermissionStatus> statuses =
-  //       await [Permission.storage, Permission.camera].request();
-
-  //   if (await Permission.camera.isGranted &&
-  //       await Permission.storage.isGranted) {
-  //     return Future.value(true);
-  //   } else {
-  //     return Future.value(false);
-  //   }
-  // }
-
 }
