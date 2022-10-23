@@ -31,7 +31,17 @@ class _MainScreenState extends State<MainScreen> {
 
   List<Widget> appBarTitle = [
     const Text(""),
-    const Text("미션"),
+    const Text(""),
+  ];
+
+  List<Color> appBarColors = [
+    backgroundColor,
+    kMissionScreenAppBarColor,
+  ];
+
+  List<Color> backgroundColors = [
+    backgroundColor,
+    kMissionScreenBgColor,
   ];
 
   var _screenIndex = 0;
@@ -62,9 +72,10 @@ class _MainScreenState extends State<MainScreen> {
         title: appBarTitle[_screenIndex],
         foregroundColor: Colors.black,
         elevation: 0.0,
-        backgroundColor: backgroundColor,
-        iconTheme: const IconThemeData(color: Color(0xFF96CE5F)),
+        backgroundColor: appBarColors[_screenIndex],
+        iconTheme: const IconThemeData(color: Color(0xFF6A6A6A)),
       ),
+      backgroundColor: backgroundColors[_screenIndex],
       body: SafeArea(
         child: bottomNavigationBarScreens[_screenIndex],
       ),

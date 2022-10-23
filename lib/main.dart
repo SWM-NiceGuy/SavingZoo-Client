@@ -14,7 +14,6 @@ import 'package:amond/ui/colors.dart';
 import 'package:amond/utils/push_notification.dart';
 import 'package:amond/utils/version/app_status.dart';
 
-
 import 'package:amond/utils/version/app_version.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -49,7 +48,6 @@ void main() async {
 
   // foreground 푸시 알림 설정
   await setUpForegroundNotification();
-
 
   runApp(MultiProvider(
     providers: globalProviders,

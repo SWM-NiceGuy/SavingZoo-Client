@@ -13,3 +13,6 @@ const lightShadowColor = Color(0xCDFFFFFF);
 
 const successColor = Color(0xff67CD00);
 const failureColor = Color(0xffD11111);
+
+const kMissionScreenBgColor = Color(0xFFEDF3FC);
+const kMissionScreenAppBarColor = Color(0xFFA8C9FA);
