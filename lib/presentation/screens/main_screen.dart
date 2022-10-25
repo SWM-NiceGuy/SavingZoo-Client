@@ -25,8 +25,8 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   List<Widget> bottomNavigationBarScreens = [
-    const GrowScreen(),
     const MissionScreen(),
+    const GrowScreen(),
   ];
 
   List<Widget> appBarTitle = [
@@ -35,13 +35,13 @@ class _MainScreenState extends State<MainScreen> {
   ];
 
   List<Color> appBarColors = [
-    backgroundColor,
     kMissionScreenAppBarColor,
+    backgroundColor,
   ];
 
   List<Color> backgroundColors = [
-    backgroundColor,
     kMissionScreenBgColor,
+    backgroundColor,
   ];
 
   var _screenIndex = 0;
@@ -80,71 +80,11 @@ class _MainScreenState extends State<MainScreen> {
         child: bottomNavigationBarScreens[_screenIndex],
       ),
       extendBody: true,
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: Colors.white, offset: Offset(-5, -5), blurRadius: 9)
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topRight: Radius.circular(30),
-            topLeft: Radius.circular(30),
-          ),
-          child: BottomNavigationBar(
-            backgroundColor: backgroundColor,
-            unselectedItemColor: Colors.grey,
-            selectedItemColor: Colors.black,
-            items: [
-              BottomNavigationBarItem(
-                label: '홈',
-                icon: Container(
-                  decoration: const BoxDecoration(boxShadow: [
-                    BoxShadow(
-                        color: Color(0xffA6B4C8),
-                        offset: Offset(3, 5),
-                        blurRadius: 7)
-                  ], shape: BoxShape.circle),
-                  child: Image.asset('assets/images/home_normal.png',
-                      width: 40, height: 40),
-                ),
-                activeIcon: Image.asset(
-                  'assets/images/home_pressed.png',
-                  width: 40,
-                  height: 40,
-                ),
-              ),
-              BottomNavigationBarItem(
-                label: '미션',
-                icon: Container(
-                  decoration: const BoxDecoration(boxShadow: [
-                    BoxShadow(
-                        color: Color(0xffA6B4C8),
-                        offset: Offset(3, 5),
-                        blurRadius: 7)
-                  ], shape: BoxShape.circle),
-                  child: Image.asset(
-                    'assets/images/mission_normal.png',
-                    width: 40,
-                    height: 40,
-                  ),
-                ),
-                activeIcon: Image.asset(
-                  'assets/images/mission_pressed.png',
-                  width: 40,
-                  height: 40,
-                ),
-              )
-            ],
-            onTap: (index) {
-              setState(() {
-                _screenIndex = index;
-              });
-            },
-            currentIndex: _screenIndex,
-          ),
-        ),
+      bottomNavigationBar: _BottomNavigationBar(
+        screenIndex: _screenIndex,
+        onTap: (index) {
+          setState(() => _screenIndex = index);
+        },
       ),
     );
   }
@@ -202,6 +142,61 @@ class _MainScreenState extends State<MainScreen> {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _BottomNavigationBar extends StatelessWidget {
+  final int screenIndex;
+  final Function(int index) onTap;
+
+  const _BottomNavigationBar({
+    required this.screenIndex,
+    required this.onTap,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
+      ),
+      child: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        unselectedItemColor: Colors.grey,
+        selectedItemColor: kBlack,
+        items: [
+          BottomNavigationBarItem(
+            label: '홈',
+            icon: Image.asset(
+              'assets/images/home_icon_normal.png',
+              width: 32,
+              height: 32,
+            ),
+            activeIcon: Image.asset(
+              'assets/images/home_icon_pressed.png',
+              width: 32,
+              height: 32,
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: '보호소',
+            icon: Image.asset(
+              'assets/images/pets_icon_normal.png',
+              width: 32,
+              height: 32,
+            ),
+            activeIcon: Image.asset(
+              'assets/images/pets_icon_pressed.png',
+              width: 32,
+              height: 32,
+            ),
+          )
+        ],
+        onTap: onTap,
+        currentIndex: screenIndex,
       ),
     );
   }
