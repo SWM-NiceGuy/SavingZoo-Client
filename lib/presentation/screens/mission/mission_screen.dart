@@ -71,7 +71,7 @@ class _MissionScreenState extends State<MissionScreen> {
           ),
           _MissionSection(
             headerTitle: '이정도면 나도 환경보호 전문가',
-            missions: viewModel.intermediateMissions,
+            missions: viewModel.advancedMissions,
           ),
         ],
       ),

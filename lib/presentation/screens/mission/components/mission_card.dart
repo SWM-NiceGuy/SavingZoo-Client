@@ -52,6 +52,7 @@ class MissionCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    const SizedBox(height: 4.0),
                     const Text(
                       '#분리수거',
                       style: TextStyle(
