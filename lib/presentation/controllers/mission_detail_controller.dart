@@ -75,14 +75,12 @@ class MissionDetailController with ChangeNotifier {
 
   String get stateToButtonText {
     switch (mission.state) {
-      case MissionState.incomplete:
-        return "인증하기";
       case MissionState.wait:
-        return "인증 대기중";
+        return "인증 대기 중";
       case MissionState.completed:
-        return "미션 인증 완료";
+        return "인증 완료";
       default:
-        return "인증하기";
+        return "인증하러 가기";
     }
   }
 

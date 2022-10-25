@@ -16,3 +16,8 @@ const failureColor = Color(0xffD11111);
 
 const kMissionScreenBgColor = Color(0xFFEDF3FC);
 const kMissionScreenAppBarColor = Color(0xFFA8C9FA);
+const kMissionButtonColor = Color(0xFF94B9F1);
+
+const kBlack = Color(0xFF343434);
+const kBlue = Color(0xFF6F98D7);
+const kGrey = Color(0xFFD1D4D9);
