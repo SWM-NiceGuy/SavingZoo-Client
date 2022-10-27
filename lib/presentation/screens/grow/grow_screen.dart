@@ -12,8 +12,8 @@ import 'package:amond/presentation/screens/grow/components/level_widget.dart';
 
 import 'package:amond/presentation/screens/grow/components/play_timer.dart';
 import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
+import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:amond/utils/dialogs/dialogs.dart';
-import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 

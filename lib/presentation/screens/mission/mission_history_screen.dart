@@ -1,7 +1,7 @@
 import 'package:amond/presentation/controllers/mission_history_controller.dart';
 import 'package:amond/presentation/screens/mission/components/mission_history_card.dart';
+import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:amond/ui/colors.dart';
-import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

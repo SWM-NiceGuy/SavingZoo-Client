@@ -1,7 +1,7 @@
 import 'package:amond/domain/models/mission_state.dart';
 import 'package:amond/presentation/controllers/mission_detail_controller.dart';
+import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:amond/utils/show_platform_based_dialog.dart';
-import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';

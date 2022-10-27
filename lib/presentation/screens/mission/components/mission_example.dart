@@ -1,4 +1,4 @@
-import 'package:amond/widget/platform_based_indicator.dart';
+import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
 
 class MissionExample extends StatelessWidget {

@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/onboarding/components/main_button.dart';
 import 'package:amond/presentation/screens/auth/components/apple_login_container.dart';
 import 'package:amond/presentation/screens/auth/components/kakao_login_container.dart';
 import 'package:amond/presentation/screens/main_screen.dart';
+import 'package:amond/presentation/widget/main_button.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:amond/utils/auth/do_apple_auth.dart';
 import 'package:amond/utils/auth/do_kakao_auth.dart';
@@ -55,74 +55,77 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
                     (MediaQuery.of(context).padding.top +
                         MediaQuery.of(context).padding.bottom +
                         kToolbarHeight),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Spacer(),
-                    Text(
-                      _isNameSet
-                          ? '로그인을 통해\n${_controller.text}와 함께해주세요'
-                          : '보살핌이 필요한 수달이\n보호소에 찾아왔어요!',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: darkGreyColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Spacer(),
+                      Text(
+                        _isNameSet
+                            ? '로그인을 통해\n${_controller.text}와 함께해주세요'
+                            : '보살핌이 필요한 수달이\n보호소에 찾아왔어요!',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: darkGreyColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    const Spacer(),
-                    const SizedBox(height: 70),
-                    Image.asset(
-                      'assets/images/onboarding2.png',
-                      width: deviceSize.width * 0.5,
-                      fit: BoxFit.cover,
-                    ),
-                    const SizedBox(height: 50),
-                    if(!_isNameSet)
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 24),
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: lightGreyColor),
-                        borderRadius: BorderRadius.circular(18),
+                      const Spacer(),
+                      const SizedBox(height: 70),
+                      Image.asset(
+                        'assets/images/onboarding2.png',
+                        width: deviceSize.width * 0.5,
+                        fit: BoxFit.cover,
                       ),
-                      child: TextField(
-                        controller: _controller,
-                        decoration:
-                            const InputDecoration(border: InputBorder.none),
-                        onEditingComplete: () => setState(() {}),
+                      const SizedBox(height: 50),
+                      if(!_isNameSet)
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 24),
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: lightGreyColor),
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                        child: TextField(
+                          controller: _controller,
+                          decoration:
+                              const InputDecoration(border: InputBorder.none),
+                          onEditingComplete: () => setState(() {}),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    if (!_isNameSet)
-                    const Text(
-                      '사육사님이 돌봐줄 동물의\n이름을 지어주세요!',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: greyColor, fontSize: 16),
-                    ),
-                    if (_isNameSet)
-                    _loginColumn(context.read<AuthController>()),
-                    const Spacer(),
-                    if (!_isNameSet)
-                      MainButton(
-                          width: deviceSize.width * 0.8,
-                          height: 60,
-                          // onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (_) => const ())),
-                          onPressed: _controller.text.isEmpty
-                              ? null
-                              : () {
-                                  setState(() {
-                                    _isNameSet = true;
-                                  });
-                                },
-                          child: const Text(
-                            '시작하기',
-                            style: TextStyle(fontSize: 16),
-                          )),
-                  ],
+                      const SizedBox(height: 12),
+                      if (!_isNameSet)
+                      const Text(
+                        '사육사님이 돌봐줄 동물의\n이름을 지어주세요!',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: greyColor, fontSize: 16),
+                      ),
+                      if (_isNameSet)
+                      _loginColumn(context.read<AuthController>()),
+                      const Spacer(),
+                      if (!_isNameSet)
+                        MainButton(
+                            width: deviceSize.width * 0.8,
+                            height: 60,
+                            // onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                            //     builder: (_) => const ())),
+                            onPressed: _controller.text.isEmpty
+                                ? null
+                                : () {
+                                    setState(() {
+                                      _isNameSet = true;
+                                    });
+                                  },
+                            child: const Text(
+                              '시작하기',
+                              style: TextStyle(fontSize: 16),
+                            )),
+                    ],
+                  ),
                 ),
               ),
             ),
