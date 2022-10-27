@@ -66,9 +66,11 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.montserratTextTheme(
               Theme.of(context).textTheme.apply(bodyColor: blackColor)),
           primarySwatch: Colors.blue,
-          scaffoldBackgroundColor: backgroundColor,
+          scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
-            backgroundColor: backgroundColor,
+            backgroundColor: Colors.white,
+            foregroundColor: greyColor,
+            elevation: 0
           )),
 
       /// 앱 시작시 setToken을 통해, 자동로그인 시도

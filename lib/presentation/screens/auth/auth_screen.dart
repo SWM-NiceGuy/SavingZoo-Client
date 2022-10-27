@@ -1,6 +1,11 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 
+import 'package:amond/presentation/onboarding/onboarding1_screen.dart';
+import 'package:amond/presentation/screens/auth/components/apple_login_container.dart';
+import 'package:amond/presentation/screens/auth/components/kakao_login_container.dart';
+import 'package:amond/ui/colors.dart';
 import 'package:amond/utils/auth/do_apple_auth.dart';
 import 'package:amond/utils/auth/do_kakao_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,31 +32,52 @@ class _AuthScreenState extends State<AuthScreen> {
     final authController = context.read<AuthController>();
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Expanded(
-              child: Center(
-                child: Text(
-                  'AMOND',
-                  style: TextStyle(
-                    fontSize: 22,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+        child: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Spacer(),
+              const Text(
+                'Amond',
+                style: TextStyle(color: blackColor, fontSize: 32),
               ),
-            ),
-            const Expanded(
-              child: LogoImage(),
-            ),
-            Expanded(
-              child: Column(
+              const SizedBox(height: 24),
+              const Text(
+                '겸사겸사 미션을 통해\n멸종위기 동물을 돌봐주세요',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
+              const Spacer(),
+              Column(
                 children: [
-                  const Text('소셜계정으로 로그인하기'),
                   const SizedBox(height: 12.0),
-                  Row(
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      // 애플 로그인 버튼
+                      if (Platform.isIOS)
+                        GestureDetector(
+                          onTap: () async {
+                            try {
+                              // 로그인 시도 후 성공하면 MainScreen으로 이동
+                              final info = await DoAppleAuth().login();
+                              await authController.login(
+                                  info.provider, info.accessToken);
+                              _navigateToMainScreen();
+                            } catch (error) {
+                              // 의도적인 로그인 취소로 보고 애플 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
+                              if (error
+                                      is SignInWithAppleAuthorizationException &&
+                                  error.code ==
+                                      AuthorizationErrorCode.canceled) {
+                                return;
+                              }
+                              _showLoginFailDialog(context, '로그인에 실패했습니다.');
+                            }
+                          },
+                          child: const AppleLoginContainer(),
+                        ),
+                      if (Platform.isIOS) const SizedBox(height: 18),
                       // 카카오 로그인 버튼
                       GestureDetector(
                         onTap: () async {
@@ -75,49 +101,24 @@ class _AuthScreenState extends State<AuthScreen> {
                             }
                           }
                         },
-                        child: Image.asset(
-                          'assets/images/kakao-login-icon.png',
-                          height: 50,
-                          width: 50,
-                          fit: BoxFit.cover,
-                        ),
+                        child: const KakaoLoginContainer(),
                       ),
-                      // 애플 로그인 버튼
-                      if (Platform.isIOS) const SizedBox(width: 24),
-                      if (Platform.isIOS)
-                        GestureDetector(
-                          onTap: () async {
-                            try {
-                              // 로그인 시도 후 성공하면 MainScreen으로 이동
-                              final info = await DoAppleAuth().login();
-                              await authController.login(
-                                  info.provider, info.accessToken);
-                              _navigateToMainScreen();
-                            } catch (error) {
-                              // 의도적인 로그인 취소로 보고 애플 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
-                              if (error
-                                      is SignInWithAppleAuthorizationException &&
-                                  error.code ==
-                                      AuthorizationErrorCode.canceled) {
-                                return;
-                              }
-                              _showLoginFailDialog(context, '로그인에 실패했습니다.');
-                            }
-                          },
-                          child: Image.asset(
-                            'assets/images/apple-login-icon.png',
-                            height: 50,
-                            width: 50,
-                            fit: BoxFit.cover,
-                          ),
+                      const SizedBox(height: 18),
+                      GestureDetector(
+                        child: const Text(
+                          '로그인 없이 이용해보기',
+                          style:
+                              TextStyle(decoration: TextDecoration.underline),
                         ),
+                        onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => Onboarding1Screen())),
+                      ),
                     ],
                   ),
                 ],
-              ),
-            )
-            // 카카오 로그인 버튼
-          ],
+              )
+              // 카카오 로그인 버튼
+            ],
+          ),
         ),
       ),
     );
