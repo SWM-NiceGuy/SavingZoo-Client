@@ -30,12 +30,8 @@ void main() async {
 
   await Firebase.initializeApp();
 
-  if (!kDebugMode) {
-    // Firebase Analytics 추가
-    FirebaseAnalytics analytics = FirebaseAnalytics.instance;
-    // Firebase Crashlytics 추가
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-  }
+  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
+  FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(!kDebugMode);
 
   // 로컬 데이터 삭제
   // SharedPreferences.getInstance().then((value) => value.clear());

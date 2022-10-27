@@ -12,6 +12,7 @@ class DoAppleAuth extends DoAuth {
           AppleIDAuthorizationScopes.fullName,
         ],
       );
+
       return LoginInfo("APPLE", appleCredential.identityToken!);
     } catch (error) {
       // print('애플 로그인 실패 $error');
