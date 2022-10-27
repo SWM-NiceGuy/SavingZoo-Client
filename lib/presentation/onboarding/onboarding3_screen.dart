@@ -191,9 +191,9 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
 
   /// MainScreen으로 pushReplacement하는 함수
   void _navigateToMainScreen() {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
         builder: (context) => const MainScreen(),
-        settings: const RouteSettings(name: "/")));
+        settings: const RouteSettings(name: "/")),(Route<dynamic> route) => false);
     // Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
   }
 
