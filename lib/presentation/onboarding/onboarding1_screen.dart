@@ -12,7 +12,7 @@ class Onboarding1Screen extends StatelessWidget {
     final deviceSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('1/3'),
+        title: const Text('1/3', style: TextStyle(color: greyColor)),
       ),
       body: SafeArea(
         child: Center(
@@ -44,7 +44,7 @@ class Onboarding1Screen extends StatelessWidget {
                       TextSpan(
                         text: '아몬드 임시보호소',
                         style: TextStyle(
-                          color: textBlueColor,
+                          color: textBlueColor200,
                         ),
                       ),
                       TextSpan(text: '기후 변화로 인해 갈 곳을 잃은\n멸종위기 동물들이 맡겨지는 곳이에요')

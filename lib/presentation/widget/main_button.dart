@@ -50,7 +50,7 @@ class MainButton extends StatelessWidget {
           backgroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.pressed)) {
               // 버튼 눌렀을 때 색
-              return blueColor;
+              return blueColor100;
             } else if (states.contains(MaterialState.disabled)) {
               return Colors.grey;
             }

@@ -45,7 +45,7 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('3/3'),
+          title: const Text('3/3', style: TextStyle(color: greyColor)),
         ),
         body: SingleChildScrollView(
           child: SafeArea(
