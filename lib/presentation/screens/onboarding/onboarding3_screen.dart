@@ -25,6 +25,8 @@ class Onboarding3Screen extends StatefulWidget {
 class _Onboarding3ScreenState extends State<Onboarding3Screen> {
   late TextEditingController _controller;
   var _isNameSet = false;
+  var _isNameValidate = false;
+  var _indicateNameAlert = false;
 
   @override
   void initState() {
@@ -63,17 +65,39 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Spacer(),
-                      Text(
-                        _isNameSet
-                            ? '로그인을 통해\n${_controller.text}와 함께해주세요'
-                            : '보살핌이 필요한 수달이\n보호소에 찾아왔어요!',
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: darkGreyColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      _isNameSet
+                          ? RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                children: [
+                                  const TextSpan(
+                                    text: '로그인을 통해\n',
+                                  ),
+                                  TextSpan(
+                                    text: _controller.text,
+                                    style: const TextStyle(
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  const TextSpan(text: '와 함께해주세요')
+                                ],
+                                style: const TextStyle(
+                                  color: darkGreyColor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              maxLines: 3,
+                            )
+                          : const Text(
+                              '보살핌이 필요한 수달이\n보호소에 찾아왔어요!',
+                              style: TextStyle(
+                                color: darkGreyColor,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                       const Spacer(),
                       const SizedBox(height: 70),
                       Image.asset(
@@ -82,30 +106,49 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
                         fit: BoxFit.cover,
                       ),
                       const SizedBox(height: 50),
-                      if(!_isNameSet)
-                      Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 24),
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: lightGreyColor),
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        child: TextField(
-                          controller: _controller,
-                          decoration:
-                              const InputDecoration(border: InputBorder.none),
-                          onEditingComplete: () => setState(() {}),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
                       if (!_isNameSet)
+                        Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 24),
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: lightGreyColor),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: TextField(
+                            controller: _controller,
+                            decoration:
+                                const InputDecoration(border: InputBorder.none),
+                            onChanged: (value) {
+                              if (_nameValidate(value)) {
+                                setState(() {
+                                _isNameValidate = true;
+                                _indicateNameAlert = false;
+                                });
+                              } else {
+                                setState(() {
+                                  _isNameValidate = false;
+                                  _indicateNameAlert = true;
+                                });
+                              }
+                            },
+                          ),
+                        ),
+                      const SizedBox(height: 12),
+                      if (_indicateNameAlert)
                       const Text(
-                        '사육사님이 돌봐줄 동물의\n이름을 지어주세요!',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: greyColor, fontSize: 16),
-                      ),
+                          '2-8자로 설정해주세요',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.red, fontSize: 16),
+                        ),
+
+                      if (!_isNameSet)
+                        const Text(
+                          '사육사님이 돌봐줄 동물의\n이름을 지어주세요!',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: greyColor, fontSize: 16),
+                        ),
                       if (_isNameSet)
-                      _loginColumn(context.read<AuthController>()),
+                        _loginColumn(context.read<AuthController>()),
                       const Spacer(),
                       if (!_isNameSet)
                         MainButton(
@@ -113,7 +156,7 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
                             height: 60,
                             // onPressed: () => Navigator.of(context).push(MaterialPageRoute(
                             //     builder: (_) => const ())),
-                            onPressed: _controller.text.isEmpty
+                            onPressed: !_isNameValidate
                                 ? null
                                 : () {
                                     setState(() {
@@ -133,6 +176,14 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
         ),
       ),
     );
+  }
+
+  /// 이름 유효성 검사
+  bool _nameValidate(String name) {
+    if (name.length > 8 || name.length < 2) {
+      return false;
+    }
+    return true;
   }
 
   Widget _loginColumn(AuthController authController) {
@@ -194,9 +245,11 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
 
   /// MainScreen으로 pushReplacement하는 함수
   void _navigateToMainScreen() {
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-        builder: (context) => const MainScreen(),
-        settings: const RouteSettings(name: "/")),(Route<dynamic> route) => false);
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+            builder: (context) => const MainScreen(),
+            settings: const RouteSettings(name: "/")),
+        (Route<dynamic> route) => false);
     // Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
   }
 

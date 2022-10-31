@@ -1,8 +1,8 @@
-
-import 'package:amond/presentation/onboarding/onboarding2_screen.dart';
 import 'package:amond/presentation/widget/main_button.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
+
+import 'onboarding2_screen.dart';
 
 class Onboarding1Screen extends StatelessWidget {
   const Onboarding1Screen({Key? key}) : super(key: key);

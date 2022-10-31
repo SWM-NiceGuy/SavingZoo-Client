@@ -62,8 +62,7 @@ class MyApp extends StatelessWidget {
       title: '아몬드',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          textTheme: GoogleFonts.montserratTextTheme(
-              Theme.of(context).textTheme.apply(bodyColor: blackColor)),
+          fontFamily: 'AppleSDGothicNeo',
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(

@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:amond/presentation/onboarding/onboarding1_screen.dart';
 import 'package:amond/presentation/screens/auth/components/apple_login_container.dart';
 import 'package:amond/presentation/screens/auth/components/kakao_login_container.dart';
+import 'package:amond/presentation/screens/onboarding/onboarding1_screen.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:amond/utils/auth/do_apple_auth.dart';
 import 'package:amond/utils/auth/do_kakao_auth.dart';
