@@ -3,14 +3,14 @@ import 'package:amond/domain/models/mission_state.dart';
 import 'package:amond/domain/repositories/mission_repository.dart';
 import 'package:flutter/foundation.dart';
 
-class MissionDetailController with ChangeNotifier {
+class MissionDetailViewModel with ChangeNotifier {
   final MissionRepository _missionRepository;
 
   bool _mounted = false;
 
   final int missionId;
 
-  MissionDetailController(this._missionRepository, {required this.missionId});
+  MissionDetailViewModel(this._missionRepository, {required this.missionId});
 
   late final MissionDetail _missionDetail;
   MissionDetail get mission => _missionDetail;

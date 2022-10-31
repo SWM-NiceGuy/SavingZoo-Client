@@ -1,4 +1,4 @@
-import 'package:amond/presentation/controllers/mission_history_controller.dart';
+import 'package:amond/presentation/controllers/mission_history_view_model.dart';
 import 'package:amond/presentation/screens/mission/components/mission_history_card.dart';
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:amond/ui/colors.dart';
@@ -33,7 +33,7 @@ class MissionHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final historyController = context.watch<MissionHistoryController>();
+    final historyController = context.watch<MissionHistoryViewModel>();
 
     if (historyController.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) {

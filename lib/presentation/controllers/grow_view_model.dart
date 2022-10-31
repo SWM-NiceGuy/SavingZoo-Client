@@ -8,10 +8,10 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class GrowController with ChangeNotifier {
+class GrowViewModel with ChangeNotifier {
   final CharacterRepository _characterRepository;
 
-  GrowController(this._characterRepository);
+  GrowViewModel(this._characterRepository);
 
   bool _mounted = true;
 

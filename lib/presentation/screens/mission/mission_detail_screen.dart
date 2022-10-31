@@ -1,4 +1,4 @@
-import 'package:amond/presentation/controllers/mission_detail_controller.dart';
+import 'package:amond/presentation/controllers/mission_detail_view_model.dart';
 import 'package:amond/presentation/screens/mission/components/image_slider.dart';
 import 'package:amond/presentation/screens/mission/components/mission_detail_bottom_bar.dart';
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
@@ -18,7 +18,7 @@ class MissionDetailScreen extends StatelessWidget {
     // 미션 id
     final width = MediaQuery.of(context).size.width;
 
-    final viewModel = context.watch<MissionDetailController>();
+    final viewModel = context.watch<MissionDetailViewModel>();
 
     if (viewModel.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) {

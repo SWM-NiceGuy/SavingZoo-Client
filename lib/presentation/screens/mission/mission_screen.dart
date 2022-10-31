@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:amond/presentation/controllers/mission_view_model.dart';
 import 'package:flutter/material.dart';
 
-import '../../controllers/mission_detail_controller.dart';
+import '../../controllers/mission_detail_view_model.dart';
 import 'components/mission_card.dart';
 import 'mission_detail_screen.dart';
 
@@ -243,8 +243,8 @@ class _MissionSection extends StatelessWidget {
         .push(
       MaterialPageRoute(
         // MissionDetailController를 여기서 주입
-        builder: (context) => ChangeNotifierProvider<MissionDetailController>(
-          create: (_) => MissionDetailController(
+        builder: (context) => ChangeNotifierProvider<MissionDetailViewModel>(
+          create: (_) => MissionDetailViewModel(
             context.read<MissionRepositoryImpl>(),
             missionId: mission.id,
           ),

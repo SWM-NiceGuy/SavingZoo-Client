@@ -1,7 +1,7 @@
 import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/controllers/grow_controller.dart';
-import 'package:amond/presentation/controllers/mission_history_controller.dart';
+import 'package:amond/presentation/controllers/grow_view_model.dart';
+import 'package:amond/presentation/controllers/mission_history_view_model.dart';
 import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/presentation/screens/settings/settings_screen.dart';
@@ -54,7 +54,7 @@ class _MainScreenState extends State<MainScreen> {
         showUpdateDialog(context);
       }
 
-      final growViewModel = context.read<GrowController>();
+      final growViewModel = context.read<GrowViewModel>();
       growViewModel.fetchData().then((_) {
         setState(() {
           appBarTitle[1] = growViewModel.character.nickname ?? "";
@@ -112,7 +112,7 @@ class _MainScreenState extends State<MainScreen> {
                 FirebaseAnalytics.instance.logEvent(name: '미션내역_조회');
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ChangeNotifierProvider(
-                    create: (context) => MissionHistoryController(
+                    create: (context) => MissionHistoryViewModel(
                       context.read<MissionRepositoryImpl>(),
                     ),
                     child: const MissionHistoryScreen(),

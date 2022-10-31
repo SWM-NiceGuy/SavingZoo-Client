@@ -1,4 +1,4 @@
-import 'package:amond/presentation/controllers/grow_controller.dart';
+import 'package:amond/presentation/controllers/grow_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +9,7 @@ class HeartEffect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isHeartVisible =
-        context.select<GrowController, bool>((value) => value.isHeartVisible);
+        context.select<GrowViewModel, bool>((value) => value.isHeartVisible);
         
     return isHeartVisible
         ? Lottie.asset(

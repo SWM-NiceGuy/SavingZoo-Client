@@ -1,5 +1,5 @@
 import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/controllers/grow_controller.dart';
+import 'package:amond/presentation/controllers/grow_view_model.dart';
 
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/grow/components/character_image_widget.dart';
@@ -33,7 +33,7 @@ class _GrowScreenWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final growController = context.watch<GrowController>();
+    final growController = context.watch<GrowViewModel>();
 
     // 데이터가 불러와 있지 않을때 데이터 불러오기
     if (growController.isLoading) {

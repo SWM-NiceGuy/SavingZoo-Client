@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:amond/presentation/controllers/grow_controller.dart';
+import 'package:amond/presentation/controllers/grow_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -77,7 +77,7 @@ class _PlayTimerState extends State<PlayTimer> {
             timer.cancel();
             _time--;
           });
-          context.read<GrowController>().togglePlayButton(isActive: true);
+          context.read<GrowViewModel>().togglePlayButton(isActive: true);
         } else {
           setState(() {
             _time--;

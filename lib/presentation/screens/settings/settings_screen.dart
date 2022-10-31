@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/controllers/settings_controller.dart';
+import 'package:amond/presentation/controllers/settings_view_model.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/settings/components/settings_alert_container.dart';
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
@@ -21,7 +21,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => SettingsController(),
+      create: (context) => SettingsViewModel(),
       child: const SettingsScreenWidget(),
     );
   }
@@ -37,7 +37,7 @@ class SettingsScreenWidget extends StatefulWidget {
 class _SettingsScreenWidgetState extends State<SettingsScreenWidget> {
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<SettingsController>();
+    final controller = context.watch<SettingsViewModel>();
 
     if (controller.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) {

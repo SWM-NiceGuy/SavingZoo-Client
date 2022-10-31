@@ -1,4 +1,4 @@
-import 'package:amond/presentation/controllers/grow_controller.dart';
+import 'package:amond/presentation/controllers/grow_view_model.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
@@ -11,7 +11,7 @@ class LevelWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final character = context.watch<GrowController>().character;
+    final character = context.watch<GrowViewModel>().character;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 8.0, 24, 0.0),

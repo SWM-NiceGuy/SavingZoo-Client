@@ -1,6 +1,6 @@
 import 'package:amond/domain/models/mission_detail.dart';
 import 'package:amond/domain/models/mission_state.dart';
-import 'package:amond/presentation/controllers/mission_detail_controller.dart';
+import 'package:amond/presentation/controllers/mission_detail_view_model.dart';
 
 import 'package:amond/ui/colors.dart';
 import 'package:amond/utils/firebase_analytics.dart';
@@ -25,7 +25,7 @@ class MissionDetailBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<MissionDetailController>();
+    final controller = context.watch<MissionDetailViewModel>();
 
     Future<void> _onButtonClick() async {
       // 미션을 제출했으면 동작 취소

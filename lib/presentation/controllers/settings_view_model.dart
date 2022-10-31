@@ -2,7 +2,7 @@ import 'package:amond/utils/push_notification.dart';
 import 'package:flutter/foundation.dart' show ChangeNotifier;
 import 'package:permission_handler/permission_handler.dart';
 
-class SettingsController with ChangeNotifier {
+class SettingsViewModel with ChangeNotifier {
   var _isLoading = true;
 
   bool get isLoading => _isLoading;

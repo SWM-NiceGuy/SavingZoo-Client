@@ -2,11 +2,11 @@ import 'package:amond/domain/models/mission_history.dart';
 import 'package:amond/domain/repositories/mission_repository.dart';
 import 'package:flutter/foundation.dart';
 
-class MissionHistoryController with ChangeNotifier {
+class MissionHistoryViewModel with ChangeNotifier {
 
   final MissionRepository _missionRepository;
 
-  MissionHistoryController(this._missionRepository);
+  MissionHistoryViewModel(this._missionRepository);
 
   late List<MissionHistory> _histories;
   List<MissionHistory> get histories => _histories;
