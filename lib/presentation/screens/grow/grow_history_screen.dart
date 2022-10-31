@@ -34,6 +34,7 @@ class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
   ]);
 
   var _growStageIndex = 0;
+  var _test = false;
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +64,9 @@ class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
                   width: deviceSize.width * 0.9,
                   height: deviceSize.height * 0.4,
                   child: ModelViewer(
-                    src: 'assets/glb/cat.glb',
+                    src: _test ? 'assets/glb/Shiba.glb' : 'assets/glb/cat.glb',
                     cameraControls: true,
-                    loading: Loading.lazy,
+                    loading: Loading.auto,
                   ),
                 ),
                 // 캐릭터 왼쪽 화살표
@@ -75,8 +76,9 @@ class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
                       onTap: () {
                         setState(() {
                           _growStageIndex == 0
-                              ? _growStageIndex = history.stages.length - 1
+                             ? _growStageIndex = history.stages.length - 1
                               : _growStageIndex -= 1;
+                          _test = !_test;
                         });
                       },
                       child: const Icon(
@@ -93,6 +95,7 @@ class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
                       setState(() {
                         _growStageIndex =
                             (_growStageIndex + 1) % history.stages.length;
+                        _test = !_test;
                       });
                     },
                     child: const Icon(
