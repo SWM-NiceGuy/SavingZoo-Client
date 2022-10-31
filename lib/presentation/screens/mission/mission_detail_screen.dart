@@ -1,9 +1,9 @@
 import 'package:amond/presentation/controllers/mission_detail_controller.dart';
 import 'package:amond/presentation/screens/mission/components/image_slider.dart';
 import 'package:amond/presentation/screens/mission/components/mission_detail_bottom_bar.dart';
+import 'package:amond/presentation/widget/platform_based_indicator.dart';
 
 import 'package:amond/ui/colors.dart';
-import 'package:amond/widget/platform_based_indicator.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';

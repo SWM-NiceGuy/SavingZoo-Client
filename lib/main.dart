@@ -76,21 +76,20 @@ class MyApp extends StatelessWidget {
       /// 앱 시작시 setToken을 통해, 자동로그인 시도
       /// 반환된 값이 [true]라면 MainScreen으로 이동
       /// 반환된 값이 [false]라면 AuthScreen으로 이동
-      // home: appStatus.isLatest() || !appStatus.required
-      //     ? FutureBuilder(
-      //         future: context.read<AuthController>().setToken(),
-      //         builder: (context, snapshot) {
-      //           return snapshot.hasData
-      //               ? snapshot.data.toString() == 'true'
-      //                   ? const MainScreen()
-      //                   : const AuthScreen()
-      //               : const SplashScreen();
-      //         } // 사용하려면 Future.delayed 필요
-      //         ,
-      //       )
-      //     // 앱이 최신버전이 아니라면 업데이트 요청
-      //     : const PleaseUpdateScreen(),
-      home: GrowHistoryScreen(),
+      home: appStatus.isLatest() || !appStatus.required
+          ? FutureBuilder(
+              future: context.read<AuthController>().setToken(),
+              builder: (context, snapshot) {
+                return snapshot.hasData
+                    ? snapshot.data.toString() == 'true'
+                        ? const MainScreen()
+                        : const AuthScreen()
+                    : const SplashScreen();
+              } // 사용하려면 Future.delayed 필요
+              ,
+            )
+          // 앱이 최신버전이 아니라면 업데이트 요청
+          : const PleaseUpdateScreen(),
       routes: {
         AuthScreen.routeName: (context) => const AuthScreen(),
         MainScreen.routeName: (context) => const MainScreen(),
