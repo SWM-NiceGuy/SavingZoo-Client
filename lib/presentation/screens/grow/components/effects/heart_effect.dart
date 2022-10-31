@@ -10,6 +10,7 @@ class HeartEffect extends StatelessWidget {
   Widget build(BuildContext context) {
     final isHeartVisible =
         context.select<GrowController, bool>((value) => value.isHeartVisible);
+        
     return isHeartVisible
         ? Lottie.asset(
             'assets/lotties/lottie-hearts.json',
