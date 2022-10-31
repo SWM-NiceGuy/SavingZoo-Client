@@ -19,6 +19,7 @@ class MainButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
+        // 버튼 색깔
         gradient: const LinearGradient(
           colors: [
             buttonGradientColor1,
@@ -52,12 +53,14 @@ class MainButton extends StatelessWidget {
               // 버튼 눌렀을 때 색
               return blueColor100;
             } else if (states.contains(MaterialState.disabled)) {
+              // 버튼 비활성화 색
               return Colors.grey;
             }
             return Colors.transparent;
           }),
           foregroundColor: MaterialStateProperty.resolveWith((states) {
             if (states.contains(MaterialState.disabled)) {
+              // 버튼 비활성화 foreground color
               return Colors.white;
             }
             return null;
