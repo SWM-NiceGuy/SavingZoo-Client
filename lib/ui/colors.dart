@@ -21,3 +21,7 @@ const kMissionButtonColor = Color(0xFF94B9F1);
 const kBlack = Color(0xFF343434);
 const kBlue = Color(0xFF6F98D7);
 const kGrey = Color(0xFFD1D4D9);
+
+const kExpBarDefaultColor = Color(0xFFF4F4F4);
+const kExpBarFillColor = Color(0xFFB4D1FB);
+const kCharacterActionButtonColor = kMissionScreenBgColor;

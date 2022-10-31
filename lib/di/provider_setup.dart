@@ -8,6 +8,7 @@ import 'package:amond/domain/usecases/member/member_use_cases.dart';
 import 'package:amond/domain/usecases/member/resign.dart';
 import 'package:amond/domain/usecases/member/login.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
+import 'package:amond/presentation/controllers/grow_controller.dart';
 
 import 'package:amond/presentation/controllers/main_view_model.dart';
 import 'package:amond/presentation/controllers/mission_view_model.dart';
@@ -64,6 +65,11 @@ List<SingleChildWidget> viewModels = [
   // MissionViewModel
   ChangeNotifierProvider(
     create: (_) => MissionViewModel(_.read<MissionRepositoryImpl>()),
+  ),
+
+  // GrowController
+  ChangeNotifierProvider(
+    create: (_) => GrowController(_.read<CharacterRepositoryImpl>()),
   ),
 
   // MainViewModel

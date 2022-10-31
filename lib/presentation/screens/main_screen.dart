@@ -1,5 +1,6 @@
 import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
+import 'package:amond/presentation/controllers/grow_controller.dart';
 import 'package:amond/presentation/controllers/mission_history_controller.dart';
 import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
@@ -29,33 +30,37 @@ class _MainScreenState extends State<MainScreen> {
     const GrowScreen(),
   ];
 
-  List<Widget> appBarTitle = [
-    const Text(""),
-    const Text(""),
-  ];
+  var _screenIndex = 0;
+
+  late List<String> appBarTitle = ["", ""];
 
   List<Color> appBarColors = [
     kMissionScreenAppBarColor,
-    backgroundColor,
+    Colors.white,
   ];
 
   List<Color> backgroundColors = [
     kMissionScreenBgColor,
-    backgroundColor,
+    Colors.white,
   ];
-
-  var _screenIndex = 0;
 
   @override
   void initState() {
     super.initState();
 
-    // 앱 업데이트가 있으면 다이얼로그를 통해 알려줌.
-    if (!currentAppStatus!.isLatest()) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // 앱 업데이트가 있으면 다이얼로그를 통해 알려줌.
+      if (!currentAppStatus!.isLatest()) {
         showUpdateDialog(context);
+      }
+
+      final growViewModel = context.read<GrowController>();
+      growViewModel.fetchData().then((_) {
+        setState(() {
+          appBarTitle[1] = growViewModel.character.nickname ?? "";
+        });
       });
-    }
+    });
   }
 
   @override
@@ -69,7 +74,7 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       drawer: mainDrawer(context, authController),
       appBar: AppBar(
-        title: appBarTitle[_screenIndex],
+        title: Text(appBarTitle[_screenIndex]),
         foregroundColor: Colors.black,
         elevation: 0.0,
         backgroundColor: appBarColors[_screenIndex],
