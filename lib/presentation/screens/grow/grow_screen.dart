@@ -1,14 +1,14 @@
-import 'package:amond/data/repository/character_repository_impl.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow_controller.dart';
 
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/grow/components/character_image_widget.dart';
-import 'package:amond/presentation/screens/grow/components/comment_box.dart';
 import 'package:amond/presentation/screens/grow/components/effects/heart_effect.dart';
 import 'package:amond/presentation/screens/grow/components/effects/level_up_effect.dart';
 import 'package:amond/presentation/screens/grow/components/effects/starfall_effect.dart';
+import 'package:amond/presentation/screens/grow/components/feed_button.dart';
 import 'package:amond/presentation/screens/grow/components/level_widget.dart';
+import 'package:amond/presentation/screens/grow/components/play_button.dart';
 
 import 'package:amond/presentation/screens/grow/components/play_timer.dart';
 import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
@@ -24,35 +24,20 @@ class GrowScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) =>
-          GrowController(context.read<CharacterRepositoryImpl>()),
-      child: const GrowScreenWidget(),
-    );
+    return const _GrowScreenWidget();
   }
 }
 
-class GrowScreenWidget extends StatelessWidget {
-  static const screenMargin = 24.0;
-
-  const GrowScreenWidget({
-    Key? key,
-  }) : super(key: key);
+class _GrowScreenWidget extends StatelessWidget {
+  const _GrowScreenWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // final growController = Provider.of<GrowController>(context, listen: false);
     final growController = context.watch<GrowController>();
-
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
-
-    final commentBoxHeight = height * 0.12;
-    final buttonHeight = height * 0.08;
 
     // 데이터가 불러와 있지 않을때 데이터 불러오기
     if (growController.isLoading) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
         growController.fetchData().onError((error, stackTrace) {
           context.read<AuthController>().logout();
           showPlatformDialog(
@@ -104,13 +89,7 @@ class GrowScreenWidget extends StatelessWidget {
             children: [
               // 레벨 위젯
               const LevelWidget(),
-              // 캐릭터 이름
               const SizedBox(height: 24),
-              Text(growController.character.nickname ?? "",
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w500)),
-              Text('(${growController.character.name})',
-                  style: const TextStyle(color: Colors.grey)),
               Expanded(
                 child: Stack(
                   alignment: Alignment.center,
@@ -128,74 +107,23 @@ class GrowScreenWidget extends StatelessWidget {
               ),
               Column(
                 children: [
-                  CommentBox(
-                    comment: growController.comment,
-                    width: width * 2 / 3,
-                    height: commentBoxHeight,
-                    // height: 100.0,
-                  ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: screenMargin,
-                      vertical: screenMargin / 1.5,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 24),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Stack(
-                                clipBehavior: Clip.none,
-                                alignment: Alignment.center,
-                                children: [
-                                  ShadowButton(
-                                    width: buttonHeight,
-                                    height: buttonHeight,
-                                    padding: EdgeInsets.zero,
-                                    onPress: growController.playButtonEnabled
-                                        ? growController.playWithCharacter
-                                        : null,
-                                    child: Center(
-                                      child: Image.asset(
-                                        'assets/images/heart_icon.png',
-                                        width: buttonHeight / 2,
-                                        height: buttonHeight / 2,
-                                        fit: BoxFit.fitHeight,
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: -45,
-                                    child: PlayTimer(
-                                      time: growController.remainedPlayTime,
-                                      width: buttonHeight,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              ShadowButton(
-                                width: buttonHeight,
-                                height: buttonHeight,
-                                padding: EdgeInsets.zero,
-                                onPress: growController.changeComment,
-                                child: Center(
-                                  child: Image.asset(
-                                    'assets/images/comment_icon.png',
-                                    width: buttonHeight / 2,
-                                    height: buttonHeight / 2,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                        ],
-                      ),
+                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                    child: FeedButton(
+                      rewardQuantity: 3,
+                      onClick: () {},
+                      enabled: false,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 16.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                    child: PlayButton(
+                      remainingSeconds: growController.remainedPlayTime,
+                      onClick: growController.playWithCharacter,
+                    ),
+                  ),
+                  const SizedBox(height: 24.0),
                 ],
               ),
             ],

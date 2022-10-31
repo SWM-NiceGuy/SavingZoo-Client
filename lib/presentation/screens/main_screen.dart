@@ -1,5 +1,6 @@
 import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
+import 'package:amond/presentation/controllers/grow_controller.dart';
 import 'package:amond/presentation/controllers/mission_history_controller.dart';
 import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
@@ -25,27 +26,41 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   List<Widget> bottomNavigationBarScreens = [
-    const GrowScreen(),
     const MissionScreen(),
-  ];
-
-  List<Widget> appBarTitle = [
-    const Text(""),
-    const Text("미션"),
+    const GrowScreen(),
   ];
 
   var _screenIndex = 0;
+
+  late List<String> appBarTitle = ["", ""];
+
+  List<Color> appBarColors = [
+    kMissionScreenAppBarColor,
+    Colors.white,
+  ];
+
+  List<Color> backgroundColors = [
+    kMissionScreenBgColor,
+    Colors.white,
+  ];
 
   @override
   void initState() {
     super.initState();
 
-    // 앱 업데이트가 있으면 다이얼로그를 통해 알려줌.
-    if (!currentAppStatus!.isLatest()) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // 앱 업데이트가 있으면 다이얼로그를 통해 알려줌.
+      if (!currentAppStatus!.isLatest()) {
         showUpdateDialog(context);
+      }
+
+      final growViewModel = context.read<GrowController>();
+      growViewModel.fetchData().then((_) {
+        setState(() {
+          appBarTitle[1] = growViewModel.character.nickname ?? "";
+        });
       });
-    }
+    });
   }
 
   @override
@@ -59,81 +74,22 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       drawer: mainDrawer(context, authController),
       appBar: AppBar(
-        title: appBarTitle[_screenIndex],
+        title: Text(appBarTitle[_screenIndex]),
         foregroundColor: Colors.black,
         elevation: 0.0,
-        backgroundColor: backgroundColor,
-        iconTheme: const IconThemeData(color: Color(0xFF96CE5F)),
+        backgroundColor: appBarColors[_screenIndex],
+        iconTheme: const IconThemeData(color: Color(0xFF6A6A6A)),
       ),
+      backgroundColor: backgroundColors[_screenIndex],
       body: SafeArea(
         child: bottomNavigationBarScreens[_screenIndex],
       ),
       extendBody: true,
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: Colors.white, offset: Offset(-5, -5), blurRadius: 9)
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topRight: Radius.circular(30),
-            topLeft: Radius.circular(30),
-          ),
-          child: BottomNavigationBar(
-            backgroundColor: backgroundColor,
-            unselectedItemColor: Colors.grey,
-            selectedItemColor: Colors.black,
-            items: [
-              BottomNavigationBarItem(
-                label: '홈',
-                icon: Container(
-                  decoration: const BoxDecoration(boxShadow: [
-                    BoxShadow(
-                        color: Color(0xffA6B4C8),
-                        offset: Offset(3, 5),
-                        blurRadius: 7)
-                  ], shape: BoxShape.circle),
-                  child: Image.asset('assets/images/home_normal.png',
-                      width: 40, height: 40),
-                ),
-                activeIcon: Image.asset(
-                  'assets/images/home_pressed.png',
-                  width: 40,
-                  height: 40,
-                ),
-              ),
-              BottomNavigationBarItem(
-                label: '미션',
-                icon: Container(
-                  decoration: const BoxDecoration(boxShadow: [
-                    BoxShadow(
-                        color: Color(0xffA6B4C8),
-                        offset: Offset(3, 5),
-                        blurRadius: 7)
-                  ], shape: BoxShape.circle),
-                  child: Image.asset(
-                    'assets/images/mission_normal.png',
-                    width: 40,
-                    height: 40,
-                  ),
-                ),
-                activeIcon: Image.asset(
-                  'assets/images/mission_pressed.png',
-                  width: 40,
-                  height: 40,
-                ),
-              )
-            ],
-            onTap: (index) {
-              setState(() {
-                _screenIndex = index;
-              });
-            },
-            currentIndex: _screenIndex,
-          ),
-        ),
+      bottomNavigationBar: _BottomNavigationBar(
+        screenIndex: _screenIndex,
+        onTap: (index) {
+          setState(() => _screenIndex = index);
+        },
       ),
     );
   }
@@ -191,6 +147,61 @@ class _MainScreenState extends State<MainScreen> {
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _BottomNavigationBar extends StatelessWidget {
+  final int screenIndex;
+  final Function(int index) onTap;
+
+  const _BottomNavigationBar({
+    required this.screenIndex,
+    required this.onTap,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
+      ),
+      child: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        unselectedItemColor: Colors.grey,
+        selectedItemColor: kBlack,
+        items: [
+          BottomNavigationBarItem(
+            label: '홈',
+            icon: Image.asset(
+              'assets/images/home_icon_normal.png',
+              width: 32,
+              height: 32,
+            ),
+            activeIcon: Image.asset(
+              'assets/images/home_icon_pressed.png',
+              width: 32,
+              height: 32,
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: '보호소',
+            icon: Image.asset(
+              'assets/images/pets_icon_normal.png',
+              width: 32,
+              height: 32,
+            ),
+            activeIcon: Image.asset(
+              'assets/images/pets_icon_pressed.png',
+              width: 32,
+              height: 32,
+            ),
+          )
+        ],
+        onTap: onTap,
+        currentIndex: screenIndex,
       ),
     );
   }

@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class GrowController with ChangeNotifier {
   final CharacterRepository _characterRepository;
+
   GrowController(this._characterRepository);
 
   bool _mounted = true;
