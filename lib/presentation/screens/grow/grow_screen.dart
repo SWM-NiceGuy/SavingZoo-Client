@@ -1,5 +1,6 @@
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow_view_model.dart';
+import 'package:amond/presentation/controllers/mission_view_model.dart';
 
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/grow/components/character_image_widget.dart';
@@ -8,19 +9,51 @@ import 'package:amond/presentation/screens/grow/components/effects/level_up_effe
 import 'package:amond/presentation/screens/grow/components/effects/starfall_effect.dart';
 import 'package:amond/presentation/screens/grow/components/feed_button.dart';
 import 'package:amond/presentation/screens/grow/components/level_widget.dart';
+import 'package:amond/presentation/screens/grow/components/mission_complete_dialog.dart';
 import 'package:amond/presentation/screens/grow/components/play_button.dart';
 
-import 'package:amond/presentation/screens/grow/components/play_timer.dart';
-import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
-import 'package:amond/utils/dialogs/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 
 import 'package:provider/provider.dart';
 
-class GrowScreen extends StatelessWidget {
+class GrowScreen extends StatefulWidget {
   const GrowScreen({Key? key}) : super(key: key);
+
+  @override
+  State<GrowScreen> createState() => _GrowScreenState();
+}
+
+class _GrowScreenState extends State<GrowScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 미션 불러오기
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<GrowViewModel>().fetchData();
+    });
+
+    // 미션 인증 결과 확인하기
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await checkMissionResult();
+    });
+  }
+
+    /// 인증된 미션이 있는지 확인하고 있으면 팝업을 띄움
+  Future<void> checkMissionResult() async {
+    final result = await context.read<MissionViewModel>().getMissionResult();
+    showDialog(
+        context: context,
+        builder: (context) => MissionCompleteDialog(
+              result: result!,
+              onPop: () {},
+            ));
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -58,25 +91,6 @@ class _GrowScreenWidget extends StatelessWidget {
             ),
           );
         });
-      });
-    }
-
-    // // 캐릭터의 이름이 정해져 있지 않으면 이름 설정 팝업을 띄운다.
-    // if (growController.isNewUser) {
-    //   growController.isNewUser = false;
-    //   WidgetsBinding.instance.addPostFrameCallback((_) {
-    //     showCharacterNamingDialog(context, growController.setCharacterName,
-    //         growController.character.imageUrl);
-    //   });
-    // }
-
-    // 완료한 미션이 있으면 미션 완료 팝업을 띄운다.
-    if (growController.isMissionClear) {
-      growController.isMissionClear = false;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        showMissionCompleteDialog(context, () async {
-          await growController.increaseExp(growController.increasedExp!);
-        }, growController.increasedExp!);
       });
     }
 

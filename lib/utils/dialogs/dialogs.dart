@@ -60,16 +60,16 @@ Future<dynamic> showUpdateDialog(BuildContext context) {
   }
 
   /// 미션 완료 다이얼로그를 띄운다.
-  void showMissionCompleteDialog(
-    BuildContext context,
-    Function onSubmit,
-    int reward,
-  ) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return MissionCompleteDialog(onSubmit: onSubmit, reward: reward);
-      },
-    );
-  }
+  // void showMissionCompleteDialog(
+  //   BuildContext context,
+  //   Function onSubmit,
+  //   int reward,
+  // ) {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder: (context) {
+  //       return MissionCompleteDialog(onSubmit: onSubmit, reward: reward);
+  //     },
+  //   );
+  // }

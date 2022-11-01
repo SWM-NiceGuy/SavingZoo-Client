@@ -26,4 +26,6 @@ class MainViewModel with ChangeNotifier {
 
     return DateTime.now().millisecondsSinceEpoch >= startDate + epochDuration;
   }
+
+  
 }

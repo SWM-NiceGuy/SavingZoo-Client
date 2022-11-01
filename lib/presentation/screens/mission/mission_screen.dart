@@ -1,5 +1,6 @@
 import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/domain/models/mission_list.dart';
+import 'package:amond/presentation/screens/grow/components/mission_complete_dialog.dart';
 import 'package:amond/presentation/screens/mission/util/time_util.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -25,10 +26,26 @@ class _MissionScreenState extends State<MissionScreen> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final missionViewModel = context.read<MissionViewModel>();
-      missionViewModel.fetchMissions();
+    // 미션 불러오기
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<MissionViewModel>().fetchMissions();
     });
+
+    // 미션 인증 결과 확인하기
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await checkMissionResult();
+    });
+  }
+
+  /// 인증된 미션이 있는지 확인하고 있으면 팝업을 띄움
+  Future<void> checkMissionResult() async {
+    final result = await context.read<MissionViewModel>().getMissionResult();
+    showDialog(
+        context: context,
+        builder: (context) => MissionCompleteDialog(
+              result: result!,
+              onPop: () {},
+            ));
   }
 
   @override

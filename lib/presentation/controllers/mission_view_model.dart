@@ -1,4 +1,6 @@
 import 'package:amond/domain/models/mission_list.dart';
+import 'package:amond/domain/models/mission_result.dart';
+import 'package:amond/domain/models/reward_type.dart';
 import 'package:amond/domain/repositories/mission_repository.dart';
 import 'package:flutter/material.dart';
 
@@ -57,5 +59,31 @@ class MissionViewModel with ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  /// 인증된(성공 또는 반려) 미션 결과를 가져온다.
+  /// 
+  /// 만약 인증된 미션이 없으면 null 반환
+  Future<MissionResult?> getMissionResult() async {
+    //  MissionResult? result = await _missionRepository.getMissionResult();
+
+    var result = MissionResult(
+      totalCompletedMission: 2,
+      totalRejectedMission: 2,
+      completedMission: [
+        CompletedMission(missionId: 1, missionTitle: '금속 캔 압착', rewardType: RewardType.fish, reward: 1),
+        CompletedMission(missionId: 2, missionTitle: '플로깅', rewardType: RewardType.fish, reward: 2),
+      ],
+      rejectedMission: [
+        RejectedMission(missionTitle: '걷기', reason: '날고 있음'),
+        RejectedMission(missionTitle: 'PET라벨 제거', reason: '라벨 부착 됨')
+      ],
+    );
+    return result;
+  }
+
+  /// 보상을 받았다는 표시를 서버에 보낸다
+  Future<void> confirmResult() async {
+    await _missionRepository.confirmResult();
   }
 }

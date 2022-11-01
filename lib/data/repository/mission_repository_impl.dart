@@ -2,6 +2,7 @@ import 'package:amond/data/source/network/api/mission_api.dart';
 import 'package:amond/domain/models/mission_detail.dart';
 import 'package:amond/domain/models/mission_history.dart';
 import 'package:amond/domain/models/mission_list.dart';
+import 'package:amond/domain/models/mission_result.dart';
 import 'package:amond/domain/repositories/mission_repository.dart';
 
 class MissionRepositoryImpl implements MissionRepository {
@@ -52,5 +53,17 @@ class MissionRepositoryImpl implements MissionRepository {
     final entityList = await api.getMissionHistories();
     entityList.sort((a, b) => b.date - a.date);
     return entityList.map((e) => MissionHistory.fromEntity(e)).toList();
+  }
+
+  @override
+  Future<MissionResult?> getMissionResult() {
+    // TODO: implement getMissionResult
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<void> confirmResult() {
+    // TODO: implement confirmResult
+    throw UnimplementedError();
   }
 }
