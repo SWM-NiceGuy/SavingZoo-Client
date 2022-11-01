@@ -12,25 +12,28 @@ class GrowHistoryScreen extends StatefulWidget {
 }
 
 class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
-  final GrowHistory history = GrowHistory(petName: '냐옹이', expPct: 60, stages: [
+  final GrowHistory history = GrowHistory(petName: '냐옹이', birth: DateTime.fromMillisecondsSinceEpoch(1666939721000), stages: [
     GrowStage(
         level: 1,
         growState: true,
-        weight: 3,
-        height: 4,
-        birth: DateTime.fromMillisecondsSinceEpoch(1666939721000)),
+        weight: '3kg',
+        height: '4cm',
+        grownDate: DateTime.fromMillisecondsSinceEpoch(1667269570000)
+        ),
     GrowStage(
         level: 15,
         growState: true,
-        weight: 5,
-        height: 7,
-        birth: DateTime.fromMillisecondsSinceEpoch(1666939721000)),
+        weight: '5kg',
+        height: '7cm',
+        grownDate: DateTime.fromMillisecondsSinceEpoch(1669269570000)
+    ),
     GrowStage(
         level: 30,
         growState: false,
-        weight: 7,
-        height: 10,
-        birth: DateTime.fromMillisecondsSinceEpoch(1666939721000))
+        weight: '7kg',
+        height: '10cm',
+        grownDate: DateTime.fromMillisecondsSinceEpoch(1672269570000)
+    ),
   ]);
 
   var _growStageIndex = 0;
@@ -76,7 +79,7 @@ class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
                       onTap: () {
                         setState(() {
                           _growStageIndex == 0
-                             ? _growStageIndex = history.stages.length - 1
+                              ? _growStageIndex = history.stages.length - 1
                               : _growStageIndex -= 1;
                           _test = !_test;
                         });
@@ -138,18 +141,19 @@ class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
                         // 이름
                         Text(history.petName,
                             style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w600)),
+                                fontSize: 20, fontWeight: FontWeight.w500)),
                         const SizedBox(width: 8),
                         // 이름 변경
                         GestureDetector(
-                            onTap: () {
-                              // 이름 변경 로직
-                            },
-                            child: const Icon(
-                              Icons.edit_outlined,
-                              color: Color(0xff8e8e8e),
-                              size: 20,
-                            ))
+                          onTap: () {
+                            // 이름 변경 로직
+                          },
+                          child: const Icon(
+                            Icons.edit_outlined,
+                            color: Color(0xff8e8e8e),
+                            size: 20,
+                          ),
+                        ),
                       ],
                     ),
 
@@ -157,19 +161,48 @@ class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
 
                     // 레벨
                     RichText(
-                        text: TextSpan(
-                      style: const TextStyle(
-                          color: textBlueColor300,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
-                      children: [
-                        TextSpan(
-                            text: history.stages[_growStageIndex].level
-                                .toString(),
-                            style: const TextStyle(fontSize: 36)),
-                        const TextSpan(text: 'Level')
-                      ],
-                    )),
+                      text: TextSpan(
+                        style: const TextStyle(
+                            color: textBlueColor300,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
+                        children: [
+                          TextSpan(
+                              text: history.stages[_growStageIndex].level
+                                  .toString(),
+                              style: const TextStyle(fontSize: 36)),
+                          const TextSpan(text: 'Level')
+                        ],
+                      ),
+                    ),
+
+                    // 캐릭터 정보 (몸무게, 키 등등)
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 50, right: 40),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GrowInfoRow(
+                              title: '몸무게',
+                              value: history.stages[_growStageIndex].growState ? history.stages[_growStageIndex].weight : '???',
+                            ),
+                            GrowInfoRow(
+                              title: '키',
+                              value: history.stages[_growStageIndex].growState ? history.stages[_growStageIndex].height : '???',
+                            ),
+                            GrowInfoRow(
+                              title: '생일',
+                              value: '${history.birth.year}년 ${history.birth.month}월 ${history.birth.day}일',
+                            ),
+                            GrowInfoRow(
+                              title: '함께한지',
+                              value: history.stages[_growStageIndex].growState ? history.growDifference(_growStageIndex) : '???',
+                            )
+                          ],
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -177,6 +210,44 @@ class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class GrowInfoRow extends StatelessWidget {
+  const GrowInfoRow({
+    Key? key,
+    required this.title,
+    required this.value,
+  }) : super(key: key);
+
+  final String title;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+         Text(title,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+        Container(
+          alignment: Alignment.centerLeft,
+          width: 200,
+          height: 30,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          decoration: BoxDecoration(
+            color: kMissionScreenBgColor,
+            borderRadius: BorderRadius.circular(7),
+          ),
+          child: Text(
+            value,
+            style: const TextStyle(
+              color: textBlueColor200,
+            ),
+          ),
+        )
+      ],
     );
   }
 }

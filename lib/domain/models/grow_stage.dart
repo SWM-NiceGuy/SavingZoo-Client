@@ -9,9 +9,9 @@
 class GrowStage {
   final bool growState;
   final String? description;
-  final double weight;
-  final double height;
-  final DateTime birth;
+  final String weight;
+  final String height;
+  final DateTime? grownDate;
   final int level;
 
   GrowStage({
@@ -20,6 +20,6 @@ class GrowStage {
     this.description,
     required this.weight,
     required this.height,
-    required this.birth,
+    this.grownDate,
   });
 }
