@@ -36,7 +36,6 @@ class GrowViewModel with ChangeNotifier {
   bool playButtonEnabled = true;
 
   int? increasedExp;
-  Character? currentCharacter;
 
   int remainedPlayTime = 0;
   bool get canPlay => remainedPlayTime <= 0;
@@ -62,7 +61,6 @@ class GrowViewModel with ChangeNotifier {
     if (character.currentExp + value < character.maxExp) {
       character.currentExp += value;
       notifyListeners();
-      _saveCharacter(character);
       return;
     }
 
@@ -75,10 +73,8 @@ class GrowViewModel with ChangeNotifier {
     notifyListeners();
     await Future.delayed(Duration(milliseconds: fadeDuration));
 
-    // _character = 서버에서 가져온 캐릭터;
-    _character = currentCharacter!;
-    currentCharacter = null;
-
+    await fetchData();
+    
     avatarIsVisible = true;
     levelUpEffect = true;
     notifyListeners();
@@ -86,7 +82,6 @@ class GrowViewModel with ChangeNotifier {
     await Future.delayed(const Duration(milliseconds: 1000));
     levelUpEffect = false;
     notifyListeners();
-    _saveCharacter(character);
   }
 
   void changeComment() {
@@ -96,6 +91,10 @@ class GrowViewModel with ChangeNotifier {
   }
 
   /// 캐릭터 데이터를 불러오는 함수
+  /// 
+  /// [_character]에 저장
+  /// 
+  /// [character]로 접근 가능
   Future<void> fetchData({bool missionClear = true}) async {
     try {
       // 서버에서 가져온 캐릭터
@@ -120,54 +119,8 @@ class GrowViewModel with ChangeNotifier {
         playButtonEnabled = false;
       }
 
-      if (characterFromServer.maxExp == 0) {
-        characterFromServer.maxExp = 30;
-      }
-
-      // 캐릭터 닉네임이 없으면 새로운 유저로 판단
-      if (characterFromServer.nickname == null) {
-        isNewUser = true;
-      }
-
-      final prefs = await SharedPreferences.getInstance();
-
-      var prevCharacterJson = prefs.getString('prevCharacter');
-      // 저장되어 있던 캐릭터 정보가 없으면 서버에서 가져온 캐릭터로 로드
-      if (prevCharacterJson == null) {
-        // 서버에서 가져온 캐릭터
-        _character = characterFromServer;
-        _saveCharacter(_character);
-        _isLoading = false;
-        notifyListeners();
-        return;
-      }
-      Character prevCharacter = Character.fromEntity(
-          CharacterEntity.fromJson(jsonDecode(prevCharacterJson)));
-
-      // 저장되어 있던 캐릭터 정보와 서버에서 불러온 캐릭터 정보가 같으면 서버 캐릭터로 로드
-      if (prevCharacter.level >= characterFromServer.level &&
-          prevCharacter.currentExp >= characterFromServer.currentExp) {
-        _character = characterFromServer;
-        _isLoading = false;
-        notifyListeners();
-        return;
-      }
-
-      // 저장되어 있던 캐릭터와 서버에서 불러온 캐릭터 정보가 다를 때, 이전 캐릭터로 먼저 로드 후 경험치 증가
-      _character = prevCharacter;
-      _character.nickname = characterFromServer.nickname;
+      _character = characterFromServer;
       _isLoading = false;
-      // 서버에서 불러온 캐릭터의 레벨이 더 높을 때, 같을 때 구분해서 계산
-      increasedExp = prevCharacter.level < characterFromServer.level
-          ? (prevCharacter.maxExp - prevCharacter.currentExp) +
-              characterFromServer.currentExp
-          : characterFromServer.currentExp - prevCharacter.currentExp;
-      currentCharacter = characterFromServer;
-
-      isMissionClear = missionClear;
-      if (!missionClear) {
-        increaseExp(increasedExp!);
-      }
       notifyListeners();
     } catch (e) {
       rethrow;

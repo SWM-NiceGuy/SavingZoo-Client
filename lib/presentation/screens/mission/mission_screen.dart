@@ -40,12 +40,14 @@ class _MissionScreenState extends State<MissionScreen> {
   /// 인증된 미션이 있는지 확인하고 있으면 팝업을 띄움
   Future<void> checkMissionResult() async {
     final result = await context.read<MissionViewModel>().getMissionResult();
-    showDialog(
-        context: context,
-        builder: (context) => MissionCompleteDialog(
-              result: result!,
-              onPop: () {},
-            ));
+    if (result != null) {
+      showDialog(
+          context: context,
+          builder: (context) => MissionCompleteDialog(
+                result: result,
+                onPop: () {},
+              ));
+    }
   }
 
   @override

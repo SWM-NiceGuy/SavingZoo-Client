@@ -26,7 +26,6 @@ class GrowScreen extends StatefulWidget {
 }
 
 class _GrowScreenState extends State<GrowScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -42,18 +41,18 @@ class _GrowScreenState extends State<GrowScreen> {
     });
   }
 
-    /// 인증된 미션이 있는지 확인하고 있으면 팝업을 띄움
+  /// 인증된 미션이 있는지 확인하고 있으면 팝업을 띄움
   Future<void> checkMissionResult() async {
     final result = await context.read<MissionViewModel>().getMissionResult();
-    showDialog(
-        context: context,
-        builder: (context) => MissionCompleteDialog(
-              result: result!,
-              onPop: () {},
-            ));
+    if (result != null) {
+      showDialog(
+          context: context,
+          builder: (context) => MissionCompleteDialog(
+                result: result,
+                onPop: () {},
+              ));
+    }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
