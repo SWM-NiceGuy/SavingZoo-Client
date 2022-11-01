@@ -53,7 +53,7 @@ class _SettingsScreenWidgetState extends State<SettingsScreenWidget> {
         shape: const Border(bottom: BorderSide(color: Color(0xffd7d7d7))),
       ),
       body: controller.isLoading
-          ? const Center(child: PlatformBasedIndicator())
+          ? const Center(child: PlatformBasedLoadingIndicator())
           : SafeArea(
               child: Column(
                 children: [

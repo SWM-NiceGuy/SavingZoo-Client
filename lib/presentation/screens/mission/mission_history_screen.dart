@@ -50,7 +50,7 @@ class MissionHistoryScreen extends StatelessWidget {
         shape: const Border(bottom: BorderSide(color: Color(0xffd7d7d7))),
       ),
       body: historyController.isLoading
-          ? const Center(child: PlatformBasedIndicator())
+          ? const Center(child: PlatformBasedLoadingIndicator())
           : historyController.histories.isNotEmpty
               ? ListView.builder(
                   itemCount: historyController.histories.length,

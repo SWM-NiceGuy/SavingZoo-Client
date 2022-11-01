@@ -41,7 +41,7 @@ class MissionDetailScreen extends StatelessWidget {
           ? const SizedBox()
           : MissionDetailBottomBar(mission: viewModel.mission),
       body: viewModel.isLoading
-          ? const Center(child: PlatformBasedIndicator())
+          ? const Center(child: PlatformBasedLoadingIndicator())
           : SingleChildScrollView(
               child: Column(
                 children: [

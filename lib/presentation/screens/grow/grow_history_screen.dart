@@ -40,7 +40,7 @@ class GrowHistoryWidget extends StatelessWidget {
       ),
       body: Center(
         child: viewModel.isLoading 
-        ? const PlatformBasedIndicator()
+        ? const PlatformBasedLoadingIndicator()
         : Column(
           children: [
             Text(

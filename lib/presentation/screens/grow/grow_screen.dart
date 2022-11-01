@@ -82,7 +82,7 @@ class _GrowScreenWidget extends StatelessWidget {
 
     return growController.isLoading
         ? const Center(
-            child: PlatformBasedIndicator(),
+            child: PlatformBasedLoadingIndicator(),
           )
         : Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

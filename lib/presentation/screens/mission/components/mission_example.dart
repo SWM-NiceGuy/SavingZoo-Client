@@ -27,7 +27,7 @@ class MissionExample extends StatelessWidget {
               return SizedBox(
                 height: deviceSize.height * 0.4,
                 child: const Center(
-                  child: PlatformBasedIndicator(),
+                  child: PlatformBasedLoadingIndicator(),
                 ),
               );
             },
