@@ -89,7 +89,7 @@ class MyApp extends StatelessWidget {
       //       )
       //     // 앱이 최신버전이 아니라면 업데이트 요청
       //     : const PleaseUpdateScreen(),
-      home: GrowHistoryScreen(),
+      home: const GrowHistoryScreen(),
       routes: {
         AuthScreen.routeName: (context) => const AuthScreen(),
         MainScreen.routeName: (context) => const MainScreen(),

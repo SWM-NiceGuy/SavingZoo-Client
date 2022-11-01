@@ -1,5 +1,6 @@
 import 'package:amond/data/source/network/api/character_api.dart';
 import 'package:amond/domain/models/character.dart';
+import 'package:amond/domain/models/grow_history.dart';
 import 'package:amond/domain/repositories/character_repository.dart';
 
 class CharacterRepositoryImpl implements CharacterRepository {
@@ -55,5 +56,11 @@ class CharacterRepositoryImpl implements CharacterRepository {
     }
 
     return Character.fromEntity(resultCharacterEntity);
+  }
+
+  @override
+  Future<GrowHistory> getGrowHistory() {
+    // TODO: implement getGrowHistory
+    throw UnimplementedError();
   }
 }

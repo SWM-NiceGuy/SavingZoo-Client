@@ -1,58 +1,50 @@
-import 'package:amond/domain/models/grow_history.dart';
-import 'package:amond/domain/models/grow_stage.dart';
+import 'package:amond/data/repository/character_repository_impl.dart';
+import 'package:amond/presentation/controllers/grow_history_view_model.dart';
 import 'package:amond/presentation/screens/grow/components/grow_info_row.dart';
+import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
+import 'package:provider/provider.dart';
 
-class GrowHistoryScreen extends StatefulWidget {
+class GrowHistoryScreen extends StatelessWidget {
   const GrowHistoryScreen({Key? key}) : super(key: key);
 
   @override
-  State<GrowHistoryScreen> createState() => _GrowHistoryScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => GrowHistoryViewModel(context.read<CharacterRepositoryImpl>()),
+      child: const GrowHistoryWidget(),
+    );
+  }
 }
 
-class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
-  final GrowHistory history = GrowHistory(petName: '냐옹이', birth: DateTime.fromMillisecondsSinceEpoch(1666939721000), stages: [
-    GrowStage(
-        level: 1,
-        growState: true,
-        weight: '3kg',
-        height: '4cm',
-        grownDate: DateTime.fromMillisecondsSinceEpoch(1667269570000)
-        ),
-    GrowStage(
-        level: 15,
-        growState: true,
-        weight: '5kg',
-        height: '7cm',
-        grownDate: DateTime.fromMillisecondsSinceEpoch(1669269570000)
-    ),
-    GrowStage(
-        level: 30,
-        growState: false,
-        weight: '7kg',
-        height: '10cm',
-        grownDate: DateTime.fromMillisecondsSinceEpoch(1672269570000)
-    ),
-  ]);
+class GrowHistoryWidget extends StatelessWidget {
+  const GrowHistoryWidget({Key? key}) : super(key: key);
 
-  var _growStageIndex = 0;
-  var _test = false;
 
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    final viewModel = context.watch<GrowHistoryViewModel>();
+    
+    if (viewModel.isLoading) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      viewModel.fetchData();
+    });
+    }
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('성장 일기'),
       ),
       body: Center(
-        child: Column(
+        child: viewModel.isLoading 
+        ? const PlatformBasedIndicator()
+        : Column(
           children: [
             Text(
-              '${history.petName} 자연으로 무사히 돌아갈 수 있도록\n잘 돌봐주세요!',
+              '${viewModel.history.petName} 자연으로 무사히 돌아갈 수 있도록\n잘 돌봐주세요!',
               style: const TextStyle(
                 fontSize: 14,
                 color: greyColor,
@@ -68,7 +60,7 @@ class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
                   width: deviceSize.width * 0.9,
                   height: deviceSize.height * 0.4,
                   child: ModelViewer(
-                    src: _test ? 'assets/glb/Shiba.glb' : 'assets/glb/cat.glb',
+                    src: 'assets/glb/cat.glb',
                     cameraControls: true,
                     loading: Loading.auto,
                   ),
@@ -78,12 +70,7 @@ class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
                     left: 0,
                     child: GestureDetector(
                       onTap: () {
-                        setState(() {
-                          _growStageIndex == 0
-                              ? _growStageIndex = history.stages.length - 1
-                              : _growStageIndex -= 1;
-                          _test = !_test;
-                        });
+                        viewModel.changeIndex(forward: false);
                       },
                       child: const Icon(
                         Icons.arrow_back_ios_rounded,
@@ -96,11 +83,7 @@ class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
                   right: 0,
                   child: GestureDetector(
                     onTap: () {
-                      setState(() {
-                        _growStageIndex =
-                            (_growStageIndex + 1) % history.stages.length;
-                        _test = !_test;
-                      });
+                      viewModel.changeIndex();
                     },
                     child: const Icon(
                       Icons.arrow_forward_ios_rounded,
@@ -140,7 +123,7 @@ class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // 이름
-                        Text(history.petName,
+                        Text(viewModel.history.petName,
                             style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w500)),
                         const SizedBox(width: 8),
@@ -158,7 +141,7 @@ class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
                             fontWeight: FontWeight.w600),
                         children: [
                           TextSpan(
-                              text: history.stages[_growStageIndex].level
+                              text: viewModel.history.stages[viewModel.index].level
                                   .toString(),
                               style: const TextStyle(fontSize: 36)),
                           const TextSpan(text: 'Level')
@@ -175,19 +158,19 @@ class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
                           children: [
                             GrowInfoRow(
                               title: '몸무게',
-                              value: history.stages[_growStageIndex].growState ? history.stages[_growStageIndex].weight : '???',
+                              value: viewModel.history.stages[viewModel.index].growState ? viewModel.history.stages[viewModel.index].weight : '???',
                             ),
                             GrowInfoRow(
                               title: '키',
-                              value: history.stages[_growStageIndex].growState ? history.stages[_growStageIndex].height : '???',
+                              value: viewModel.history.stages[viewModel.index].growState ? viewModel.history.stages[viewModel.index].height : '???',
                             ),
                             GrowInfoRow(
                               title: '생일',
-                              value: '${history.birth.year}년 ${history.birth.month}월 ${history.birth.day}일',
+                              value: '${viewModel.history.birth.year}년 ${viewModel.history.birth.month}월 ${viewModel.history.birth.day}일',
                             ),
                             GrowInfoRow(
                               title: '함께한지',
-                              value: history.stages[_growStageIndex].growState ? history.growDifference(_growStageIndex) : '???',
+                              value: viewModel.history.stages[viewModel.index].growState ? viewModel.history.growDifference(viewModel.index) : '???',
                             )
                           ],
                         ),
