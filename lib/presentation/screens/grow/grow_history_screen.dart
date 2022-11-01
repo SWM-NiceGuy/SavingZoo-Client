@@ -1,5 +1,6 @@
 import 'package:amond/domain/models/grow_history.dart';
 import 'package:amond/domain/models/grow_stage.dart';
+import 'package:amond/presentation/screens/grow/components/grow_info_row.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:model_viewer_plus/model_viewer_plus.dart';
@@ -143,17 +144,6 @@ class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
                             style: const TextStyle(
                                 fontSize: 20, fontWeight: FontWeight.w500)),
                         const SizedBox(width: 8),
-                        // 이름 변경
-                        GestureDetector(
-                          onTap: () {
-                            // 이름 변경 로직
-                          },
-                          child: const Icon(
-                            Icons.edit_outlined,
-                            color: Color(0xff8e8e8e),
-                            size: 20,
-                          ),
-                        ),
                       ],
                     ),
 
@@ -214,40 +204,3 @@ class _GrowHistoryScreenState extends State<GrowHistoryScreen> {
   }
 }
 
-class GrowInfoRow extends StatelessWidget {
-  const GrowInfoRow({
-    Key? key,
-    required this.title,
-    required this.value,
-  }) : super(key: key);
-
-  final String title;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-         Text(title,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-        Container(
-          alignment: Alignment.centerLeft,
-          width: 200,
-          height: 30,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          decoration: BoxDecoration(
-            color: kMissionScreenBgColor,
-            borderRadius: BorderRadius.circular(7),
-          ),
-          child: Text(
-            value,
-            style: const TextStyle(
-              color: textBlueColor200,
-            ),
-          ),
-        )
-      ],
-    );
-  }
-}
