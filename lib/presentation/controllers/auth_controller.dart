@@ -71,6 +71,7 @@ class AuthController with ChangeNotifier {
         await prefs.remove('jwt');
         await prefs.remove('loginType');
         _loginType = null;
+        globalToken = null;
       } catch (error) {
         // print('로그아웃 실패 $error');
         rethrow;

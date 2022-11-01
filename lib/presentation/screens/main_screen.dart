@@ -56,9 +56,7 @@ class _MainScreenState extends State<MainScreen> {
 
       final growViewModel = context.read<GrowViewModel>();
       growViewModel.fetchData().then((_) {
-        setState(() {
           appBarTitle[1] = growViewModel.character.nickname ?? "";
-        });
       });
     });
   }
@@ -164,6 +162,9 @@ class _BottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    
+
     return Container(
       decoration: const BoxDecoration(
         boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],

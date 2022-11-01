@@ -67,7 +67,7 @@ List<SingleChildWidget> viewModels = [
     create: (_) => MissionViewModel(_.read<MissionRepositoryImpl>()),
   ),
 
-  // GrowController
+  // GrowViewModel
   ChangeNotifierProvider(
     create: (_) => GrowViewModel(_.read<CharacterRepositoryImpl>()),
   ),

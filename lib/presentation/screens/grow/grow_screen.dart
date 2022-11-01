@@ -61,14 +61,14 @@ class _GrowScreenWidget extends StatelessWidget {
       });
     }
 
-    // 캐릭터의 이름이 정해져 있지 않으면 이름 설정 팝업을 띄운다.
-    if (growController.isNewUser) {
-      growController.isNewUser = false;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        showCharacterNamingDialog(context, growController.setCharacterName,
-            growController.character.imageUrl);
-      });
-    }
+    // // 캐릭터의 이름이 정해져 있지 않으면 이름 설정 팝업을 띄운다.
+    // if (growController.isNewUser) {
+    //   growController.isNewUser = false;
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     showCharacterNamingDialog(context, growController.setCharacterName,
+    //         growController.character.imageUrl);
+    //   });
+    // }
 
     // 완료한 미션이 있으면 미션 완료 팝업을 띄운다.
     if (growController.isMissionClear) {

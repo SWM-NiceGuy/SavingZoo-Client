@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:amond/domain/repositories/character_repository.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
+import 'package:amond/presentation/controllers/grow_view_model.dart';
 import 'package:amond/presentation/screens/auth/components/apple_login_container.dart';
 import 'package:amond/presentation/screens/auth/components/kakao_login_container.dart';
 import 'package:amond/presentation/screens/main_screen.dart';
 import 'package:amond/presentation/widget/main_button.dart';
 import 'package:amond/ui/colors.dart';
+import 'package:amond/utils/auth/auth_info.dart';
 import 'package:amond/utils/auth/do_apple_auth.dart';
 import 'package:amond/utils/auth/do_kakao_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,11 +30,17 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
   var _isNameSet = false;
   var _isNameValidate = false;
   var _indicateNameAlert = false;
+  var _isLogined = false;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController();
+    // 토큰이 설정되어 있으면 로그인 되어 있는 상태
+    _isLogined = globalToken != null;
+    if (_isLogined) {
+      context.read<GrowViewModel>().fetchData();
+    }
   }
 
   @override
@@ -43,6 +52,7 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -121,8 +131,8 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
                             onChanged: (value) {
                               if (_nameValidate(value)) {
                                 setState(() {
-                                _isNameValidate = true;
-                                _indicateNameAlert = false;
+                                  _isNameValidate = true;
+                                  _indicateNameAlert = false;
                                 });
                               } else {
                                 setState(() {
@@ -135,12 +145,11 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
                         ),
                       const SizedBox(height: 12),
                       if (_indicateNameAlert)
-                      const Text(
+                        const Text(
                           '2-8자로 설정해주세요',
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.red, fontSize: 16),
                         ),
-
                       if (!_isNameSet)
                         const Text(
                           '사육사님이 돌봐줄 동물의\n이름을 지어주세요!',
@@ -148,9 +157,10 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
                           style: TextStyle(color: greyColor, fontSize: 16),
                         ),
                       if (_isNameSet)
-                        _loginColumn(context.read<AuthController>()),
+                        _loginColumn(context.read<AuthController>(), context),
                       const Spacer(),
                       if (!_isNameSet)
+                        // 이름을 설정하는 버튼
                         MainButton(
                             width: deviceSize.width * 0.8,
                             height: 60,
@@ -158,10 +168,19 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
                             //     builder: (_) => const ())),
                             onPressed: !_isNameValidate
                                 ? null
-                                : () {
-                                    setState(() {
-                                      _isNameSet = true;
-                                    });
+                                : () async {
+                                    // 로그인이 되어 있지 않으면
+                                    if (!_isLogined) {
+                                      setState(() {
+                                        _isNameSet = true;
+                                      });
+                                    } else {
+                                      // 로그인이 되어 있으면 이름을 설정하고 Main Screen으로 이동하는 로직
+                                      await context
+                                          .read<GrowViewModel>()
+                                          .setCharacterName(_controller.text);
+                                      _navigateToMainScreen();
+                                    }
                                   },
                             child: const Text(
                               '시작하기',
@@ -186,7 +205,7 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
     return true;
   }
 
-  Widget _loginColumn(AuthController authController) {
+  Widget _loginColumn(AuthController authController, BuildContext context) {
     return Column(
       children: [
         const SizedBox(height: 12.0),
@@ -198,10 +217,17 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
               GestureDetector(
                 onTap: () async {
                   try {
-                    // 로그인 시도 후 성공하면 MainScreen으로 이동
-                    final info = await DoAppleAuth().login();
-                    await authController.login(info.provider, info.accessToken);
-                    _navigateToMainScreen();
+
+                    // 로그인 시도 후 성공하면 캐릭터 이름 설정 후 MainScreen으로 이동
+                    DoAppleAuth().login().then((info) {
+                      authController.login(info.provider, info.accessToken);
+                      context
+                          .read<GrowViewModel>()
+                          .setNameIfNoName(_controller.text);
+                    }).then((_) {
+                      _navigateToMainScreen();
+                    });
+                    
                   } catch (error) {
                     // 의도적인 로그인 취소로 보고 애플 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
                     if (error is SignInWithAppleAuthorizationException &&
@@ -218,10 +244,16 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
             GestureDetector(
               onTap: () async {
                 try {
-                  // 로그인 시도 후 성공하면 MainScreen으로 이동
-                  final info = await DoKakaoAuth().login();
-                  await authController.login(info.provider, info.accessToken);
-                  _navigateToMainScreen();
+
+                  DoKakaoAuth().login().then((info) {
+                    authController.login(info.provider, info.accessToken);
+                    context
+                        .read<GrowViewModel>()
+                        .setNameIfNoName(_controller.text);
+                  }).then((_) {
+                    _navigateToMainScreen();
+                  });
+
                 } catch (error) {
                   // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
                   // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)

@@ -25,6 +25,8 @@ class GrowViewModel with ChangeNotifier {
 
   bool isNewUser = false;
 
+  bool get hasName => character.nickname != null;
+
   final int fadeDuration = 1000; // Fade 애니메이션 지속시간
   bool avatarIsVisible = true; // 아바타 보임 유무
 
@@ -172,6 +174,30 @@ class GrowViewModel with ChangeNotifier {
     }
   }
 
+  /// [fetchData]를 통해 캐릭터 정보를 먼저 가져오고 캐릭터 이름이 있는지 확인
+  /// 
+  /// 만약 있으면 [true]
+  /// 없으면 [false]를 반환
+  Future<bool> checkIfCharacterHasName() async {
+    await fetchData();
+    return hasName;
+  }
+
+
+  /// 캐릭터의 이름이 없을때만 캐릭터 이름을 설정
+  /// 
+  /// 캐릭터 이름이 없으면 [name] 반환
+  /// 
+  /// 있으면 [null] 반환
+  Future<String?> setNameIfNoName(String name) async {
+    if (await checkIfCharacterHasName()) {
+      await setCharacterName(name);
+      return name;
+    } else {
+      return null;
+    }
+  }
+
   /// SharedPreferences 로컬 스토리지에 현재 캐릭터 상태를 저장
   Future<void> _saveCharacter(Character character) async {
     final prefs = await SharedPreferences.getInstance();
@@ -222,7 +248,7 @@ class GrowViewModel with ChangeNotifier {
     });
   }
 
-  void setCharacterName(String nickname) {
+  Future<void> setCharacterName(String nickname) async {
     _character.nickname = nickname;
     notifyListeners();
 

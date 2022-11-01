@@ -2,6 +2,7 @@ import 'package:amond/di/provider_setup.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
+import 'package:amond/presentation/screens/first_screen.dart';
 import 'package:amond/presentation/screens/grow/grow_history_screen.dart';
 import 'package:amond/presentation/screens/grow/grow_screen.dart';
 import 'package:amond/presentation/screens/main_screen.dart';
@@ -82,7 +83,7 @@ class MyApp extends StatelessWidget {
               builder: (context, snapshot) {
                 return snapshot.hasData
                     ? snapshot.data.toString() == 'true'
-                        ? const MainScreen()
+                        ? const FirstScreen()
                         : const AuthScreen()
                     : const SplashScreen();
               } // 사용하려면 Future.delayed 필요
