@@ -94,7 +94,7 @@ class _PlayButtonState extends State<PlayButton> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('밥먹자', style: headerTextStyle),
+                      Text('놀자', style: headerTextStyle),
                       const SizedBox(height: 4.0),
                       Text('경험치가 5 증가해요', style: bodyTextStyle)
                     ],

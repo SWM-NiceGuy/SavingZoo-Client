@@ -15,6 +15,7 @@ class MemberApi {
           'Content-type': 'application/json',
           'Accept': 'application/json',
         }).timeout(const Duration(seconds: 6));
+    print(response.body);
     return response;
   }
 

@@ -55,6 +55,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+
                         // 애플 로그인 버튼
                         if (Platform.isIOS)
                           GestureDetector(
@@ -79,6 +80,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             child: const AppleLoginContainer(),
                           ),
                         if (Platform.isIOS) const SizedBox(height: 18),
+
                         // 카카오 로그인 버튼
                         GestureDetector(
                           onTap: () async {
