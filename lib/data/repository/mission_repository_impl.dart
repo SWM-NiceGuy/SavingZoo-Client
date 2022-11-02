@@ -6,7 +6,6 @@ import 'package:amond/domain/models/mission_result.dart';
 import 'package:amond/domain/repositories/mission_repository.dart';
 
 class MissionRepositoryImpl implements MissionRepository {
-
   final MissionApi api;
 
   MissionRepositoryImpl(this.api);
@@ -15,14 +14,14 @@ class MissionRepositoryImpl implements MissionRepository {
   @override
   Future<List<MissionList>> getAllMissions() async {
     final missions = await api.getAllMissions();
-    return missions.map((e) => MissionList.fromEntity(e)).toList();  
+    return missions.map((e) => MissionList.fromEntity(e)).toList();
   }
 
   /// id가 [missionId]인 미션을 완료(COMPLETE) 처리한다.
   @override
   Future<void> completeMission(int missionId) async {
     try {
-    await api.completeMission(missionId);
+      await api.completeMission(missionId);
     } catch (e) {
       rethrow;
     }
@@ -31,19 +30,18 @@ class MissionRepositoryImpl implements MissionRepository {
   @override
   Future<MissionDetail> getMissionDetail(int missionId) async {
     try {
-    final missionDetail = await api.getMissionDetail(missionId);
-    return MissionDetail.fromEntity(missionDetail);
+      final missionDetail = await api.getMissionDetail(missionId);
+      return MissionDetail.fromEntity(missionDetail);
     } catch (e) {
       rethrow;
     }
   }
-  
+
   @override
   Future<void> submitMission(int missionId, String filePath) async {
     try {
       await api.uploadMission(missionId, filePath);
-    }
-    catch (e) {
+    } catch (e) {
       rethrow;
     }
   }
@@ -56,14 +54,28 @@ class MissionRepositoryImpl implements MissionRepository {
   }
 
   @override
-  Future<MissionResult> getMissionResult() {
-    // TODO: implement getMissionResult
-    throw UnimplementedError();
+  Future<MissionResult> getMissionResult() async {
+    final res = await api.getMissionResult();
+
+    List<CompletedMission> completedMissions;
+    List<RejectedMission> rejectedMissions;
+
+    completedMissions = res.completedMissions
+        .map((e) => CompletedMission.fromEntity(e))
+        .toList();
+    rejectedMissions =
+        res.rejectedMissions.map((e) => RejectedMission.fromEntity(e)).toList();
+
+    return MissionResult(
+      totalCompletedMission: res.totalCompletedMission,
+      totalRejectedMission: res.totalRejectedMission,
+      completedMission: completedMissions,
+      rejectedMission: rejectedMissions,
+    );
   }
-  
+
   @override
-  Future<void> confirmResult() {
-    // TODO: implement confirmResult
-    throw UnimplementedError();
+  Future<void> confirmResult(List<int> missionIds) async {
+    await api.confirmResult(missionIds);
   }
 }

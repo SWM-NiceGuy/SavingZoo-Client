@@ -39,24 +39,28 @@ class _AuthScreenState extends State<AuthScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Spacer(),
+                Image.asset(
+                  'assets/images/logo.png',
+                  width: 150,
+                  fit: BoxFit.cover,
+                ),
                 const Text(
                   'Amond',
                   style: TextStyle(color: blackColor, fontSize: 32),
                 ),
-                const SizedBox(height: 24),
+                const Spacer(),
                 const Text(
                   '겸사겸사 미션을 통해\n멸종위기 동물을 돌봐주세요',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16),
                 ),
-                const Spacer(),
+                const SizedBox(height: 60),
                 Column(
                   children: [
                     const SizedBox(height: 12.0),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-
                         // 애플 로그인 버튼
                         if (Platform.isIOS)
                           GestureDetector(
@@ -98,7 +102,8 @@ class _AuthScreenState extends State<AuthScreen> {
                                   error.code == 'CANCELED') {
                                 return;
                               } else if (error is TimeoutException) {
-                                _showLoginFailDialog(context, '로그인 시간이 초과되었습니다.');
+                                _showLoginFailDialog(
+                                    context, '로그인 시간이 초과되었습니다.');
                               } else {
                                 // 로그인 실패
                                 _showLoginFailDialog(context, '로그인에 실패했습니다.');
@@ -114,7 +119,9 @@ class _AuthScreenState extends State<AuthScreen> {
                             style:
                                 TextStyle(decoration: TextDecoration.underline),
                           ),
-                          onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const Onboarding1Screen())),
+                          onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (_) => const Onboarding1Screen())),
                         ),
                       ],
                     ),

@@ -52,7 +52,7 @@ class _MissionScreenState extends State<MissionScreen> {
           builder: (context) => MissionCompleteDialog(
                 result: result,
                 onPop: () {
-                  context.read<MissionViewModel>().confirmResult();
+                  context.read<MissionViewModel>().confirmResult(result.completedMissionIds);
                 },
               ));
     }

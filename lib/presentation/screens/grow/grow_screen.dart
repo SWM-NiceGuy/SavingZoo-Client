@@ -11,6 +11,8 @@ import 'package:amond/presentation/screens/grow/components/feed_button.dart';
 import 'package:amond/presentation/screens/grow/components/level_widget.dart';
 
 import 'package:amond/presentation/screens/grow/components/play_button.dart';
+import 'package:amond/presentation/screens/grow/grow_history_screen.dart';
+import 'package:amond/presentation/screens/grow/memorial_screen.dart';
 import 'package:amond/presentation/widget/dialogs/mission_complete_dialog.dart';
 
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
@@ -121,6 +123,46 @@ class _GrowScreenWidget extends StatelessWidget {
               ),
               Column(
                 children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+
+                      // 성장일기
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => const GrowHistoryScreen())
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Image.asset('assets/images/grow_history_icon.png', width: 35, height: 35,),
+                            const SizedBox(height: 7),
+                            const Text('성장 일기', style: TextStyle(fontSize: 12, color: Color(0xff505459)),)
+                          ],
+                        ),
+                      ),
+
+
+                      const SizedBox(width: 40),
+
+                      // 추억 저장소
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MemorialScreen()));
+                        },
+                        child: Column(
+                          children: [
+                            Image.asset('assets/images/photo_frame_icon.png', width: 38, height: 38,),
+                            const SizedBox(height: 7),
+                            const Text('추억 저장소', style: TextStyle(fontSize: 12, color: Color(0xff505459)),),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: FeedButton(

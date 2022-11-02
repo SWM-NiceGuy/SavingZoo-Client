@@ -81,7 +81,7 @@ class MissionViewModel with ChangeNotifier {
   }
 
   /// 보상을 받았다는 표시를 서버에 보낸다
-  Future<void> confirmResult() async {
-    await _missionRepository.confirmResult();
+  Future<void> confirmResult(List<int> missionIds) async {
+    await _missionRepository.confirmResult(missionIds);
   }
 }

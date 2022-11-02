@@ -10,5 +10,5 @@ abstract class MissionRepository {
   Future<void> submitMission(int missionId, String filePath);
   Future<List<MissionHistory>> getMissionHistories();
   Future<MissionResult> getMissionResult();
-  Future<void> confirmResult();
+  Future<void> confirmResult(List<int> missionIds);
 }

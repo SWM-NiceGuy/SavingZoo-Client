@@ -1,3 +1,5 @@
+import 'package:amond/data/entity/completed_mission_entity.dart';
+import 'package:amond/data/entity/rejected_mission_entity.dart';
 import 'package:amond/domain/models/reward_type.dart';
 
 class MissionResult {
@@ -16,6 +18,14 @@ class MissionResult {
 
   bool get hasNoResult {
     return totalCompletedMission == 0 && totalRejectedMission == 0;
+  }
+
+  List<int> get completedMissionIds {
+    List<int> res = [];
+    for (var i in completedMission) {
+      res.add(i.missionId);
+    }
+    return res;
   }
 
   MissionResult({
@@ -43,6 +53,18 @@ class CompletedMission {
     required this.rewardType,
     required this.reward,
   });
+
+  factory CompletedMission.fromEntity(CompletedMissionEntity entity) =>
+      _$CompletedMissionListFromEntity(entity);
+
+  static CompletedMission _$CompletedMissionListFromEntity(
+          CompletedMissionEntity entity) =>
+      CompletedMission(
+        missionId: entity.missionId,
+        missionTitle: entity.missionTitle,
+        rewardType: RewardType.fromString(entity.rewardType),
+        reward: entity.reward,
+      );
 }
 
 class RejectedMission {
@@ -56,4 +78,11 @@ class RejectedMission {
     required this.missionTitle,
     required this.reason,
   });
+
+  factory RejectedMission.fromEntity(RejectedMissionEntity entity) =>
+      _$RejectedMissionListFromEntity(entity);
+
+  static RejectedMission _$RejectedMissionListFromEntity(
+          RejectedMissionEntity entity) =>
+      RejectedMission(missionTitle: entity.missionTitle, reason: entity.reason);
 }
