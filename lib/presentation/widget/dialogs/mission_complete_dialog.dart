@@ -18,7 +18,9 @@ class MissionCompleteDialog extends StatelessWidget {
     // final deviceSize = MediaQuery.of(context).size;
 
     return WillPopScope(
-      onWillPop: () async {return false;},
+      onWillPop: () async {
+        return false;
+      },
       child: Dialog(
         insetPadding: const EdgeInsets.symmetric(horizontal: 20),
         shape: const RoundedRectangleBorder(
@@ -38,42 +40,57 @@ class MissionCompleteDialog extends StatelessWidget {
                     style: TextStyle(fontSize: 18),
                   ),
                   const SizedBox(height: 16),
-                  const _Divider(),
-                  const SizedBox(height: 22),
-    
-                  const _ResultRow(
-                      child1: Text(
-                        '성공',
-                        style: TextStyle(fontSize: 18, color: textBlueColor200),
-                      ),
-                      child2: Text(
-                        '보상',
-                        style: TextStyle(fontSize: 18, color: Color(0xff919191)),
-                      )),
-    
-                  const SizedBox(height: 22),
-    
-                  // 성공한 미션들
-                  ..._completedMission(),
-    
-                  const SizedBox(height: 28),
-                  const _Divider(),
-                  const SizedBox(height: 22),
-    
-                  const _ResultRow(
-                      child1: Text(
-                        '반려',
-                        style: TextStyle(fontSize: 18, color: textBlueColor200),
-                      ),
-                      child2: Text(
-                        '사유',
-                        style: TextStyle(fontSize: 18, color: Color(0xff919191)),
-                      )),
-    
-                  const SizedBox(height: 22),
-    
-                  // 실패한 미션들
-                  ..._rejectedMission(),
+
+                  // 성공 섹션
+                  if (result.totalCompletedMission != 0)
+                    Column(
+                      children: [
+                        const _Divider(),
+                        const SizedBox(height: 22),
+                        const _ResultRow(
+                            child1: Text(
+                              '성공',
+                              style: TextStyle(
+                                  fontSize: 18, color: textBlueColor200),
+                            ),
+                            child2: Text(
+                              '보상',
+                              style: TextStyle(
+                                  fontSize: 18, color: Color(0xff919191)),
+                            )),
+                        const SizedBox(height: 22),
+                        // 성공한 미션들
+                        ..._completedMission(),
+                        const SizedBox(height: 28),
+                      ],
+                    ),
+
+                  // 반려 섹션
+                  if (result.totalRejectedMission != 0)
+                    Column(
+                      children: [
+                        const _Divider(),
+                        const SizedBox(height: 22),
+
+                        const _ResultRow(
+                            child1: Text(
+                              '반려',
+                              style: TextStyle(
+                                  fontSize: 18, color: textBlueColor200),
+                            ),
+                            child2: Text(
+                              '사유',
+                              style: TextStyle(
+                                  fontSize: 18, color: Color(0xff919191)),
+                            )),
+
+                        const SizedBox(height: 22),
+
+                        // 실패한 미션들
+                        ..._rejectedMission(),
+                        const SizedBox(height: 28),
+                      ],
+                    ),
                 ],
               ),
             ),
@@ -89,7 +106,8 @@ class MissionCompleteDialog extends StatelessWidget {
                     Image.asset('assets/images/fish_icon.png',
                         width: 25, height: 25),
                     Text(' ${result.totalReward} 획득',
-                        style: const TextStyle(fontSize: 18, color: blackColor)),
+                        style:
+                            const TextStyle(fontSize: 18, color: blackColor)),
                   ],
                 ),
                 MainButton(
