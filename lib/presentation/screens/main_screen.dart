@@ -173,21 +173,6 @@ class _MainScreenState extends State<MainScreen> {
                 Navigator.of(context).pushNamed(SettingsScreen.routeName);
               },
             ),
-
-            // 개발자에 문의하기
-            ListTile(
-              leading: const Icon(
-                Icons.question_answer_rounded,
-                color: blackColor,
-              ),
-              title: const Text('의견 보내기'),
-              onTap: () async {
-                final url = Uri.parse('https://pf.kakao.com/_JLxkxob/chat');
-                if (await canLaunchUrl(url)) {
-                  launchUrl(url, mode: LaunchMode.externalApplication);
-                }
-              },
-            )
           ],
         ),
       ),
