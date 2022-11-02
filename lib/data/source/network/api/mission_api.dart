@@ -106,9 +106,10 @@ class MissionApi {
   Future<void> confirmResult(List<int> missionIds) async {
     try {
       final url = Uri.parse('$baseUrl/user/mission/reward');
-      await http.post(
+      final response = await http.post(
         url,
         headers: {
+          'Content-type': 'application/json',
           'Authorization': 'Bearer $globalToken',
         },
         body: jsonEncode({

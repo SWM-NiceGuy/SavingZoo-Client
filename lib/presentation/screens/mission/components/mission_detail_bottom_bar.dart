@@ -104,9 +104,9 @@ class MissionDetailBottomBar extends StatelessWidget {
               ),
             ),
             // 사진 제출했을 경우 보여주기
-            if (mission.state == MissionState.wait ||
-                mission.state == MissionState.completed)
-              _MyMissionImage(imageUrl: 'myMissionImage'),
+            // if (mission.state == MissionState.wait ||
+            //     mission.state == MissionState.completed)
+              // _MyMissionImage(imageUrl: 'myMissionImage'),
           ],
         ),
       ),
