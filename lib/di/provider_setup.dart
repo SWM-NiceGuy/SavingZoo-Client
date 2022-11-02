@@ -14,6 +14,7 @@ import 'package:amond/presentation/controllers/grow_view_model.dart';
 
 import 'package:amond/presentation/controllers/main_view_model.dart';
 import 'package:amond/presentation/controllers/mission_view_model.dart';
+import 'package:amond/presentation/controllers/settings_view_model.dart';
 
 import 'package:amond/utils/auth/do_apple_auth.dart';
 import 'package:amond/utils/auth/do_auth.dart';
@@ -64,6 +65,10 @@ List<SingleChildWidget> viewModels = [
   // AuthController
   ChangeNotifierProvider<AuthController>(
     create: (_) => AuthController(_.read<MemberUseCases>()),
+  ),
+
+  ChangeNotifierProvider<SettingsViewModel>(
+    create: (_) => SettingsViewModel(),
   ),
 
   // MissionViewModel
