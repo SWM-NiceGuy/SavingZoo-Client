@@ -5,6 +5,7 @@ import 'package:amond/presentation/controllers/mission_history_view_model.dart';
 import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/presentation/screens/settings/settings_screen.dart';
+import 'package:amond/presentation/widget/dialogs/change_user_name_dialog.dart';
 import 'package:amond/presentation/widget/dialogs/dialogs.dart';
 import 'package:amond/utils/push_notification.dart';
 import 'package:amond/utils/version/app_version.dart';
@@ -56,7 +57,7 @@ class _MainScreenState extends State<MainScreen> {
 
       final growViewModel = context.read<GrowViewModel>();
       growViewModel.fetchData().then((_) {
-          appBarTitle[1] = growViewModel.character.nickname ?? "";
+        appBarTitle[1] = growViewModel.character.nickname ?? "";
       });
     });
   }
@@ -68,9 +69,8 @@ class _MainScreenState extends State<MainScreen> {
       showPushNotificationPermissionDialog(context);
     });
 
-    final authController = context.read<AuthController>();
     return Scaffold(
-      drawer: mainDrawer(context, authController),
+      drawer: mainDrawer(context),
       appBar: AppBar(
         title: Text(appBarTitle[_screenIndex]),
         foregroundColor: Colors.black,
@@ -92,22 +92,67 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Drawer mainDrawer(BuildContext context, AuthController authController) {
+  Drawer mainDrawer(BuildContext context) {
     return Drawer(
       child: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            const SizedBox(height: 40),
+
+            // 이름 탭
+            Row(
+              children: [
+                const SizedBox(width: 17),
+                Image.asset('assets/images/profile_icon.png',
+                    width: 32, height: 32),
+                const SizedBox(width: 8),
+                RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w300,
+                        color: darkGreyColor),
+                    children: [
+                      TextSpan(
+                          text: context.select<AuthController, String>((value) => value.userName),
+                          style: const TextStyle(fontWeight: FontWeight.w600)),
+                      const TextSpan(text: '님'),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () {
+                    showDialog(context: context, builder: (_) => ChangeUserNameDialog(onSubmit: context.read<AuthController>().changeUserName));
+                  },
+                  child: Image.asset('assets/images/edit_icon.png', width: 16, height: 16),
+                )
+              ],
+            ),
+
+            const Divider(
+              color: lightBlueColor,
+              thickness: 1,
+            ),
+
+
             // 미션수행 기록
             ListTile(
-              leading: const Icon(
-                Icons.history,
-                color: blackColor,
+              leading: Image.asset(
+                'assets/images/book_icon.png',
+                width: 24,
+                height: 24,
               ),
-              title: const Text('미션수행 기록'),
+              title: const Text(
+                '미션수행 기록',
+                style:
+                    TextStyle(fontWeight: FontWeight.w300, color: blackColor),
+              ),
               onTap: () {
                 // FA 로그
                 FirebaseAnalytics.instance.logEvent(name: '미션내역_조회');
+
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ChangeNotifierProvider(
                     create: (context) => MissionHistoryViewModel(
@@ -118,17 +163,17 @@ class _MainScreenState extends State<MainScreen> {
                 ));
               },
             ),
+
             // 설정
             ListTile(
-              leading: const Icon(
-                Icons.settings,
-                color: blackColor,
-              ),
+              leading: Image.asset('assets/images/settings_icon.png',
+                  width: 24, height: 24),
               title: const Text('설정'),
               onTap: () {
                 Navigator.of(context).pushNamed(SettingsScreen.routeName);
               },
             ),
+
             // 개발자에 문의하기
             ListTile(
               leading: const Icon(
@@ -162,9 +207,6 @@ class _BottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    
-
     return Container(
       decoration: const BoxDecoration(
         boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],

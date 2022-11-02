@@ -1,5 +1,6 @@
 import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/domain/models/mission_list.dart';
+import 'package:amond/presentation/controllers/auth_controller.dart';
 
 
 import 'package:amond/presentation/screens/mission/util/time_util.dart';
@@ -37,7 +38,6 @@ class _MissionScreenState extends State<MissionScreen> {
     // 미션 인증 결과 확인하기
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // await checkMissionResult();
-      showDialog(context: context, builder: (_) => LevelupDialog(level:2, name: '냐옹이',));
     });
   }
 
@@ -47,9 +47,12 @@ class _MissionScreenState extends State<MissionScreen> {
     if (!result.hasNoResult) {
       showDialog(
           context: context,
+          barrierDismissible: false,
           builder: (context) => MissionCompleteDialog(
                 result: result,
-                onPop: () {},
+                onPop: () {
+                  context.read<MissionViewModel>().confirmResult();
+                },
               ));
     }
   }
@@ -71,9 +74,7 @@ class _MissionScreenState extends State<MissionScreen> {
                 SizedBox(height: 32.0),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.0),
-                  child: _GreetingText(
-                    name: '진수',
-                  ),
+                  child: _GreetingText(),
                 ),
                 SizedBox(height: 20.0),
                 Padding(
@@ -103,9 +104,7 @@ class _MissionScreenState extends State<MissionScreen> {
 }
 
 class _GreetingText extends StatelessWidget {
-  final String name;
   const _GreetingText({
-    required this.name,
     Key? key,
   }) : super(key: key);
 
@@ -117,6 +116,7 @@ class _GreetingText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String name = context.select<AuthController, String>((value) => value.userName);
     return RichText(
       text: TextSpan(
         children: [

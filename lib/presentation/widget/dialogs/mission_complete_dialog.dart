@@ -17,92 +17,95 @@ class MissionCompleteDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     // final deviceSize = MediaQuery.of(context).size;
 
-    return Dialog(
-      insetPadding: const EdgeInsets.symmetric(horizontal: 20),
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(26.0))),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Text(
-                  '미션 수행 결과',
-                  style: TextStyle(fontSize: 18),
-                ),
-                const SizedBox(height: 16),
-                const _Divider(),
-                const SizedBox(height: 22),
-
-                const _ResultRow(
-                    child1: Text(
-                      '성공',
-                      style: TextStyle(fontSize: 18, color: textBlueColor200),
-                    ),
-                    child2: Text(
-                      '보상',
-                      style: TextStyle(fontSize: 18, color: Color(0xff919191)),
-                    )),
-
-                const SizedBox(height: 22),
-
-                // 성공한 미션들
-                ..._completedMission(),
-
-                const SizedBox(height: 28),
-                const _Divider(),
-                const SizedBox(height: 22),
-
-                const _ResultRow(
-                    child1: Text(
-                      '반려',
-                      style: TextStyle(fontSize: 18, color: textBlueColor200),
-                    ),
-                    child2: Text(
-                      '사유',
-                      style: TextStyle(fontSize: 18, color: Color(0xff919191)),
-                    )),
-
-                const SizedBox(height: 22),
-
-                // 실패한 미션들
-                ..._rejectedMission(),
-              ],
-            ),
-          ),
-          const _Divider(),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Row(
+    return WillPopScope(
+      onWillPop: () async {return false;},
+      child: Dialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 20),
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(26.0))),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Text('   총 ',
-                      style: TextStyle(fontSize: 18, color: blackColor)),
-                  Image.asset('assets/images/fish_icon.png',
-                      width: 25, height: 25),
-                  Text(' ${result.totalReward} 획득',
-                      style: const TextStyle(fontSize: 18, color: blackColor)),
+                  const Text(
+                    '미션 수행 결과',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  const SizedBox(height: 16),
+                  const _Divider(),
+                  const SizedBox(height: 22),
+    
+                  const _ResultRow(
+                      child1: Text(
+                        '성공',
+                        style: TextStyle(fontSize: 18, color: textBlueColor200),
+                      ),
+                      child2: Text(
+                        '보상',
+                        style: TextStyle(fontSize: 18, color: Color(0xff919191)),
+                      )),
+    
+                  const SizedBox(height: 22),
+    
+                  // 성공한 미션들
+                  ..._completedMission(),
+    
+                  const SizedBox(height: 28),
+                  const _Divider(),
+                  const SizedBox(height: 22),
+    
+                  const _ResultRow(
+                      child1: Text(
+                        '반려',
+                        style: TextStyle(fontSize: 18, color: textBlueColor200),
+                      ),
+                      child2: Text(
+                        '사유',
+                        style: TextStyle(fontSize: 18, color: Color(0xff919191)),
+                      )),
+    
+                  const SizedBox(height: 22),
+    
+                  // 실패한 미션들
+                  ..._rejectedMission(),
                 ],
               ),
-              MainButton(
-                onPressed: () {
-                  onPop.call();
-                  Navigator.of(context).pop();
-                },
-                height: 56,
-                width: 149,
-                child: const Text('받기'),
-              )
-            ],
-          ),
-          const SizedBox(height: 13),
-        ],
+            ),
+            const _Divider(),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Row(
+                  children: [
+                    const Text('   총 ',
+                        style: TextStyle(fontSize: 18, color: blackColor)),
+                    Image.asset('assets/images/fish_icon.png',
+                        width: 25, height: 25),
+                    Text(' ${result.totalReward} 획득',
+                        style: const TextStyle(fontSize: 18, color: blackColor)),
+                  ],
+                ),
+                MainButton(
+                  onPressed: () {
+                    onPop.call();
+                    Navigator.of(context).pop();
+                  },
+                  height: 56,
+                  width: 149,
+                  child: const Text('받기'),
+                )
+              ],
+            ),
+            const SizedBox(height: 13),
+          ],
+        ),
       ),
     );
   }

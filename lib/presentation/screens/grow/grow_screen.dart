@@ -38,7 +38,7 @@ class _GrowScreenState extends State<GrowScreen> {
 
     // 미션 인증 결과 확인하기
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await checkMissionResult();
+      // await checkMissionResult();
     });
   }
 

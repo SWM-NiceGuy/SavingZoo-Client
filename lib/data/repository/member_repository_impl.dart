@@ -25,4 +25,16 @@ class MemberRepositoryImpl implements MemberRepository {
   Future<void> resign(String provider, [Map<String, String>? additional]) async {
     await memberApi.resign(provider, additional);
   }
+  
+  @override
+  Future<String> getUserName() {
+    // TODO: implement getUserName
+    throw UnimplementedError();
+  }
+  
+  @override
+  Future<void> changeUserName(String name) {
+    // TODO: implement changeUserName
+    throw UnimplementedError();
+  }
 }
