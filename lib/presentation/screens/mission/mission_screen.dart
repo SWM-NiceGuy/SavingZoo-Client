@@ -1,7 +1,10 @@
 import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/domain/models/mission_list.dart';
-import 'package:amond/presentation/screens/grow/components/mission_complete_dialog.dart';
+
+
 import 'package:amond/presentation/screens/mission/util/time_util.dart';
+import 'package:amond/presentation/widget/dialogs/levelup_dialog.dart';
+import 'package:amond/presentation/widget/dialogs/mission_complete_dialog.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:provider/provider.dart';
@@ -33,14 +36,15 @@ class _MissionScreenState extends State<MissionScreen> {
 
     // 미션 인증 결과 확인하기
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await checkMissionResult();
+      // await checkMissionResult();
+      showDialog(context: context, builder: (_) => LevelupDialog(level:2, name: '냐옹이',));
     });
   }
 
   /// 인증된 미션이 있는지 확인하고 있으면 팝업을 띄움
   Future<void> checkMissionResult() async {
     final result = await context.read<MissionViewModel>().getMissionResult();
-    if (result != null) {
+    if (!result.hasNoResult) {
       showDialog(
           context: context,
           builder: (context) => MissionCompleteDialog(

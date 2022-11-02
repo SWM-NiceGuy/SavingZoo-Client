@@ -1,6 +1,5 @@
 import 'package:amond/presentation/controllers/name_validation.dart';
 import 'package:amond/presentation/screens/grow/components/character_name_input.dart';
-import 'package:amond/presentation/screens/grow/components/mission_complete_dialog.dart';
 import 'package:amond/utils/version/app_version.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';

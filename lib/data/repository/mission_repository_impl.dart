@@ -56,7 +56,7 @@ class MissionRepositoryImpl implements MissionRepository {
   }
 
   @override
-  Future<MissionResult?> getMissionResult() {
+  Future<MissionResult> getMissionResult() {
     // TODO: implement getMissionResult
     throw UnimplementedError();
   }

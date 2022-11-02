@@ -5,7 +5,7 @@ import 'package:amond/presentation/controllers/mission_history_view_model.dart';
 import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/presentation/screens/settings/settings_screen.dart';
-import 'package:amond/utils/dialogs/dialogs.dart';
+import 'package:amond/presentation/widget/dialogs/dialogs.dart';
 import 'package:amond/utils/push_notification.dart';
 import 'package:amond/utils/version/app_version.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';

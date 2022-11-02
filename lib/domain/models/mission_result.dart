@@ -14,6 +14,10 @@ class MissionResult {
     return res;
   }
 
+  bool get hasNoResult {
+    return totalCompletedMission == 0 && totalRejectedMission == 0;
+  }
+
   MissionResult({
     required this.totalCompletedMission,
     required this.totalRejectedMission,

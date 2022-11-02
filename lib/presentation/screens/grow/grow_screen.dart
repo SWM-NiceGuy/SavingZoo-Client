@@ -9,8 +9,9 @@ import 'package:amond/presentation/screens/grow/components/effects/level_up_effe
 import 'package:amond/presentation/screens/grow/components/effects/starfall_effect.dart';
 import 'package:amond/presentation/screens/grow/components/feed_button.dart';
 import 'package:amond/presentation/screens/grow/components/level_widget.dart';
-import 'package:amond/presentation/screens/grow/components/mission_complete_dialog.dart';
+
 import 'package:amond/presentation/screens/grow/components/play_button.dart';
+import 'package:amond/presentation/widget/dialogs/mission_complete_dialog.dart';
 
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class _GrowScreenState extends State<GrowScreen> {
   /// 인증된 미션이 있는지 확인하고 있으면 팝업을 띄움
   Future<void> checkMissionResult() async {
     final result = await context.read<MissionViewModel>().getMissionResult();
-    if (result != null) {
+    if (!result.hasNoResult) {
       showDialog(
           context: context,
           builder: (context) => MissionCompleteDialog(

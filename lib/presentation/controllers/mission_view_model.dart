@@ -62,9 +62,7 @@ class MissionViewModel with ChangeNotifier {
   }
 
   /// 인증된(성공 또는 반려) 미션 결과를 가져온다.
-  /// 
-  /// 만약 인증된 미션이 없으면 null 반환
-  Future<MissionResult?> getMissionResult() async {
+  Future<MissionResult> getMissionResult() async {
     //  MissionResult? result = await _missionRepository.getMissionResult();
 
     var result = MissionResult(
