@@ -5,6 +5,7 @@ import 'package:amond/data/source/network/api/character_api.dart';
 import 'package:amond/data/source/network/api/member_api.dart';
 import 'package:amond/data/source/network/api/mission_api.dart';
 import 'package:amond/domain/usecases/member/change_user_name.dart';
+import 'package:amond/domain/usecases/member/get_goods_quantity.dart';
 import 'package:amond/domain/usecases/member/get_user_name.dart';
 import 'package:amond/domain/usecases/member/member_use_cases.dart';
 import 'package:amond/domain/usecases/member/resign.dart';
@@ -49,6 +50,7 @@ List<SingleChildWidget> dependentModels = [
       login: Login(repository),
       getUserName: GetUserName(repository),
       changeUserName: ChangeUserName(repository),
+      getGoodsQuantity: GetGoodsQuantity(repository),
     ),
   ),
   // ProxyProvider<CharacterRepositoryImpl, CharacterUseCases>(

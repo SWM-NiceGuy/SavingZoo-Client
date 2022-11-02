@@ -4,7 +4,7 @@ import 'package:amond/presentation/controllers/mission_detail_view_model.dart';
 
 import 'package:amond/ui/colors.dart';
 import 'package:amond/utils/firebase_analytics.dart';
-import 'package:amond/utils/show_platform_based_dialog.dart';
+import 'package:amond/presentation/widget/show_platform_based_dialog.dart';
 
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
 

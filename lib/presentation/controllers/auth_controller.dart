@@ -23,6 +23,9 @@ class AuthController with ChangeNotifier {
   String _userName = '';
   String get userName => _userName;
 
+  int _goodsQuantity = 0;
+  int get goodsQuantity => -_goodsQuantity;
+
   bool get isTokenExists => _token != null;
 
   /// 앱 시작시 토큰 설정 (자동로그인)
@@ -61,9 +64,11 @@ class AuthController with ChangeNotifier {
       _loginType = provider;
       await setToken();
 
-      // 이름 세팅
-      // await setUserName();
+
+      await setUserName();
+      await setGoodsQuantity();
     } catch (error) {
+      print(error);
       rethrow;
     }
   }
@@ -108,8 +113,13 @@ class AuthController with ChangeNotifier {
     _userName = await _memberUseCases.getUserName();
   }
 
+  Future<void> setGoodsQuantity() async {
+    _goodsQuantity = await _memberUseCases.getGoodsQuantity();
+    notifyListeners();
+  }
+
   Future<void> changeUserName(String name) async {
-    // await _memberUseCases.changeUserName(name);
+    await _memberUseCases.changeUserName(name);
     _userName = name;
     notifyListeners();
   }

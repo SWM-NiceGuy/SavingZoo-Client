@@ -11,7 +11,7 @@ import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:amond/ui/text_styles.dart';
 import 'package:amond/utils/auth/do_auth.dart';
-import 'package:amond/utils/show_platform_based_dialog.dart';
+import 'package:amond/presentation/widget/show_platform_based_dialog.dart';
 import 'package:amond/utils/version/app_version.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';

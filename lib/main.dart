@@ -26,6 +26,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_common.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,7 +37,7 @@ void main() async {
   FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(!kDebugMode);
 
   // 로컬 데이터 삭제
-  // SharedPreferences.getInstance().then((value) => value.clear());
+  SharedPreferences.getInstance().then((value) => value.clear());
 
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 

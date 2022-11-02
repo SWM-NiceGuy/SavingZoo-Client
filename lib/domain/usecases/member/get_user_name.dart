@@ -5,7 +5,7 @@ class GetUserName {
   GetUserName(this.memberRepository);
 
   Future<String> call() async {
-    final name = await memberRepository.getUserName();
-    return name;
+    final info = await memberRepository.getUserInfo();
+    return info.userName;
   }
 }

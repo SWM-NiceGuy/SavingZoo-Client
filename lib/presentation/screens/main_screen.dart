@@ -74,9 +74,11 @@ class _MainScreenState extends State<MainScreen> {
       appBar: AppBar(
         title: Text(appBarTitle[_screenIndex]),
         foregroundColor: Colors.black,
-        elevation: 0.0,
         backgroundColor: appBarColors[_screenIndex],
         iconTheme: const IconThemeData(color: Color(0xFF6A6A6A)),
+        actions: [
+          _GoodsQuantity()
+        ],
       ),
       backgroundColor: backgroundColors[_screenIndex],
       body: SafeArea(
@@ -175,6 +177,28 @@ class _MainScreenState extends State<MainScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _GoodsQuantity extends StatelessWidget {
+  const _GoodsQuantity({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    int quantity = context.select<AuthController, int>((value) => value.goodsQuantity);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: Row(
+        children: [
+          Image.asset('assets/images/fish_icon.png', width: 18, height: 18,),
+          const SizedBox(width: 8),
+          Text(quantity.toString(), style: const TextStyle(fontSize: 16, color: blackColor),),
+        ],
       ),
     );
   }

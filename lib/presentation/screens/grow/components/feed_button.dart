@@ -4,13 +4,11 @@ import 'package:flutter/material.dart';
 
 class FeedButton extends StatelessWidget {
   final VoidCallback onClick;
-  final int rewardQuantity;
   final bool enabled;
 
   const FeedButton({
     Key? key,
     required this.onClick,
-    required this.rewardQuantity,
     this.enabled = true,
   }) : super(key: key);
 
@@ -57,17 +55,13 @@ class FeedButton extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16.0),
-              Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(7.0),
-                ),
-                child: Text(
-                  rewardQuantity.toString(),
-                  style: const TextStyle(color: kBlue),
-                ),
-              ),
+              // Container(
+              //   padding: const EdgeInsets.all(8.0),
+              //   decoration: BoxDecoration(
+              //     color: Colors.white.withOpacity(0.5),
+              //     borderRadius: BorderRadius.circular(7.0),
+              //   ),
+              // ),
             ],
           ),
         ),

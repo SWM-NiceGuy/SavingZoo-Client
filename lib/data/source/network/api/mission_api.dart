@@ -106,13 +106,15 @@ class MissionApi {
   Future<void> confirmResult(List<int> missionIds) async {
     try {
       final url = Uri.parse('$baseUrl/user/mission/reward');
-      await http.post(url,
-          headers: {
-            'Authorization': 'Bearer $globalToken',
-          },
-          body: jsonEncode({
-            "missions": missionIds,
-          }));
+      await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $globalToken',
+        },
+        body: jsonEncode({
+          "missions": missionIds,
+        }),
+      );
     } catch (e) {
       if (kDebugMode) {
         print(e);

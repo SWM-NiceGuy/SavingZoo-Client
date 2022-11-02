@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:amond/data/entity/user_info_entity.dart';
 import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/auth/auth_info.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
@@ -8,14 +9,14 @@ import 'package:http/http.dart' as http;
 class MemberApi {
   Future<http.Response> login(String provider, String accessToken) async {
     final url = Uri.parse('$baseUrl/auth/login');
-    final response = await http.post(url,
-        body:
-            jsonEncode({"providerType": provider, "accessToken": accessToken}),
-        headers: {
-          'Content-type': 'application/json',
-          'Accept': 'application/json',
-        }).timeout(const Duration(seconds: 6));
-    print(response.body);
+    final response = await http.post(
+      url,
+      body: jsonEncode({"providerType": provider, "accessToken": accessToken}),
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+      },
+    ).timeout(const Duration(seconds: 6));
     return response;
   }
 
@@ -27,11 +28,8 @@ class MemberApi {
         ? {
             'providerType': provider,
           }
-        : {
-            'providerType': provider,
-            ...additional
-          };
-    
+        : {'providerType': provider, ...additional};
+
     try {
       final response = await http.delete(url, body: jsonEncode(body), headers: {
         'Authorization': 'Bearer $globalToken',
@@ -45,5 +43,36 @@ class MemberApi {
     } catch (error) {
       rethrow;
     }
+  }
+
+  Future<UserInfoEntity> getUserInfo() async {
+    final url = Uri.parse('$baseUrl/user/info');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $globalToken',
+        'Accept': 'application/json',
+      },
+    );
+    final Map<String, dynamic> json =
+        jsonDecode(utf8.decode(response.bodyBytes));
+    final info = UserInfoEntity.fromJson(json);
+
+    return info;
+  }
+
+  Future<void> changeUserName(String name) async {
+    final url = Uri.parse('$baseUrl/user/info');
+    final response = await http.post(
+      url,
+      headers: {
+        'Authorization': 'Bearer $globalToken',
+        'Accept': 'application/json',
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        'username': name,
+      })
+    );
   }
 }

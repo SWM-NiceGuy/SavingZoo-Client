@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:amond/data/source/network/api/member_api.dart';
+import 'package:amond/domain/models/user_info.dart';
 import 'package:amond/domain/repositories/member_repository.dart';
 
 class MemberRepositoryImpl implements MemberRepository {
@@ -27,14 +28,13 @@ class MemberRepositoryImpl implements MemberRepository {
   }
   
   @override
-  Future<String> getUserName() {
-    // TODO: implement getUserName
-    throw UnimplementedError();
+  Future<UserInfo> getUserInfo() async {
+    final entity = await memberApi.getUserInfo();
+    return UserInfo.fromEntity(entity);
   }
   
   @override
-  Future<void> changeUserName(String name) {
-    // TODO: implement changeUserName
-    throw UnimplementedError();
+  Future<void> changeUserName(String name) async {
+    await memberApi.changeUserName(name);
   }
 }

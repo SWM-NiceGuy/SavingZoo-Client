@@ -93,7 +93,7 @@ class _ChangeUserNameDialogState extends State<ChangeUserNameDialog> {
                         });
                         return;
                       }
-                      
+
                       widget.onSubmit(_controller.text);
                       Navigator.of(context).pop();
                     },

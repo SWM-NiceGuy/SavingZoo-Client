@@ -13,6 +13,7 @@ import 'package:amond/presentation/screens/grow/components/level_widget.dart';
 import 'package:amond/presentation/screens/grow/components/play_button.dart';
 import 'package:amond/presentation/screens/grow/grow_history_screen.dart';
 import 'package:amond/presentation/screens/grow/memorial_screen.dart';
+import 'package:amond/presentation/screens/mission/util/check_mission_result.dart';
 import 'package:amond/presentation/widget/dialogs/mission_complete_dialog.dart';
 
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
@@ -40,22 +41,11 @@ class _GrowScreenState extends State<GrowScreen> {
 
     // 미션 인증 결과 확인하기
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // await checkMissionResult();
+      await checkMissionResult(context);
     });
   }
 
-  /// 인증된 미션이 있는지 확인하고 있으면 팝업을 띄움
-  Future<void> checkMissionResult() async {
-    final result = await context.read<MissionViewModel>().getMissionResult();
-    if (!result.hasNoResult) {
-      showDialog(
-          context: context,
-          builder: (context) => MissionCompleteDialog(
-                result: result,
-                onPop: () {},
-              ));
-    }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +156,6 @@ class _GrowScreenWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: FeedButton(
-                      rewardQuantity: 3,
                       onClick: () {},
                       enabled: false,
                     ),
