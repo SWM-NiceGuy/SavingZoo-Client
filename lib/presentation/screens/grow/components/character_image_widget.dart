@@ -1,4 +1,4 @@
-import 'package:amond/presentation/controllers/grow_view_model.dart';
+import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

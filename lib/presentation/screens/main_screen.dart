@@ -1,6 +1,6 @@
 import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/controllers/grow_view_model.dart';
+import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 import 'package:amond/presentation/controllers/mission_history_view_model.dart';
 import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
@@ -14,7 +14,6 @@ import 'package:amond/presentation/screens/grow/grow_screen.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -56,7 +55,7 @@ class _MainScreenState extends State<MainScreen> {
       }
 
       final growViewModel = context.read<GrowViewModel>();
-      growViewModel.fetchData().then((_) {
+      growViewModel.setCharacter().then((_) {
         appBarTitle[1] = growViewModel.character.nickname ?? "";
       });
     });
@@ -72,13 +71,13 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       drawer: mainDrawer(context),
       appBar: AppBar(
-        title: Text(appBarTitle[_screenIndex]),
+        title: Center(
+            child:
+                Text(appBarTitle[_screenIndex], textAlign: TextAlign.center)),
         foregroundColor: Colors.black,
         backgroundColor: appBarColors[_screenIndex],
         iconTheme: const IconThemeData(color: Color(0xFF6A6A6A)),
-        actions: [
-          _GoodsQuantity()
-        ],
+        actions: const [_GoodsQuantity()],
       ),
       backgroundColor: backgroundColors[_screenIndex],
       body: SafeArea(
@@ -117,7 +116,8 @@ class _MainScreenState extends State<MainScreen> {
                         color: darkGreyColor),
                     children: [
                       TextSpan(
-                          text: context.select<AuthController, String>((value) => value.userName),
+                          text: context.select<AuthController, String>(
+                              (value) => value.userName),
                           style: const TextStyle(fontWeight: FontWeight.w600)),
                       const TextSpan(text: '님'),
                     ],
@@ -126,9 +126,14 @@ class _MainScreenState extends State<MainScreen> {
                 const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () {
-                    showDialog(context: context, builder: (_) => ChangeUserNameDialog(onSubmit: context.read<AuthController>().changeUserName));
+                    showDialog(
+                        context: context,
+                        builder: (_) => ChangeUserNameDialog(
+                            onSubmit:
+                                context.read<AuthController>().changeUserName));
                   },
-                  child: Image.asset('assets/images/edit_icon.png', width: 16, height: 16),
+                  child: Image.asset('assets/images/edit_icon.png',
+                      width: 16, height: 16),
                 )
               ],
             ),
@@ -137,7 +142,6 @@ class _MainScreenState extends State<MainScreen> {
               color: lightBlueColor,
               thickness: 1,
             ),
-
 
             // 미션수행 기록
             ListTile(
@@ -189,15 +193,23 @@ class _GoodsQuantity extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int quantity = context.select<AuthController, int>((value) => value.goodsQuantity);
+    int quantity =
+        context.select<AuthController, int>((value) => value.goodsQuantity);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14),
       child: Row(
         children: [
-          Image.asset('assets/images/fish_icon.png', width: 18, height: 18,),
+          Image.asset(
+            'assets/images/fish_icon.png',
+            width: 18,
+            height: 18,
+          ),
           const SizedBox(width: 8),
-          Text(quantity.toString(), style: const TextStyle(fontSize: 16, color: blackColor),),
+          Text(
+            quantity.toString(),
+            style: const TextStyle(fontSize: 16, color: blackColor),
+          ),
         ],
       ),
     );

@@ -1,4 +1,4 @@
-import 'package:amond/presentation/controllers/grow_view_model.dart';
+import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';

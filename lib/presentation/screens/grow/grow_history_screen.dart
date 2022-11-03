@@ -63,6 +63,7 @@ class GrowHistoryWidget extends StatelessWidget {
                     src: 'assets/glb/cat.glb',
                     cameraControls: true,
                     loading: Loading.auto,
+                    ar: false,
                   ),
                 ),
                 // 캐릭터 왼쪽 화살표

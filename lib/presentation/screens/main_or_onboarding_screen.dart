@@ -1,4 +1,4 @@
-import 'package:amond/presentation/controllers/grow_view_model.dart';
+import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 import 'package:amond/presentation/screens/main_screen.dart';
 import 'package:amond/presentation/screens/onboarding/onboarding1_screen.dart';
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 /// Main Screen으로 갈지 Onboarding Screen으로 갈지 결정하는 widget
-class FirstScreen extends StatelessWidget {
-  const FirstScreen({Key? key}) : super(key: key);
+class MainOrOnboardingScreen extends StatelessWidget {
+  const MainOrOnboardingScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

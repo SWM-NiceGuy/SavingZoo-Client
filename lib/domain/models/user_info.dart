@@ -10,9 +10,9 @@ class UserInfo {
   });
 
   factory UserInfo.fromEntity(UserInfoEntity entity) =>
-      _$MissionListFromEntity(entity);
+      _$UserInfoFromEntity(entity);
 
-  static UserInfo _$MissionListFromEntity(UserInfoEntity entity) => UserInfo(
+  static UserInfo _$UserInfoFromEntity(UserInfoEntity entity) => UserInfo(
         userName: entity.username,
         goodsQuantity: entity.rewardQuantity,
       );

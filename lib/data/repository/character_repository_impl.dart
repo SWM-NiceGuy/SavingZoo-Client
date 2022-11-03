@@ -63,4 +63,10 @@ class CharacterRepositoryImpl implements CharacterRepository {
     // TODO: implement getGrowHistory
     throw UnimplementedError();
   }
+  
+  @override
+  Future<int> feed() async {
+    final remainReward = await characterApi.feedCharacter();
+    return remainReward;
+  }
 }

@@ -24,7 +24,7 @@ class AuthController with ChangeNotifier {
   String get userName => _userName;
 
   int _goodsQuantity = 0;
-  int get goodsQuantity => -_goodsQuantity;
+  int get goodsQuantity => _goodsQuantity;
 
   bool get isTokenExists => _token != null;
 
@@ -68,7 +68,7 @@ class AuthController with ChangeNotifier {
       await setUserName();
       await setGoodsQuantity();
     } catch (error) {
-      print(error);
+      // print(error);
       rethrow;
     }
   }
@@ -102,6 +102,7 @@ class AuthController with ChangeNotifier {
       prefs.remove('loginType');
       prefs.remove('jwt');
       _loginType = null;
+      globalToken = null;
       prefs.clear();
     }
     catch (error) {

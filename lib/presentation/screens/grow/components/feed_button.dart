@@ -1,15 +1,15 @@
 
+import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FeedButton extends StatelessWidget {
   final VoidCallback onClick;
-  final bool enabled;
 
   const FeedButton({
     Key? key,
     required this.onClick,
-    this.enabled = true,
   }) : super(key: key);
 
   final headerTextStyle = const TextStyle(
@@ -24,6 +24,8 @@ class FeedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentGoodsQuantity = context.select<AuthController, int>((value) => value.goodsQuantity);
+
     return Material(
       color: kCharacterActionButtonColor,
       borderRadius: BorderRadius.circular(20.0),
@@ -31,7 +33,7 @@ class FeedButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(20.0),
         splashColor: kBlue.withOpacity(0.15),
         highlightColor: kBlue.withOpacity(0.1),
-        onTap: onClick,
+        onTap: currentGoodsQuantity > 0 ? onClick : null,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(

@@ -9,4 +9,5 @@ abstract class CharacterRepository {
   Future<void> setName(int petId, String name);
   Future<Character?> playWithCharacter(int petId);
   Future<GrowHistory> getGrowHistory();
+  Future<int> feed();
 }

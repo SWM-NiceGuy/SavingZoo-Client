@@ -44,13 +44,16 @@ class MissionViewModel with ChangeNotifier {
         rewardSet.add(mission.reward);
       }
 
+
       List<int> rewardList = rewardSet.toList()..sort();
 
       for (final mission in missions) {
         if (mission.reward == rewardList.first) {
           _basicMissions.add(mission);
         } else if (mission.reward == rewardList.last) {
-          _basicMissions.add(mission);
+          _advancedMissions.add(mission);
+        } else {
+          _intermediateMissions.add(mission);
         }
       }
 

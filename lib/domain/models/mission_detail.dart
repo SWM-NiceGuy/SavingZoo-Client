@@ -42,4 +42,8 @@ class MissionDetail {
         reward: entity.reward,
         state: MissionState.fromString(entity.state),
       );
+
+  bool get canSubmit {
+    return state == MissionState.incomplete || state == MissionState.rejected;
+  }
 }

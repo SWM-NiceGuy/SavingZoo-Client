@@ -1,5 +1,8 @@
+import 'dart:async';
+
+import 'package:amond/di/provider_setup.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/controllers/grow_view_model.dart';
+import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 import 'package:amond/presentation/controllers/mission_view_model.dart';
 
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
@@ -14,6 +17,7 @@ import 'package:amond/presentation/screens/grow/components/play_button.dart';
 import 'package:amond/presentation/screens/grow/grow_history_screen.dart';
 import 'package:amond/presentation/screens/grow/memorial_screen.dart';
 import 'package:amond/presentation/screens/mission/util/check_mission_result.dart';
+import 'package:amond/presentation/widget/dialogs/levelup_dialog.dart';
 import 'package:amond/presentation/widget/dialogs/mission_complete_dialog.dart';
 
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
@@ -30,11 +34,27 @@ class GrowScreen extends StatefulWidget {
 }
 
 class _GrowScreenState extends State<GrowScreen> {
+  StreamSubscription? _uiEventSubscription;
+
   @override
   void initState() {
     super.initState();
 
-    // 미션 불러오기
+    final viewModel = context.read<GrowViewModel>();
+
+    _uiEventSubscription = viewModel.eventStream.listen((event) {
+      event.when(levelUp: () {
+        // 레벨업 다이얼로그 보여주기
+        showDialog(
+            context: context,
+            builder: (_) => LevelupDialog(
+                  level: viewModel.character.level,
+                  name: viewModel.character.nickname ?? '',
+                ));
+      });
+    });
+
+    // 캐릭터 불러오기
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<GrowViewModel>().fetchData();
     });
@@ -45,7 +65,11 @@ class _GrowScreenState extends State<GrowScreen> {
     });
   }
 
-
+  @override
+  void dispose() {
+    super.dispose();
+    _uiEventSubscription?.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,30 +85,30 @@ class _GrowScreenWidget extends StatelessWidget {
     final growController = context.watch<GrowViewModel>();
 
     // 데이터가 불러와 있지 않을때 데이터 불러오기
-    if (growController.isLoading) {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        growController.fetchData().onError((error, stackTrace) {
-          context.read<AuthController>().logout();
-          showPlatformDialog(
-            context: context,
-            builder: (context) => BasicDialogAlert(
-              title: const Text("로그인 실패"),
-              content: const Text('다시 로그인 해주세요'),
-              actions: <Widget>[
-                BasicDialogAction(
-                  title: const Text("확인"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.of(context)
-                        .pushReplacementNamed(AuthScreen.routeName);
-                  },
-                ),
-              ],
-            ),
-          );
-        });
-      });
-    }
+    // if (growController.isLoading) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //     growController.fetchData().onError((error, stackTrace) {
+    //       context.read<AuthController>().logout();
+    //       showPlatformDialog(
+    //         context: context,
+    //         builder: (context) => BasicDialogAlert(
+    //           title: const Text("로그인 실패"),
+    //           content: const Text('다시 로그인 해주세요'),
+    //           actions: <Widget>[
+    //             BasicDialogAction(
+    //               title: const Text("확인"),
+    //               onPressed: () {
+    //                 Navigator.pop(context);
+    //                 Navigator.of(context)
+    //                     .pushReplacementNamed(AuthScreen.routeName);
+    //               },
+    //             ),
+    //           ],
+    //         ),
+    //       );
+    //     });
+    //   });
+    // }
 
     return growController.isLoading
         ? const Center(
@@ -117,54 +141,76 @@ class _GrowScreenWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-
                       // 성장일기
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => const GrowHistoryScreen())
-                          );
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => const GrowHistoryScreen()));
                         },
                         child: Column(
                           children: [
-                            Image.asset('assets/images/grow_history_icon.png', width: 35, height: 35,),
+                            Image.asset(
+                              'assets/images/grow_history_icon.png',
+                              width: 35,
+                              height: 35,
+                            ),
                             const SizedBox(height: 7),
-                            const Text('성장 일기', style: TextStyle(fontSize: 12, color: Color(0xff505459)),)
+                            const Text(
+                              '성장 일기',
+                              style: TextStyle(
+                                  fontSize: 12, color: Color(0xff505459)),
+                            )
                           ],
                         ),
                       ),
-
 
                       const SizedBox(width: 40),
 
                       // 추억 저장소
                       GestureDetector(
                         onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MemorialScreen()));
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => const MemorialScreen()));
                         },
                         child: Column(
                           children: [
-                            Image.asset('assets/images/photo_frame_icon.png', width: 38, height: 38,),
+                            Image.asset(
+                              'assets/images/photo_frame_icon.png',
+                              width: 38,
+                              height: 38,
+                            ),
                             const SizedBox(height: 7),
-                            const Text('추억 저장소', style: TextStyle(fontSize: 12, color: Color(0xff505459)),),
+                            const Text(
+                              '추억 저장소',
+                              style: TextStyle(
+                                  fontSize: 12, color: Color(0xff505459)),
+                            ),
                           ],
                         ),
                       )
                     ],
                   ),
+
+                  // 먹이 주기
                   const SizedBox(height: 20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: FeedButton(
-                      onClick: () {},
-                      enabled: false,
+                      onClick: () async {
+                        await growController.feed().then((_) {
+                          context.read<AuthController>().setGoodsQuantity();
+                        });
+                      },
                     ),
                   ),
                   const SizedBox(height: 16.0),
+
+                  // 놀아 주기
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: PlayButton(
-                      remainingSeconds: growController.remainedPlayTime,
+                      remainingSeconds:
+                          growController.remainedPlayTime,
                       onClick: growController.playWithCharacter,
                     ),
                   ),

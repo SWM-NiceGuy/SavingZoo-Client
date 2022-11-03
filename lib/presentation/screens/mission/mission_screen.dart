@@ -265,6 +265,7 @@ class _MissionSection extends StatelessWidget {
         .then((_) {
       // 상태가 변경된 미션이 있을 수 있으니 미션을 다시 불러온다
       context.read<MissionViewModel>().fetchMissions();
+      checkMissionResult(context);
     });
   }
 }

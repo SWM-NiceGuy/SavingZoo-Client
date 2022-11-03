@@ -57,7 +57,6 @@ class MemberApi {
     final Map<String, dynamic> json =
         jsonDecode(utf8.decode(response.bodyBytes));
     final info = UserInfoEntity.fromJson(json);
-
     return info;
   }
 

@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 import 'package:amond/presentation/screens/mission/util/time_util.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// 캐릭터와 놀아주기 버튼
 ///
@@ -22,11 +24,8 @@ class PlayButton extends StatefulWidget {
 }
 
 class _PlayButtonState extends State<PlayButton> {
-  int remainingSeconds = 0;
 
   String get timeInStr => secondsToTimeLeft(remainingSeconds);
-
-  late Timer _timer;
 
   final headerTextStyle = const TextStyle(
     fontSize: 16.0,
@@ -39,33 +38,36 @@ class _PlayButtonState extends State<PlayButton> {
     color: kBlue,
   );
 
-  /// 매 초마다 남은 시간을 감소시키는 타이머를 시작한다
-  void startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (remainingSeconds <= 0) {
-        _timer.cancel();
-        return;
-      }
-
-      setState(() => remainingSeconds--);
-    });
-  }
-
-  /// 타이머를 중지한다
-  void stopTimer() => _timer.cancel();
+  late int remainingSeconds;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     remainingSeconds = widget.remainingSeconds;
-    startTimer();
+    if (remainingSeconds != 0) {
+      _startTimer();
+    }
   }
 
   @override
-  void dispose() {
-    stopTimer();
-    super.dispose();
+  void didUpdateWidget(PlayButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_timer?.isActive ?? false) {
+      return;
+    }
+    remainingSeconds = widget.remainingSeconds;
+    if (remainingSeconds != 0) {
+      _startTimer();
+    }
   }
+
+    @override
+  void dispose() {
+    super.dispose();
+    _timer?.cancel();
+  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -117,6 +119,27 @@ class _PlayButtonState extends State<PlayButton> {
               ],
             )),
       ),
+    );
+  }
+
+  void _startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (remainingSeconds == 1) {
+          setState(() {
+            timer.cancel();
+            remainingSeconds--;
+          });
+          //
+          context.read<GrowViewModel>().clearPlayTime();
+        } else {
+          setState(() {
+            remainingSeconds--;
+          });
+        }
+      },
     );
   }
 }

@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:amond/presentation/screens/auth/components/apple_login_container.dart';
 import 'package:amond/presentation/screens/auth/components/kakao_login_container.dart';
-import 'package:amond/presentation/screens/first_screen.dart';
+import 'package:amond/presentation/screens/main_or_onboarding_screen.dart';
 import 'package:amond/presentation/screens/onboarding/onboarding1_screen.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:amond/utils/auth/do_apple_auth.dart';
@@ -139,7 +139,7 @@ class _AuthScreenState extends State<AuthScreen> {
   /// MainScreen으로 pushReplacement하는 함수
   void _navigateToFirstScreen() {
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => const FirstScreen(),
+        builder: (context) => const MainOrOnboardingScreen(),
         settings: const RouteSettings(name: "/")));
     // Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
   }

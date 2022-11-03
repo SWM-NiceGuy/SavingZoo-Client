@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:amond/domain/repositories/character_repository.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/controllers/grow_view_model.dart';
+import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 import 'package:amond/presentation/screens/auth/components/apple_login_container.dart';
 import 'package:amond/presentation/screens/auth/components/kakao_login_container.dart';
 import 'package:amond/presentation/screens/main_screen.dart';
@@ -38,9 +38,12 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
     _controller = TextEditingController();
     // 토큰이 설정되어 있으면 로그인 되어 있는 상태
     _isLogined = globalToken != null;
-    if (_isLogined) {
-      context.read<GrowViewModel>().fetchData();
-    }
+
+    Future.microtask(() {
+      if (_isLogined) {
+        context.read<GrowViewModel>().fetchData();
+      }
+    });
   }
 
   @override
@@ -217,17 +220,17 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
               GestureDetector(
                 onTap: () async {
                   try {
-
                     // 로그인 시도 후 성공하면 캐릭터 이름 설정 후 MainScreen으로 이동
-                    DoAppleAuth().login().then((info) {
-                      authController.login(info.provider, info.accessToken);
-                      context
+                    await DoAppleAuth().login().then((info) async {
+                      await authController.login(
+                          info.provider, info.accessToken);
+                    }).then((_) async {
+                      await context
                           .read<GrowViewModel>()
                           .setNameIfNoName(_controller.text);
                     }).then((_) {
                       _navigateToMainScreen();
                     });
-                    
                   } catch (error) {
                     // 의도적인 로그인 취소로 보고 애플 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
                     if (error is SignInWithAppleAuthorizationException &&
@@ -244,16 +247,15 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
             GestureDetector(
               onTap: () async {
                 try {
-
-                  DoKakaoAuth().login().then((info) {
-                    authController.login(info.provider, info.accessToken);
-                    context
+                  await DoKakaoAuth().login().then((info) async {
+                    await authController.login(info.provider, info.accessToken);
+                  }).then((_) async {
+                    await context
                         .read<GrowViewModel>()
                         .setNameIfNoName(_controller.text);
                   }).then((_) {
                     _navigateToMainScreen();
                   });
-
                 } catch (error) {
                   // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
                   // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)

@@ -97,7 +97,7 @@ class MissionDetailBottomBar extends StatelessWidget {
             Expanded(
               child: _CustomButton(
                 text: controller.stateToButtonText,
-                onClick: controller.mission.state == MissionState.incomplete
+                onClick: controller.mission.canSubmit
                     ? _onButtonClick
                     : null,
                 whiteBackground: controller.mission.state == MissionState.wait,

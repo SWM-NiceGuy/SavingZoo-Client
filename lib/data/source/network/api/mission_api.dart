@@ -97,7 +97,6 @@ class MissionApi {
 
     final Map<String, dynamic> json =
         jsonDecode(utf8.decode(response.bodyBytes));
-
     final missionResult = MissionResultEntity.fromJson(json);
 
     return missionResult;
@@ -116,6 +115,7 @@ class MissionApi {
           "missions": missionIds,
         }),
       );
+      // print(response.body);
     } catch (e) {
       if (kDebugMode) {
         print(e);

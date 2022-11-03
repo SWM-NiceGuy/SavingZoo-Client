@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:amond/data/entity/character_entity.dart';
 import 'package:amond/domain/models/character.dart';
 import 'package:amond/domain/repositories/character_repository.dart';
+import 'package:amond/presentation/controllers/grow/grow_ui_event.dart';
+import 'package:amond/presentation/screens/grow/components/level_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,6 +14,11 @@ class GrowViewModel with ChangeNotifier {
 
   GrowViewModel(this._characterRepository);
 
+  /// UI Event를 알려주는 스트림 컨트롤러
+  final _uiEventController = StreamController<GrowUiEvent>.broadcast();
+  Stream<GrowUiEvent> get eventStream => _uiEventController.stream;
+
+  /// 인스턴스가 사라지면 이 값은 false
   bool _mounted = true;
 
   late Character _character;
@@ -42,24 +48,17 @@ class GrowViewModel with ChangeNotifier {
 
   final int _heartVisibleTime = 6;
 
-  final heartComment = '사랑을 받으니 무엇이든\n할 수 있을 것만 같아요!';
+  /// 캐릭터의 경험치를 증가시킨다.
+  Future<void> increaseExp() async {
 
-  final _comments = [
-    '미션을 수행해 주시면\n제가 성장할 수 있어요',
-    '저도 커서 멋진\n어른이 될 수 있을까요?',
-    '환경을 생각하는 마음이\n아름다워요!',
-  ];
-  int _commentOrder = 0;
-  String get comment =>
-      isHeartVisible ? heartComment : _comments[_commentOrder];
-
-  /// 캐릭터의 경험치를 증가시키고 UI효과 발생
-  Future<void> increaseExp(int value) async {
-    increasedExp = null;
+    // 현재 캐릭터
+    final currentCharacter = _character;
+    // 경험치가 올라간 캐릭터
+    final updatedCharacter = await _characterRepository.getCharacter();
 
     // 레벨업 하지 않는 경우
-    if (character.currentExp + value < character.maxExp) {
-      character.currentExp += value;
+    if (currentCharacter.level == updatedCharacter.level) {
+      await setCharacter();
       notifyListeners();
       return;
     }
@@ -67,13 +66,16 @@ class GrowViewModel with ChangeNotifier {
     // 레벨업 하는 경우
     character.currentExp = character.maxExp;
     notifyListeners();
+    // 경험치가 다 차고 레벨업 다이얼로그 UI Event발생
+    await Future.delayed(const Duration(milliseconds: ExpBar.expAnimationDuration)).then((_) {
+      _uiEventController.add(const GrowUiEvent.levelUp());
+    });
 
+    _character = updatedCharacter;
     // 캐릭터 fade 애니메이션
     avatarIsVisible = false;
     notifyListeners();
     await Future.delayed(Duration(milliseconds: fadeDuration));
-
-    await fetchData();
     
     avatarIsVisible = true;
     levelUpEffect = true;
@@ -84,22 +86,15 @@ class GrowViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void changeComment() {
-    FirebaseAnalytics.instance.logEvent(name: '캐릭터_코멘트_변경');
-    _commentOrder = (_commentOrder + 1) % _comments.length;
-    notifyListeners();
-  }
-
-  /// 캐릭터 데이터를 불러오는 함수
-  /// 
-  /// [_character]에 저장
-  /// 
-  /// [character]로 접근 가능
-  Future<void> fetchData({bool missionClear = true}) async {
+  /// 캐릭터 데이터를 불러오고 Grow Screen 화면을 설정
+  Future<void> fetchData() async {
     try {
       // 서버에서 가져온 캐릭터
-      var characterFromServer = await _characterRepository.getCharacter();
+      _isLoading = true;
+      notifyListeners();
+      await setCharacter();
 
+      
       // test용 서버에서 가져온 캐릭터
       // var characterFromServer = Character(
       //     id: 1,
@@ -110,16 +105,15 @@ class GrowViewModel with ChangeNotifier {
       //     currentExp: 5,
       //     maxExp: 30,
       //     remainedTime: 5);
-
-      // 놀아주기 남은 시간 설정
-      remainedPlayTime = characterFromServer.remainedTime ?? 0;
+      
+      /// 놀아주기 남은 시간 설정
+      /// view에서는 [_character.remainedTime]에 직접 접근하지 않음
+      remainedPlayTime = _character.remainedTime ?? 0;
       if (remainedPlayTime <= 0) {
         playButtonEnabled = true;
       } else {
         playButtonEnabled = false;
       }
-
-      _character = characterFromServer;
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -127,12 +121,18 @@ class GrowViewModel with ChangeNotifier {
     }
   }
 
-  /// [fetchData]를 통해 캐릭터 정보를 먼저 가져오고 캐릭터 이름이 있는지 확인
+
+  /// [notifyListeners] 호출 없이 캐릭터만 설정
+  Future<void> setCharacter() async {
+    _character = await _characterRepository.getCharacter();
+  }
+
+  /// [setCharacter]를 통해 캐릭터 정보를 먼저 가져오고 캐릭터 이름이 있는지 확인
   /// 
   /// 만약 있으면 [true]
   /// 없으면 [false]를 반환
   Future<bool> checkIfCharacterHasName() async {
-    await fetchData();
+    await setCharacter();
     return hasName;
   }
 
@@ -143,7 +143,7 @@ class GrowViewModel with ChangeNotifier {
   /// 
   /// 있으면 [null] 반환
   Future<String?> setNameIfNoName(String name) async {
-    if (await checkIfCharacterHasName()) {
+    if (!await checkIfCharacterHasName()) {
       await setCharacterName(name);
       return name;
     } else {
@@ -151,37 +151,27 @@ class GrowViewModel with ChangeNotifier {
     }
   }
 
-  /// SharedPreferences 로컬 스토리지에 현재 캐릭터 상태를 저장
-  Future<void> _saveCharacter(Character character) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-        'prevCharacter', jsonEncode(character.toEntity().toJson()));
+  /// 캐릭터 먹이주기
+  Future<void> feed() async {
+    await _characterRepository.feed();
+    increaseExp();
   }
 
   /// 하트 버튼 누를 시 하트 효과
-  void playWithCharacter() async {
+  Future<void> playWithCharacter() async {
     // 놀아주고 난 후 캐릭터 API 응답
     Character? resultCharacter =
         await _characterRepository.playWithCharacter(_character.id);
-
-    // test용 서버에서 가져온 캐릭터
-    // var resultCharacter = Character(
-    //     id: 1,
-    //     imageUrl:
-    //         'https://cdn.imweb.me/upload/S20211110a3d216dc49446/f7bfffacbb6de.png',
-    //     name: "안녕",
-    //     nickname: null,
-    //     currentExp: 5,
-    //     maxExp: 30,
-    //     remainedTime: 30);
 
     // 쿨타임이 남아 있으면 함수 끝
     if (resultCharacter == null) {
       return;
     }
 
-    // 경험치가 올라간 캐릭터를 서버에 저장
-    await fetchData(missionClear: false);
+    remainedPlayTime = resultCharacter.remainedTime!;
+    notifyListeners();
+    // 캐릭터의 경험치를 올린다.
+    await increaseExp();
 
     if (isHeartVisible) {
       FirebaseAnalytics.instance
@@ -202,18 +192,13 @@ class GrowViewModel with ChangeNotifier {
   }
 
   Future<void> setCharacterName(String nickname) async {
-    _character.nickname = nickname;
-    notifyListeners();
-
     // 서버에 캐릭터 이름 저장
-    _characterRepository.setName(character.id, nickname);
+    await _characterRepository.setName(character.id, nickname);
   }
 
-  void togglePlayButton({required bool isActive}) {
-    playButtonEnabled = isActive;
-    if (isActive) {
-      remainedPlayTime = 0;
-    }
+  /// view의 타이머 시간을 0으로 설정
+  void clearPlayTime() {
+    remainedPlayTime = 0;
     notifyListeners();
   }
 

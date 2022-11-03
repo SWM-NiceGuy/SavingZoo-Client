@@ -1,4 +1,4 @@
-import 'package:amond/presentation/controllers/grow_view_model.dart';
+import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
@@ -72,7 +72,7 @@ class _LevelSystem extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 5.0),
-              _ExpBar(height: height, percentage: percentage),
+              ExpBar(height: height, percentage: percentage),
             ],
           ),
         ),
@@ -81,11 +81,13 @@ class _LevelSystem extends StatelessWidget {
   }
 }
 
-class _ExpBar extends StatelessWidget {
+class ExpBar extends StatelessWidget {
   final double height;
   final double percentage;
 
-  const _ExpBar({
+  static const int expAnimationDuration = 500;
+
+  const ExpBar({
     Key? key,
     required this.percentage,
     required this.height,
@@ -99,7 +101,7 @@ class _ExpBar extends StatelessWidget {
       maxValue: 100,
       backgroundColor: kExpBarDefaultColor,
       progressColor: kExpBarFillColor,
-      animatedDuration: const Duration(milliseconds: 500),
+      animatedDuration: const Duration(milliseconds: expAnimationDuration),
       borderRadius: BorderRadius.circular(height / 2),
     );
   }
