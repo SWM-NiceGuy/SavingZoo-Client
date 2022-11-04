@@ -6,6 +6,7 @@ class Character {
   String? nickname;
   final String imageUrl;
   final int level;
+  final int currentStage;
   int currentExp;
   int maxExp;
   int? remainedTime;
@@ -18,6 +19,7 @@ class Character {
     required this.name,
     required this.nickname,
     required this.imageUrl,
+    required this.currentStage,
     this.level = 1,
     this.currentExp = 0,
     required this.maxExp,
@@ -36,6 +38,7 @@ class Character {
         currentLevel: level,
         currentExp: currentExp,
         maxExp: maxExp,
+        currentStage: currentStage
       );
 
   static Character _$CharacterFromEntity(CharacterEntity entity) => Character(
@@ -47,5 +50,6 @@ class Character {
         currentExp: entity.currentExp,
         maxExp: entity.maxExp,
         remainedTime: entity.remainedPlayTime,
+        currentStage: entity.currentStage,
       );
 }

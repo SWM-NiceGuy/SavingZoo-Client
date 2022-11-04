@@ -3,15 +3,17 @@ import 'dart:convert';
 import 'package:amond/data/entity/user_info_entity.dart';
 import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/auth/auth_info.dart';
+import 'package:amond/utils/auth/do_auth.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:http/http.dart' as http;
 
 class MemberApi {
-  Future<http.Response> login(String provider, String accessToken) async {
+  Future<http.Response> login(LoginInfo info) async {
     final url = Uri.parse('$baseUrl/auth/login');
+    print(info.username);
     final response = await http.post(
       url,
-      body: jsonEncode({"providerType": provider, "accessToken": accessToken}),
+      body: jsonEncode({"providerType": info.provider, "accessToken": info.accessToken, "username": info.username}),
       headers: {
         'Content-type': 'application/json',
         'Accept': 'application/json',

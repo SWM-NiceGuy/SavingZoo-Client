@@ -10,6 +10,7 @@ class CharacterEntity {
   String? nickname;
   final String image;
   final int currentLevel;
+  final int currentStage;
   final int currentExp;
   final int maxExp;
   final int? remainedPlayTime;
@@ -21,6 +22,7 @@ class CharacterEntity {
     required this.name,
     this.nickname,
     required this.image,
+    required this.currentStage,
     required this.currentLevel,
     required this.currentExp,
     required this.maxExp,

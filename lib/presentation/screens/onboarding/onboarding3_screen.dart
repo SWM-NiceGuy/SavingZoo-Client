@@ -223,7 +223,7 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
                     // 로그인 시도 후 성공하면 캐릭터 이름 설정 후 MainScreen으로 이동
                     await DoAppleAuth().login().then((info) async {
                       await authController.login(
-                          info.provider, info.accessToken);
+                          info);
                     }).then((_) async {
                       await context
                           .read<GrowViewModel>()
@@ -248,7 +248,7 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
               onTap: () async {
                 try {
                   await DoKakaoAuth().login().then((info) async {
-                    await authController.login(info.provider, info.accessToken);
+                    await authController.login(info);
                   }).then((_) async {
                     await context
                         .read<GrowViewModel>()

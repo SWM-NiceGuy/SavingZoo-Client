@@ -8,7 +8,6 @@ import 'package:amond/presentation/widget/show_platform_based_dialog.dart';
 
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
 import 'package:image_picker/image_picker.dart';
@@ -25,12 +24,13 @@ class MissionDetailBottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<MissionDetailViewModel>();
+    final viewModel =
+        Provider.of<MissionDetailViewModel>(context, listen: false);
 
     Future<void> _onButtonClick() async {
       // 미션을 제출했으면 동작 취소
-      if (controller.mission.state == MissionState.wait ||
-          controller.mission.state == MissionState.completed) {
+      if (viewModel.mission.state == MissionState.wait ||
+          viewModel.mission.state == MissionState.completed) {
         return;
       }
 
@@ -50,8 +50,8 @@ class MissionDetailBottomBar extends StatelessWidget {
         // FA 로그
         AmondFirebaseAnalytics.logMissionEvent(
           event: FaEvent.touchMissionButton,
-          missionId: controller.missionId,
-          missionDetail: controller.mission,
+          missionId: viewModel.missionId,
+          missionDetail: viewModel.mission,
         );
 
         // 카메라로 이미지 선택
@@ -64,8 +64,8 @@ class MissionDetailBottomBar extends StatelessWidget {
           // FA 로그
           AmondFirebaseAnalytics.logMissionEvent(
             event: FaEvent.cancelMission,
-            missionId: controller.missionId,
-            missionDetail: controller.mission,
+            missionId: viewModel.missionId,
+            missionDetail: viewModel.mission,
           );
           return;
         }
@@ -74,13 +74,13 @@ class MissionDetailBottomBar extends StatelessWidget {
         // FA 로그
         AmondFirebaseAnalytics.logMissionEvent(
           event: FaEvent.executeMission,
-          missionId: controller.missionId,
-          missionDetail: controller.mission,
+          missionId: viewModel.missionId,
+          missionDetail: viewModel.mission,
         );
 
         // 미션 업로드
         // 오류가 있으면 다이얼로그를 띄움
-        controller.submit(image.path).onError((_, __) {
+        viewModel.submit(image.path).onError((_, __) {
           showPlatformBasedDialog(context, '사진 전송에 실패했습니다.', '다시 시도해주세요.');
         });
       });
@@ -96,17 +96,15 @@ class MissionDetailBottomBar extends StatelessWidget {
             // 미션 state에 따라 버튼이 달라져야 함
             Expanded(
               child: _CustomButton(
-                text: controller.stateToButtonText,
-                onClick: controller.mission.canSubmit
-                    ? _onButtonClick
-                    : null,
-                whiteBackground: controller.mission.state == MissionState.wait,
+                text: viewModel.stateToButtonText,
+                onClick: viewModel.mission.canSubmit ? _onButtonClick : null,
+                whiteBackground: viewModel.mission.state == MissionState.wait,
               ),
             ),
             // 사진 제출했을 경우 보여주기
             // if (mission.state == MissionState.wait ||
             //     mission.state == MissionState.completed)
-              // _MyMissionImage(imageUrl: 'myMissionImage'),
+            // _MyMissionImage(imageUrl: 'myMissionImage'),
           ],
         ),
       ),
@@ -158,6 +156,7 @@ class _CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<MissionDetailViewModel>();
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(40.0),
@@ -168,29 +167,32 @@ class _CustomButton extends StatelessWidget {
           )
         ],
       ),
-      child: TextButton(
-        onPressed: onClick,
-        style: TextButton.styleFrom(
-          primary: whiteBackground ? kBlue : Colors.white,
-          backgroundColor: whiteBackground ? Colors.white : kMissionButtonColor,
-          padding: const EdgeInsets.all(20.0),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(40.0),
-            side: const BorderSide(
-              width: 2.0,
-              color: kMissionButtonColor,
+      child: viewModel.isSubmitting
+          ? const Center(child: PlatformBasedLoadingIndicator())
+          : TextButton(
+              onPressed: onClick,
+              style: TextButton.styleFrom(
+                primary: whiteBackground ? kBlue : Colors.white,
+                backgroundColor:
+                    whiteBackground ? Colors.white : kMissionButtonColor,
+                padding: const EdgeInsets.all(20.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(40.0),
+                  side: const BorderSide(
+                    width: 2.0,
+                    color: kMissionButtonColor,
+                  ),
+                ),
+              ),
+              child: Text(
+                text,
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w600,
+                  color: whiteBackground ? kBlack : Colors.white,
+                ),
+              ),
             ),
-          ),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
-            color: whiteBackground ? kBlack : Colors.white,
-          ),
-        ),
-      ),
     );
   }
 }

@@ -13,7 +13,11 @@ class DoAppleAuth extends DoAuth {
         ],
       );
 
-      return LoginInfo("APPLE", appleCredential.identityToken!);
+      String? username = appleCredential.givenName == null
+      ? null
+      : appleCredential.familyName! + appleCredential.givenName!;
+
+      return LoginInfo(provider: "APPLE", accessToken: appleCredential.identityToken!, username: username);
     } catch (error) {
       // print('애플 로그인 실패 $error');
       rethrow;

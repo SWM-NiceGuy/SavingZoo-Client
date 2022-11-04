@@ -1,5 +1,6 @@
 import 'package:amond/domain/usecases/member/member_use_cases.dart';
 import 'package:amond/utils/auth/auth_info.dart';
+import 'package:amond/utils/auth/do_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -52,16 +53,16 @@ class AuthController with ChangeNotifier {
     return true;
   }
 
-  Future<void> login(String provider, String accessToken) async {
+  Future<void> login(LoginInfo info) async {
     final prefs = await this.prefs;
     try {
       // 로그인을 시도하여 서버에서 토큰을 받아온다.
-      final jwt = await _memberUseCases.login(provider, accessToken);
+      final jwt = await _memberUseCases.login(info);
 
       // 토큰, 로그인 타입을 SharedPreferences에 저장
       await prefs.setString('jwt', jwt);
-      await prefs.setString('loginType', provider);
-      _loginType = provider;
+      await prefs.setString('loginType', info.provider);
+      _loginType = info.provider;
       await setToken();
 
 

@@ -68,9 +68,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               try {
                                 // 로그인 시도 후 성공하면 MainScreen으로 이동
                                 final info = await DoAppleAuth().login();
-                                await authController.login(
-                                    info.provider, info.accessToken);
-                                _navigateToFirstScreen();
+                                await authController.login(info);
                               } catch (error) {
                                 // 의도적인 로그인 취소로 보고 애플 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
                                 if (error
@@ -81,6 +79,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 }
                                 _showLoginFailDialog(context, '로그인에 실패했습니다.');
                               }
+                              _navigateToFirstScreen();
                             },
                             child: const AppleLoginContainer(),
                           ),
@@ -92,12 +91,10 @@ class _AuthScreenState extends State<AuthScreen> {
                             try {
                               // 로그인 시도 후 성공하면 MainScreen으로 이동
                               final info = await DoKakaoAuth().login();
-                              await authController.login(
-                                  info.provider, info.accessToken);
-                              _navigateToFirstScreen();
+                              await authController.login(info);
                             } catch (error) {
-                            //   // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
-                            //   // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
+                              //   // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
+                              //   // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
                               if (error is PlatformException &&
                                   error.code == 'CANCELED') {
                                 return;
@@ -109,6 +106,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 _showLoginFailDialog(context, '로그인에 실패했습니다.');
                               }
                             }
+                            _navigateToFirstScreen();
                           },
                           child: const KakaoLoginContainer(),
                         ),
