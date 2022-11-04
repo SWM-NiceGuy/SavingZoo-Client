@@ -42,16 +42,28 @@ class _GrowScreenState extends State<GrowScreen> {
 
     final viewModel = context.read<GrowViewModel>();
 
+    // 뷰모델로 부터 레벨업 이벤트를 받으면 레벨업 다이얼로그 보여주기
     _uiEventSubscription = viewModel.eventStream.listen((event) {
-      event.when(levelUp: () {
-        // 레벨업 다이얼로그 보여주기
-        showDialog(
-            context: context,
-            builder: (_) => LevelupDialog(
-                  level: viewModel.character.level,
-                  name: viewModel.character.nickname ?? '',
-                ));
-      });
+      event.when(
+        levelUp: () {
+          showDialog(
+              context: context,
+              builder: (_) => LevelupDialog(
+                    level: viewModel.character.level,
+                    name: viewModel.character.nickname ?? '',
+                  ));
+        },
+        stageUp: () {
+          showDialog(
+              context: context,
+              builder: (_) => LevelupDialog(
+                    level: viewModel.character.level,
+                    name: viewModel.character.nickname ?? '',
+                    isStageUpgrade: true,
+                    imageUrl: null,
+                  ));
+        },
+      );
     });
 
     // 캐릭터 불러오기
@@ -209,8 +221,7 @@ class _GrowScreenWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: PlayButton(
-                      remainingSeconds:
-                          growController.remainedPlayTime,
+                      remainingSeconds: growController.remainedPlayTime,
                       onClick: growController.playWithCharacter,
                     ),
                   ),

@@ -1,6 +1,7 @@
 import 'package:amond/domain/models/mission_detail.dart';
 import 'package:amond/domain/models/mission_state.dart';
 import 'package:amond/presentation/controllers/mission_detail_view_model.dart';
+import 'package:amond/presentation/screens/mission/mission_submit_image_detail.dart';
 
 import 'package:amond/ui/colors.dart';
 import 'package:amond/utils/firebase_analytics.dart';
@@ -104,7 +105,7 @@ class MissionDetailBottomBar extends StatelessWidget {
             // 사진 제출했을 경우 보여주기
             // if (mission.state == MissionState.wait ||
             //     mission.state == MissionState.completed)
-            // _MyMissionImage(imageUrl: 'myMissionImage'),
+            const _MyMissionImage(),
           ],
         ),
       ),
@@ -158,15 +159,17 @@ class _CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.watch<MissionDetailViewModel>();
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(40.0),
-        boxShadow: [
-          BoxShadow(
-            color: kBlue.withOpacity(0.5),
-            blurRadius: 10.0,
-          )
-        ],
-      ),
+      decoration: viewModel.isSubmitting
+          ? null
+          : BoxDecoration(
+              borderRadius: BorderRadius.circular(40.0),
+              boxShadow: [
+                BoxShadow(
+                  color: kBlue.withOpacity(0.5),
+                  blurRadius: 10.0,
+                )
+              ],
+            ),
       child: viewModel.isSubmitting
           ? const Center(child: PlatformBasedLoadingIndicator())
           : TextButton(
@@ -202,38 +205,51 @@ class _CustomButton extends StatelessWidget {
 /// [imageUrl] - 이미지 주소
 ///
 class _MyMissionImage extends StatelessWidget {
-  final String imageUrl;
   const _MyMissionImage({
-    required this.imageUrl,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(left: 24),
-      padding: const EdgeInsets.all(2),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16.0),
-        boxShadow: [
-          BoxShadow(
-            color: kBlue.withOpacity(0.5),
-            blurRadius: 10.0,
-            offset: const Offset(0, 5),
-          )
-        ],
-      ),
-      clipBehavior: Clip.hardEdge,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16.0),
-        child: Image.network(
-          imageUrl,
-          width: 58.0,
-          height: 58.0,
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
+    final String imageUrl = context.select<MissionDetailViewModel, String>(
+        (value) => value.mission.submitImageUrl);
+
+    return imageUrl.isEmpty
+        ? const SizedBox()
+        : Container(
+            margin: const EdgeInsets.only(left: 24),
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.0),
+              boxShadow: [
+                BoxShadow(
+                  color: kBlue.withOpacity(0.5),
+                  blurRadius: 10.0,
+                  offset: const Offset(0, 5),
+                )
+              ],
+            ),
+            clipBehavior: Clip.hardEdge,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) =>
+                          MissionSubmitImageDetail(imageUrl: imageUrl)));
+                },
+                child: Hero(
+                  tag: 'missionSubmitImageDetail',
+                  child: Image.network(
+                    imageUrl,
+                    width: 58.0,
+                    height: 58.0,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          );
   }
 }

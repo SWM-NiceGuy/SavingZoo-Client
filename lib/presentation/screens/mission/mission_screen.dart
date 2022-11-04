@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/domain/models/mission_list.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
@@ -65,7 +67,7 @@ class _MissionScreenState extends State<MissionScreen> {
                 SizedBox(height: 20.0),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.0),
-                  child: _MissionTimer(seconds: 7430),
+                  child: _MissionTimer(),
                 ),
                 SizedBox(height: 48.0),
               ],
@@ -123,24 +125,67 @@ class _GreetingText extends StatelessWidget {
   }
 }
 
-class _MissionTimer extends StatelessWidget {
-  final int seconds;
+class _MissionTimer extends StatefulWidget {
   const _MissionTimer({
     Key? key,
-    required this.seconds,
   }) : super(key: key);
+
+  @override
+  State<_MissionTimer> createState() => _MissionTimerState();
+}
+
+class _MissionTimerState extends State<_MissionTimer> {
+  late int _seconds;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    var now = DateTime.now();
+    var tomorrowNoon = DateTime(now.year, now.month, now.day + 1);
+    _seconds = tomorrowNoon.difference(now).inSeconds;
+    _startTimer();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _timer?.cancel();
+  }
+
+  void _startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_seconds == 1) {
+          setState(() {
+            timer.cancel();
+            _seconds--;
+          });
+        } else {
+          setState(() {
+            _seconds--;
+          });
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+      width: 119,
+      height: 25,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8.0),
         color: Colors.white.withOpacity(0.5),
       ),
-      child: Text(
-        '${secondsToTimeLeft(seconds)} 남음',
-        style: const TextStyle(fontSize: 12.0, color: Color(0xFF7EA6E1)),
+      child: Center(
+        child: Text(
+          '${secondsToTimeLeft(_seconds)} 남음',
+          style: const TextStyle(fontSize: 12.0, color: Color(0xFF7EA6E1)),
+        ),
       ),
     );
   }

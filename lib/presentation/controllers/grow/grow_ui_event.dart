@@ -6,4 +6,5 @@ part 'grow_ui_event.freezed.dart';
 class GrowUiEvent with _$GrowUiEvent {
 
   const factory GrowUiEvent.levelUp() = LevelUp;
+  const factory GrowUiEvent.stageUp() = StageUp;
 }

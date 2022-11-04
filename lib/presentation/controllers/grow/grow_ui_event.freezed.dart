@@ -19,32 +19,38 @@ mixin _$GrowUiEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() levelUp,
+    required TResult Function() stageUp,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? levelUp,
+    TResult? Function()? stageUp,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? levelUp,
+    TResult Function()? stageUp,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LevelUp value) levelUp,
+    required TResult Function(StageUp value) stageUp,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LevelUp value)? levelUp,
+    TResult? Function(StageUp value)? stageUp,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LevelUp value)? levelUp,
+    TResult Function(StageUp value)? stageUp,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -105,6 +111,7 @@ class _$LevelUp implements LevelUp {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() levelUp,
+    required TResult Function() stageUp,
   }) {
     return levelUp();
   }
@@ -113,6 +120,7 @@ class _$LevelUp implements LevelUp {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? levelUp,
+    TResult? Function()? stageUp,
   }) {
     return levelUp?.call();
   }
@@ -121,6 +129,7 @@ class _$LevelUp implements LevelUp {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? levelUp,
+    TResult Function()? stageUp,
     required TResult orElse(),
   }) {
     if (levelUp != null) {
@@ -133,6 +142,7 @@ class _$LevelUp implements LevelUp {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(LevelUp value) levelUp,
+    required TResult Function(StageUp value) stageUp,
   }) {
     return levelUp(this);
   }
@@ -141,6 +151,7 @@ class _$LevelUp implements LevelUp {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(LevelUp value)? levelUp,
+    TResult? Function(StageUp value)? stageUp,
   }) {
     return levelUp?.call(this);
   }
@@ -149,6 +160,7 @@ class _$LevelUp implements LevelUp {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(LevelUp value)? levelUp,
+    TResult Function(StageUp value)? stageUp,
     required TResult orElse(),
   }) {
     if (levelUp != null) {
@@ -160,4 +172,104 @@ class _$LevelUp implements LevelUp {
 
 abstract class LevelUp implements GrowUiEvent {
   const factory LevelUp() = _$LevelUp;
+}
+
+/// @nodoc
+abstract class _$$StageUpCopyWith<$Res> {
+  factory _$$StageUpCopyWith(_$StageUp value, $Res Function(_$StageUp) then) =
+      __$$StageUpCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$StageUpCopyWithImpl<$Res>
+    extends _$GrowUiEventCopyWithImpl<$Res, _$StageUp>
+    implements _$$StageUpCopyWith<$Res> {
+  __$$StageUpCopyWithImpl(_$StageUp _value, $Res Function(_$StageUp) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$StageUp implements StageUp {
+  const _$StageUp();
+
+  @override
+  String toString() {
+    return 'GrowUiEvent.stageUp()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$StageUp);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() levelUp,
+    required TResult Function() stageUp,
+  }) {
+    return stageUp();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? levelUp,
+    TResult? Function()? stageUp,
+  }) {
+    return stageUp?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? levelUp,
+    TResult Function()? stageUp,
+    required TResult orElse(),
+  }) {
+    if (stageUp != null) {
+      return stageUp();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(LevelUp value) levelUp,
+    required TResult Function(StageUp value) stageUp,
+  }) {
+    return stageUp(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(LevelUp value)? levelUp,
+    TResult? Function(StageUp value)? stageUp,
+  }) {
+    return stageUp?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(LevelUp value)? levelUp,
+    TResult Function(StageUp value)? stageUp,
+    required TResult orElse(),
+  }) {
+    if (stageUp != null) {
+      return stageUp(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class StageUp implements GrowUiEvent {
+  const factory StageUp() = _$StageUp;
 }

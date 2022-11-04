@@ -9,6 +9,7 @@ class MissionDetail {
   String submitGuide;
   int reward;
   MissionState state;
+  String submitImageUrl;
 
   MissionDetail({
     required this.name,
@@ -18,19 +19,22 @@ class MissionDetail {
     required this.exampleImageUrls,
     required this.reward,
     required this.state,
+    required this.submitImageUrl,
   });
 
   factory MissionDetail.fromEntity(MissionDetailEntity entity) =>
       _$MissionDetailFromEntity(entity);
 
   MissionDetailEntity toEntity() => MissionDetailEntity(
-      name: name,
-      content: content,
-      description: description,
-      exampleImageUrls: exampleImageUrls,
-      submitGuide: submitGuide,
-      reward: reward,
-      state: state.toString());
+        name: name,
+        content: content,
+        description: description,
+        exampleImageUrls: exampleImageUrls,
+        submitGuide: submitGuide,
+        reward: reward,
+        state: state.toString(),
+        submitImageUrl: submitImageUrl,
+      );
 
   static MissionDetail _$MissionDetailFromEntity(MissionDetailEntity entity) =>
       MissionDetail(
@@ -41,6 +45,7 @@ class MissionDetail {
         submitGuide: entity.submitGuide,
         reward: entity.reward,
         state: MissionState.fromString(entity.state),
+        submitImageUrl: entity.submitImageUrl,
       );
 
   bool get canSubmit {

@@ -42,8 +42,8 @@ class LevelupDialog extends StatelessWidget {
 
                 // 중앙 이미지
                 isStageUpgrade
-                    ? Image.network(
-                        imageUrl!,
+                    ? Image.asset(
+                        imageUrl ?? 'assets/characters/otter/silhouettes/2.png',
                         width: 150,
                         height: 180,
                         fit: BoxFit.cover,

@@ -50,7 +50,6 @@ class GrowViewModel with ChangeNotifier {
 
   /// 캐릭터의 경험치를 증가시킨다.
   Future<void> increaseExp() async {
-
     // 현재 캐릭터
     final currentCharacter = _character;
     // 경험치가 올라간 캐릭터
@@ -66,17 +65,28 @@ class GrowViewModel with ChangeNotifier {
     // 레벨업 하는 경우
     character.currentExp = character.maxExp;
     notifyListeners();
-    // 경험치가 다 차고 레벨업 다이얼로그 UI Event발생
-    await Future.delayed(const Duration(milliseconds: ExpBar.expAnimationDuration)).then((_) {
-      _uiEventController.add(const GrowUiEvent.levelUp());
-    });
+
+    // 경험치가 다 차고 레벨업 또는 스테이지업 다이얼로그 UI Event발생
+    if (updatedCharacter.currentStage > currentCharacter.currentStage) {
+      await Future.delayed(
+              const Duration(milliseconds: ExpBar.expAnimationDuration))
+          .then((_) {
+        _uiEventController.add(const GrowUiEvent.stageUp());
+      });
+    } else {
+      await Future.delayed(
+              const Duration(milliseconds: ExpBar.expAnimationDuration))
+          .then((_) {
+        _uiEventController.add(const GrowUiEvent.levelUp());
+      });
+    }
 
     _character = updatedCharacter;
     // 캐릭터 fade 애니메이션
     avatarIsVisible = false;
     notifyListeners();
     await Future.delayed(Duration(milliseconds: fadeDuration));
-    
+
     avatarIsVisible = true;
     levelUpEffect = true;
     notifyListeners();
@@ -94,7 +104,6 @@ class GrowViewModel with ChangeNotifier {
       notifyListeners();
       await setCharacter();
 
-      
       // test용 서버에서 가져온 캐릭터
       // var characterFromServer = Character(
       //     id: 1,
@@ -105,7 +114,7 @@ class GrowViewModel with ChangeNotifier {
       //     currentExp: 5,
       //     maxExp: 30,
       //     remainedTime: 5);
-      
+
       /// 놀아주기 남은 시간 설정
       /// view에서는 [_character.remainedTime]에 직접 접근하지 않음
       remainedPlayTime = _character.remainedTime ?? 0;
@@ -121,14 +130,13 @@ class GrowViewModel with ChangeNotifier {
     }
   }
 
-
   /// [notifyListeners] 호출 없이 캐릭터만 설정
   Future<void> setCharacter() async {
     _character = await _characterRepository.getCharacter();
   }
 
   /// [setCharacter]를 통해 캐릭터 정보를 먼저 가져오고 캐릭터 이름이 있는지 확인
-  /// 
+  ///
   /// 만약 있으면 [true]
   /// 없으면 [false]를 반환
   Future<bool> checkIfCharacterHasName() async {
@@ -136,11 +144,10 @@ class GrowViewModel with ChangeNotifier {
     return hasName;
   }
 
-
   /// 캐릭터의 이름이 없을때만 캐릭터 이름을 설정
-  /// 
+  ///
   /// 캐릭터 이름이 없으면 [name] 반환
-  /// 
+  ///
   /// 있으면 [null] 반환
   Future<String?> setNameIfNoName(String name) async {
     if (!await checkIfCharacterHasName()) {
