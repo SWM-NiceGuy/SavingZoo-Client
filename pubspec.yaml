@@ -56,6 +56,8 @@ dependencies:
   flutter_local_notifications: ^11.0.1
   firebase_crashlytics: ^2.8.12
   url_launcher: ^6.1.6
+  carousel_slider: ^4.1.1
+  webview_flutter: ^3.0.4
 
 dev_dependencies:
   flutter_test:
