@@ -1,5 +1,4 @@
 import 'package:amond/data/entity/banner_info_entity.dart';
-import 'package:flutter/material.dart';
 
 class BannerInfo {
   String imageUrl;

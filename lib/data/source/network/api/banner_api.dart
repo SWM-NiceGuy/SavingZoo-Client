@@ -7,14 +7,14 @@ import 'package:http/http.dart' as http;
 
 class BannerApi {
   Future<List<BannerInfoEntity>> getBannerInfo() async {
-    final url = Uri.parse('$baseUrl/user/mission/history');
+    final url = Uri.parse('$baseUrl/banners');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $globalToken',
       'Content-type': 'application/json',
     });
     final Map<String, dynamic> json =
         jsonDecode(utf8.decode(response.bodyBytes));
-
+  print(json);
     return (json['banners'] as List)
         .map((e) => BannerInfoEntity.fromJson(e))
         .toList();

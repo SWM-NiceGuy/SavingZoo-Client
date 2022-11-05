@@ -14,8 +14,7 @@ class BannerViewModel with ChangeNotifier {
   List<BannerInfo> get infos => _infos;
 
   Future<void> setBannerInfo() async {
-    //  _infos = await _repository.getBannerInfo();
-    await Future.delayed(const Duration(seconds: 1));
+      _infos = await _repository.getBannerInfo();
 
      _isLoading = false;
      notifyListeners();
