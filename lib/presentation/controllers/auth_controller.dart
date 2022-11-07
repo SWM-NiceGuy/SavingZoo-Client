@@ -1,7 +1,7 @@
 import 'package:amond/domain/usecases/member/member_use_cases.dart';
 import 'package:amond/utils/auth/auth_info.dart';
 import 'package:amond/utils/auth/do_auth.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController with ChangeNotifier {
@@ -41,6 +41,10 @@ class AuthController with ChangeNotifier {
 
     // 전역으로 토큰 설정
     globalToken = _token;
+    if (kDebugMode) {
+      print('유저 jwt: $_token');
+    }
+
     // 토큰이 없다면 [false] 반환
     if (_token == null) {
       return false;

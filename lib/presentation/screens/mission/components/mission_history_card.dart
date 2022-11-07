@@ -1,6 +1,5 @@
 import 'package:amond/domain/models/mission_history.dart';
 import 'package:amond/domain/models/mission_state.dart';
-import 'package:amond/presentation/screens/mission/util/get_history_text_by_state.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -24,17 +23,17 @@ class HistoryCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // 수행 시간
-                Text('${history.date.month}.${history.date.day}', style: TextStyle(color: Color(0xff939393)),),
+                Text('${history.date.month}.${history.date.day}', style: const TextStyle(color: Color(0xff939393)),),
                 const SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // 기록 내용
-                    Text(history.missionName, style: TextStyle(color: darkGreyColor, fontSize: 18,),),
+                    Text(history.missionName, style: const TextStyle(color: darkGreyColor, fontSize: 18,),),
 
                     // 반려 시 사유
                     if (history.state == MissionState.rejected)
-                    Text('사유사유', style: TextStyle(fontSize: 14, color: Color(0xff939393),),)
+                    Text(history.descriptionWhyRejected ?? '', style: const TextStyle(fontSize: 14, color: Color(0xff939393),),)
                   ],
                 ),
                 const Spacer(),

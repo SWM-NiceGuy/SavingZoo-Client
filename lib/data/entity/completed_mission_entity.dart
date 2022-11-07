@@ -1,4 +1,3 @@
-import 'package:http/http.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'completed_mission_entity.g.dart';

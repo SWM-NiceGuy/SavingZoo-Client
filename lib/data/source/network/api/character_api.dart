@@ -139,7 +139,6 @@ class CharacterApi {
       },
     );
 
-    print(response.body);
 
     final json = jsonDecode(response.body);
     return json['reward'];

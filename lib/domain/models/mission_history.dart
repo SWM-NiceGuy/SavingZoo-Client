@@ -31,5 +31,6 @@ class MissionHistory {
         type: entity.rewardType,
         missionName: entity.title,
         reward: entity.reward,
+        descriptionWhyRejected: entity.reason,
       );
 }

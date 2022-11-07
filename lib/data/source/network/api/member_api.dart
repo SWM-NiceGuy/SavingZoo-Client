@@ -10,7 +10,6 @@ import 'package:http/http.dart' as http;
 class MemberApi {
   Future<http.Response> login(LoginInfo info) async {
     final url = Uri.parse('$baseUrl/auth/login');
-    print(info.username);
     final response = await http.post(
       url,
       body: jsonEncode({"providerType": info.provider, "accessToken": info.accessToken, "username": info.username}),

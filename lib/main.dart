@@ -3,8 +3,6 @@ import 'package:amond/presentation/controllers/auth_controller.dart';
 
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/main_or_onboarding_screen.dart';
-import 'package:amond/presentation/screens/grow/grow_history_screen.dart';
-import 'package:amond/presentation/screens/grow/grow_screen.dart';
 import 'package:amond/presentation/screens/main_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_detail_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
