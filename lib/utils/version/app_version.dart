@@ -4,7 +4,7 @@ import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/version/app_status.dart';
 import 'package:http/http.dart' as http;
 
-const String appVersion = '1.2.2';
+const String appVersion = '1.2.3';
 AppStatus? currentAppStatus;
 
 const String appStoreUrl =

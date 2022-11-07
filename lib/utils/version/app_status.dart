@@ -7,7 +7,7 @@ part 'app_status.g.dart';
 class AppStatus {
   final bool required;
   final String latestVersion;
-  final String releaseNote;
+  final String? releaseNote;
 
   bool isLatest() {
     currentAppStatus = this;
@@ -16,7 +16,7 @@ class AppStatus {
 
   AppStatus({
     required this.latestVersion,
-    required this.releaseNote,
+    this.releaseNote,
     required this.required,
   });
 

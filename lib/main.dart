@@ -41,7 +41,12 @@ void main() async {
   KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
 
   // 앱 버전 체크
-  final appStatus = await getAppStatus();
+  AppStatus appStatus;
+  try {
+  appStatus = await getAppStatus();
+  } catch (e) {
+    appStatus = AppStatus(latestVersion: appVersion, required: false);
+  }
 
   // foreground 푸시 알림 설정
   await setUpForegroundNotification();

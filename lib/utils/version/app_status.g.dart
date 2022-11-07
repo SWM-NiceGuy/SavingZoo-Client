@@ -8,7 +8,7 @@ part of 'app_status.dart';
 
 AppStatus _$AppStatusFromJson(Map<String, dynamic> json) => AppStatus(
       latestVersion: json['latestVersion'] as String,
-      releaseNote: json['releaseNote'] as String,
+      releaseNote: json['releaseNote'] as String?,
       required: json['required'] as bool,
     );
 
