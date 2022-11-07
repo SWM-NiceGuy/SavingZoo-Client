@@ -44,7 +44,12 @@ void main() async {
   KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
 
   // 앱 버전 체크
-  final appStatus = await getAppStatus();
+  AppStatus appStatus;
+  try {
+    appStatus = await getAppStatus();
+  } catch (e) {
+    appStatus = AppStatus(latestVersion: appVersion, releaseNote: '', required: false);
+  }
 
   // foreground 푸시 알림 설정
   await setUpForegroundNotification();
@@ -69,11 +74,11 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           scaffoldBackgroundColor: Colors.white,
           appBarTheme: const AppBarTheme(
-            backgroundColor: Colors.white,
-            foregroundColor: blackColor,
-            titleTextStyle: TextStyle(color: blackColor, fontWeight: FontWeight.w600, fontSize: 18),
-            elevation: 0
-          )),
+              backgroundColor: Colors.white,
+              foregroundColor: blackColor,
+              titleTextStyle: TextStyle(
+                  color: blackColor, fontWeight: FontWeight.w600, fontSize: 18),
+              elevation: 0)),
 
       /// 앱 시작시 setToken을 통해, 자동로그인 시도
       /// 반환된 값이 [true]라면 MainScreen으로 이동
