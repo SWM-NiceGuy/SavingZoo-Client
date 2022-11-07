@@ -2,7 +2,7 @@ import 'package:amond/data/entity/character_entity.dart';
 
 class Character {
   final int id;
-  final String name;
+  final String species;
   String? nickname;
   final String imageUrl;
   final int level;
@@ -16,7 +16,7 @@ class Character {
 
   Character({
     required this.id,
-    required this.name,
+    required this.species,
     required this.nickname,
     required this.imageUrl,
     required this.currentStage,
@@ -32,7 +32,7 @@ class Character {
 
   CharacterEntity toEntity() => CharacterEntity(
         petId: id,
-        name: name,
+        species: species,
         nickname: nickname,
         image: imageUrl,
         currentLevel: level,
@@ -43,7 +43,7 @@ class Character {
 
   static Character _$CharacterFromEntity(CharacterEntity entity) => Character(
         id: entity.petId,
-        name: entity.name,
+        species: entity.species,
         level: entity.currentLevel,
         nickname: entity.nickname,
         imageUrl: entity.image,
