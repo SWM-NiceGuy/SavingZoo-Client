@@ -1,61 +1,111 @@
 import 'dart:convert';
 
+import 'package:amond/data/entity/character_entity.dart';
 import 'package:amond/data/source/network/base_url.dart';
-import 'package:amond/domain/models/member_info.dart';
+import 'package:amond/utils/auth/auth_info.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class CharacterApi {
-  Future<int> getExp(String provider, String uid) async {
+  Future<int> getExp() async {
     try {
-    final url = Uri.parse('$baseUrl/v1/exp?provider=$provider&uid=$uid');
-    final response = await http.get(url);
-    if (response.statusCode >= 400) {
-      throw Exception('경험치 불러오기에 실패했습니다.');
-    }
-    final res = jsonDecode(response.body)['exp'];
-    return res;
+      final url = Uri.parse('$baseUrl/v1/exp');
+      final response = await http.get(url, headers: {
+        'Authorization': 'Bearer $globalToken',
+      });
+      if (response.statusCode >= 400) {
+        throw Exception('경험치 불러오기에 실패했습니다.');
+      }
+      final res = jsonDecode(response.body)['exp'];
+      return res;
     } catch (error) {
       rethrow;
     }
   }
 
-  Future<int> changeExp(String provider, String uid, int exp) async {
+  Future<int> changeExp(int exp) async {
     final url = Uri.parse('$baseUrl/v1/exp');
-    
+
     final response = await http.put(
       url,
       body: jsonEncode({
-        'provider': provider,
-        'uid': uid,
         'exp': exp,
       }),
       headers: {
         'Content-type': 'application/json',
         'Accept': 'application/json',
+        'Authorization': 'Bearer $globalToken',
       },
     );
     final res = jsonDecode(response.body)['exp'];
     return res;
   }
 
-  Future<String?> getName(MemberInfo me) async {
-    final url = Uri.parse('$baseUrl/v1/nickname?provider=${me.provider}&uid=${me.uid}');
+  Future<String?> getName() async {
+    final url = Uri.parse('$baseUrl/v1/nickname');
 
-    final response = await http.get(url);
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $globalToken',
+    });
     final String? res = jsonDecode(utf8.decode(response.bodyBytes))["nickname"];
     return res;
   }
 
-  Future<void> setName(MemberInfo me, String name) async {
-    final url = Uri.parse("$baseUrl/v1/nickname");
-    
-    final response = await http.post(url, body: jsonEncode({
-      "provider": me.provider,
-      "uid": me.uid,
-      "nickname": name,
-    }),  headers: {
+  Future<CharacterEntity> getCharacterInfo() async {
+    final url = Uri.parse('$baseUrl/user/pet/info');
+
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $globalToken',
+    });
+    final json = jsonDecode(utf8.decode(response.bodyBytes));
+    if (kDebugMode) {
+      print('캐릭터 정보 응답: $json}');
+    }
+    return CharacterEntity.fromJson(json);
+  }
+
+  Future<void> setName(int petId, String name) async {
+    final url = Uri.parse("$baseUrl/user/pet/nickname");
+
+    await http.post(
+      url,
+      body: jsonEncode({
+        "userPetId": petId,
+        "nickname": name,
+      }),
+      headers: {
         'Content-type': 'application/json',
         'Accept': 'application/json',
-      },);
+        'Authorization': 'Bearer $globalToken',
+      },
+    );
+  }
+
+  Future<CharacterEntity?> getPlayResult(int petId) async {
+    final url = Uri.parse("$baseUrl/user/pet/play");
+
+    final response = await http.post(
+      url,
+      body: jsonEncode({
+        "userPetId": petId,
+      }),
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $globalToken',
+      },
+    );
+
+    Map<String, dynamic> json = jsonDecode(utf8.decode(response.bodyBytes));
+    if (kDebugMode) {
+      print('캐릭터 놀아주기 결과: $json');
+    }
+
+    var resultPetInfo = json['petInfo'];
+    if (resultPetInfo == null) {
+      return null;
+    }
+
+    return CharacterEntity.fromJson(resultPetInfo);
   }
 }

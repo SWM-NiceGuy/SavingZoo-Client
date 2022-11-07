@@ -1,8 +1,10 @@
-import 'package:amond/domain/models/member_info.dart';
+import 'package:amond/domain/models/character.dart';
 
 abstract class CharacterRepository {
-  Future<int> getExp(String provider, String uid);
-  Future<int> changeExp(String provider, String uid, int exp);
-  Future<String?> getName(MemberInfo me);
-  Future<void> setName(MemberInfo me, String name);
+  Future<int> getExp();
+  Future<int> changeExp(int exp);
+  Future<String?> getName();
+  Future<Character> getCharacter();
+  Future<void> setName(int petId, String name);
+  Future<Character?> playWithCharacter(int petId);
 }

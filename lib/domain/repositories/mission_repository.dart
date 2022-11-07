@@ -1,7 +1,11 @@
-import 'package:amond/data/entity/mission_entity.dart';
-import 'package:amond/domain/models/member_info.dart';
+import 'package:amond/domain/models/mission_detail.dart';
+import 'package:amond/domain/models/mission_history.dart';
+import 'package:amond/domain/models/mission_list.dart';
 
 abstract class MissionRepository {
-  Future<List<MissionEntity>> getAllMissions(MemberInfo me);
-  Future<void> completeMission(MemberInfo me, int missionId);
+  Future<List<MissionList>> getAllMissions();
+  Future<void> completeMission(int missionId);
+  Future<MissionDetail> getMissionDetail(int missionId);
+  Future<void> submitMission(int missionId, String filePath);
+  Future<List<MissionHistory>> getMissionHistories();
 }

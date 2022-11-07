@@ -1,33 +1,50 @@
-import 'package:amond/data/entity/mission_entity.dart';
+import 'package:amond/data/repository/mission_repository_impl.dart';
+import 'package:amond/domain/models/mission_list.dart';
+import 'package:amond/domain/models/mission_state.dart';
 import 'package:amond/presentation/controllers/mission_controller.dart';
+import 'package:amond/presentation/controllers/mission_detail_controller.dart';
+import 'package:amond/presentation/screens/mission/mission_detail_screen.dart';
 import 'package:amond/ui/colors.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'mission_complete_dialog.dart';
-
-class MissionCard extends StatefulWidget {
+class MissionCard extends StatelessWidget {
   const MissionCard({
     required this.mission,
     Key? key,
   }) : super(key: key);
 
-  final MissionEntity mission;
+  final MissionList mission;
 
   @override
-  State<MissionCard> createState() => _MissionCardState();
-}
+  build(BuildContext context) {
+    final deviceSize = MediaQuery.of(context).size;
 
-class _MissionCardState extends State<MissionCard> {
-  bool selected = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final missionController = context.read<MissionController>();
     return GestureDetector(
-      onTap: () => setState(() {
-        selected = !selected;
-      }),
+      // 미션카드 터치시 미션 상세 페이지로 이동
+      onTap: () {
+        // FA 로그
+        FirebaseAnalytics.instance.logEvent(name: '미션카드_터치', parameters: {
+          '미션id': mission.id,
+          '미션이름': mission.name,
+          '상태': mission.state.toString(),
+        });
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            // MissionDetailController를 여기서 주입
+            builder: (context) =>
+                ChangeNotifierProvider<MissionDetailController>(
+              create: (_) => MissionDetailController(
+                  context.read<MissionRepositoryImpl>(),
+                  missionId: mission.id),
+              child: const MissionDetailScreen(),
+            ),
+          ),
+        ).then((_) {
+          context.read<MissionController>().fetchMissions();
+        });
+      },
       child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           decoration: BoxDecoration(
@@ -49,76 +66,62 @@ class _MissionCardState extends State<MissionCard> {
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // 미션 아이콘 (아마 사진이 될 것)
-                  widget.mission.imageUrl == ""
+                  mission.iconUrl == ""
                       ? const Icon(
                           Icons.water_drop,
                           size: 48,
                           color: Colors.blue,
                         )
-                      : Image.network(widget.mission.imageUrl,
-                          height: 40, fit: BoxFit.cover),
+                      : Image.network(
+                          mission.iconUrl,
+                          height: 40,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (_, child, loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child;
+                            }
+                            return Image.asset(
+                              'assets/images/img_placeholder.gif',
+                              height: 40,
+                              width: 40,
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        ),
                   const SizedBox(width: 24),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    // 미션 내용 및 경험치
-                    children: [
-                      Text(widget.mission.title,
-                          style: const TextStyle(fontSize: 24, overflow: TextOverflow.ellipsis)),
-                      Text("+${widget.mission.reward}XP",
-                          style: const TextStyle(fontSize: 16)),
-                    ],
+                  SizedBox(
+                    width: deviceSize.width * 0.5,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      // 미션 내용 및 경험치
+                      children: [
+                        Text(
+                          mission.name,
+                          style: const TextStyle(
+                              fontSize: 20, overflow: TextOverflow.ellipsis),
+                        ),
+                        Text(
+                          '+ ${mission.reward}XP',
+                          style: const TextStyle(
+                              fontSize: 20, overflow: TextOverflow.ellipsis),
+                        )
+                      ],
+                    ),
                   ),
                   const Spacer(),
                   // 미션 성공 여부
-                  if (widget.mission.state == 'WAIT')
-                    ElevatedButton(
-                      onPressed: () {
-                        // 미션 성공 후 팝업
-                        missionController.completeMission(widget.mission.id);
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return MissionCompleteDialog(
-                                missionId: widget.mission.id,
-                                reward: widget.mission.reward,
-                              );
-                            });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.grey.shade100,
-                        elevation: 5
-                      ),
-                      child: const Text("완료하기", style: TextStyle(fontWeight: FontWeight.bold,color: expTextColor),),
-                    ),
-                  if (widget.mission.state == 'COMPLETE')
-                    Image.asset("assets/images/check_icon.png"),
+                  if (mission.state == MissionState.wait)
+                    Image.asset("assets/images/grey_check_icon.png",
+                        width: 40, height: 40),
+                  if (mission.state == MissionState.completed)
+                    Image.asset("assets/images/check_icon.png",
+                        width: 40, height: 40),
                 ],
               ),
-              AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                curve: Curves.easeIn,
-                height: selected ? 100 : 0,
-                child: Scrollbar(
-                  child: ListView(
-                    children: [
-                      const SizedBox(height: 24),
-                      Row(
-                        children: [
-                          Expanded(
-                              child: Text(
-                            widget.mission.content,
-                            style: const TextStyle(
-                                fontSize: 16,
-                                color: Color.fromARGB(255, 102, 102, 102)),
-                          ))
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              )
             ],
           )),
     );

@@ -1,59 +1,51 @@
-import 'avatar.dart';
+import 'package:amond/data/entity/character_entity.dart';
 
 class Character {
-  Avatar avatar = Avatar.baby;
+  final int id;
+  final String name;
+  String? nickname;
+  final String imageUrl;
+  final int level;
+  int currentExp;
+  int maxExp;
+  int? remainedTime;
+  bool? isPlayReady;
 
-  Character.ofExp(int exp) {
-    currentExp = exp;
-    for (var elem in avatarList.reversed) {
-      if (exp >= elem.requiredExp) {
-        avatar = elem;
-        break;
-      }
-    }
-    if (avatar == avatarList.last) {
-      expPercentage = 1.0;
-    } else {
-      expPercentage = (currentExp - avatar.requiredExp) / maxExp;
-    }
-  }
+  double get expPct => currentExp / maxExp;
 
-  int get level => avatar.level;
-  int currentExp = 0; // 현재 경험치
-  int get maxExp => avatar == avatarList.last
-      ? 50
-      : avatarList[level+1].requiredExp - avatar.requiredExp; // 최대 경험치
-  int extraExp = 0; // 증가한 경험치가 최대 경험치를 넘었을 때의 잔여 경험치
-  double expPercentage = 0.0; // 경험치 게이지 채워짐 정도 (0.0 ~ 1.0)
-  String get avatarPath => avatar.imagePath;
+  Character({
+    required this.id,
+    required this.name,
+    required this.nickname,
+    required this.imageUrl,
+    this.level = 1,
+    this.currentExp = 0,
+    required this.maxExp,
+    this.remainedTime,
+    this.isPlayReady,
+  });
 
-  int get displayExp =>
-      avatar == Avatar.adult ? 50 : currentExp - avatar.requiredExp;
+  factory Character.fromEntity(CharacterEntity entity) =>
+      _$CharacterFromEntity(entity);
 
-  ///
-  ///
-  void increaseExp(int point, [Function? callback]) async {
-    if (avatar == avatarList.last) {
-      return;
-    }
+  CharacterEntity toEntity() => CharacterEntity(
+        petId: id,
+        name: name,
+        nickname: nickname,
+        image: imageUrl,
+        currentLevel: level,
+        currentExp: currentExp,
+        maxExp: maxExp,
+      );
 
-    // 경험치 증가 로직
-    currentExp += point;
-
-    if (currentExp > avatarList[level + 1].requiredExp) {
-      extraExp = currentExp - avatarList[level].requiredExp;
-      currentExp = avatarList[level + 1].requiredExp;
-    }
-
-    // 화면상에 보여주는 함수를 callback으로 호출
-    if (callback != null) {
-      callback(expPercentage,
-        displayExp / (avatar.getNext().requiredExp - avatar.requiredExp));
-    }
-  }
-
-  void resetExp() {
-    currentExp = avatar.requiredExp;
-    expPercentage = 0.0;
-  }
+  static Character _$CharacterFromEntity(CharacterEntity entity) => Character(
+        id: entity.petId,
+        name: entity.name,
+        level: entity.currentLevel,
+        nickname: entity.nickname,
+        imageUrl: entity.image,
+        currentExp: entity.currentExp,
+        maxExp: entity.maxExp,
+        remainedTime: entity.remainedPlayTime,
+      );
 }

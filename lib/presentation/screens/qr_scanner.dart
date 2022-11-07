@@ -1,6 +1,4 @@
 import 'package:amond/presentation/screens/grow/util/mission.dart';
-import 'package:amond/widget/platform_based_indicator.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
