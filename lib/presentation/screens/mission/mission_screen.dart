@@ -32,7 +32,8 @@ class _MissionScreenState extends State<MissionScreen> {
 
     // 미션 불러오기
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<MissionViewModel>().fetchMissions();
+      final viewModel = context.read<MissionViewModel>();
+      viewModel.fetchMissions(categoryName: viewModel.selectedCategory);
     });
 
     // 미션 인증 결과 확인하기
@@ -40,7 +41,6 @@ class _MissionScreenState extends State<MissionScreen> {
       await checkMissionResult(context);
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +69,12 @@ class _MissionScreenState extends State<MissionScreen> {
                 SizedBox(height: 48.0),
               ],
             ),
+          ),
+          _CategorySection(
+            categories: viewModel.categories,
+            selectedCategory: viewModel.selectedCategory,
+            onCategoryClick: (name) =>
+                viewModel.fetchMissions(categoryName: name),
           ),
           _MissionSection(
             headerTitle: '세상쉬운 환경보호',
@@ -306,8 +312,53 @@ class _MissionSection extends StatelessWidget {
     )
         .then((_) {
       // 상태가 변경된 미션이 있을 수 있으니 미션을 다시 불러온다
-      context.read<MissionViewModel>().fetchMissions();
+      final viewModel = context.read<MissionViewModel>();
+      viewModel.fetchMissions(categoryName: viewModel.selectedCategory);
       checkMissionResult(context);
     });
+  }
+}
+
+class _CategorySection extends StatelessWidget {
+  final void Function(String name) onCategoryClick;
+  final List<String> categories;
+  final String selectedCategory;
+
+  const _CategorySection({
+    required this.categories,
+    required this.selectedCategory,
+    required this.onCategoryClick,
+    Key? key,
+  }) : super(key: key);
+
+  Widget buildButton(String text) {
+    final isSelected = text == selectedCategory;
+
+    return TextButton(
+      style: TextButton.styleFrom(
+          backgroundColor:
+              isSelected ? kMissionScreenAppBarColor : Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 20.0)),
+      onPressed: () => onCategoryClick(text),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: isSelected ? Colors.white : kBlue,
+          fontSize: 15.0,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 16, 8, 0),
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 12.0,
+        children: categories.map((label) => buildButton(label)).toList(),
+      ),
+    );
   }
 }

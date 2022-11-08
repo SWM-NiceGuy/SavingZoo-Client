@@ -53,9 +53,9 @@ class MissionCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4.0),
-                    const Text(
-                      '#분리수거',
-                      style: TextStyle(
+                    Text(
+                      '#${mission.category}',
+                      style: const TextStyle(
                         fontSize: 12,
                         color: Color(0xFF969BA2),
                         overflow: TextOverflow.ellipsis,
