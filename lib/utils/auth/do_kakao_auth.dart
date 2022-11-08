@@ -51,7 +51,7 @@ class DoKakaoAuth extends DoAuth {
       }
     }
 
-    return LoginInfo("KAKAO", token);
+    return LoginInfo(provider: "KAKAO", accessToken: token);
   }
   
   @override

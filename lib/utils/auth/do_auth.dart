@@ -8,6 +8,7 @@ abstract class DoAuth {
 class LoginInfo {
   final String provider;
   final String accessToken;
+  final String? username;
 
-  LoginInfo(this.provider, this.accessToken);
+  LoginInfo({required this.provider, required this.accessToken, this.username});
 }

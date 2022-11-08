@@ -8,6 +8,7 @@ class MissionHistoryEntity {
   int missionHistoryId;
   String rewardType;
   String title;
+  String? reason;
   int reward;
   String state;
   int date;
@@ -19,6 +20,7 @@ class MissionHistoryEntity {
     required this.reward,
     required this.state,
     required this.date,
+    this.reason,
   });
 
   factory MissionHistoryEntity.fromJson(Map<String, dynamic> json) => _$MissionHistoryEntityFromJson(json);

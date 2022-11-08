@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:amond/data/entity/character_entity.dart';
+import 'package:amond/data/entity/character_silhouette_images_entity.dart';
 import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/auth/auth_info.dart';
 import 'package:flutter/foundation.dart';
@@ -108,4 +109,39 @@ class CharacterApi {
 
     return CharacterEntity.fromJson(resultPetInfo);
   }
+
+  Future<CharacterSilhouetteImagesEntity> getCharacterSilhouettes() async {
+    final url = Uri.parse("$baseUrl/user/pet/silhouette");
+
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $globalToken',
+      },
+    );
+    final json = jsonDecode(response.body);
+    final entity = CharacterSilhouetteImagesEntity.fromJson(json);
+
+    return entity;
+  }
+
+  Future<int> feedCharacter() async {
+     final url = Uri.parse("$baseUrl/user/pet/feed");
+
+     final response = await http.get(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $globalToken',
+      },
+    );
+
+
+    final json = jsonDecode(response.body);
+    return json['reward'];
+  }
+
 }

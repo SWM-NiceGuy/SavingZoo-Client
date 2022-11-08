@@ -1,4 +1,4 @@
-import 'package:amond/presentation/controllers/grow_controller.dart';
+import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,13 +11,13 @@ class CharacterImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final avatarIsVisible =
-        context.select<GrowController, bool>((value) => value.avatarIsVisible);
+        context.select<GrowViewModel, bool>((value) => value.avatarIsVisible);
     final imageUrl = context
-        .select<GrowController, String>((value) => value.character.imageUrl);
+        .select<GrowViewModel, String>((value) => value.character.imageUrl);
 
     return AnimatedOpacity(
       opacity: avatarIsVisible ? 1.0 : 0.0,
-      duration: Duration(milliseconds: context.read<GrowController>().fadeDuration),
+      duration: Duration(milliseconds: context.read<GrowViewModel>().fadeDuration),
       child: GestureDetector(
         onTap: () {
           // FA 로그

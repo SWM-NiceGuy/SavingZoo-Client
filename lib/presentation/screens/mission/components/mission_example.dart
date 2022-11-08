@@ -1,4 +1,4 @@
-import 'package:amond/widget/platform_based_indicator.dart';
+import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
 
 class MissionExample extends StatelessWidget {
@@ -27,7 +27,7 @@ class MissionExample extends StatelessWidget {
               return SizedBox(
                 height: deviceSize.height * 0.4,
                 child: const Center(
-                  child: PlatformBasedIndicator(),
+                  child: PlatformBasedLoadingIndicator(),
                 ),
               );
             },

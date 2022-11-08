@@ -1,10 +1,12 @@
 import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/controllers/mission_history_controller.dart';
+import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
+import 'package:amond/presentation/controllers/mission_history_view_model.dart';
 import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/presentation/screens/settings/settings_screen.dart';
-import 'package:amond/utils/dialogs/dialogs.dart';
+import 'package:amond/presentation/widget/dialogs/change_user_name_dialog.dart';
+import 'package:amond/presentation/widget/dialogs/dialogs.dart';
 import 'package:amond/utils/push_notification.dart';
 import 'package:amond/utils/version/app_version.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -12,7 +14,6 @@ import 'package:amond/presentation/screens/grow/grow_screen.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -25,27 +26,39 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   List<Widget> bottomNavigationBarScreens = [
-    const GrowScreen(),
     const MissionScreen(),
-  ];
-
-  List<Widget> appBarTitle = [
-    const Text(""),
-    const Text("미션"),
+    const GrowScreen(),
   ];
 
   var _screenIndex = 0;
+
+  late List<String> appBarTitle = ["", ""];
+
+  List<Color> appBarColors = [
+    kMissionScreenAppBarColor,
+    Colors.white,
+  ];
+
+  List<Color> backgroundColors = [
+    kMissionScreenBgColor,
+    Colors.white,
+  ];
 
   @override
   void initState() {
     super.initState();
 
-    // 앱 업데이트가 있으면 다이얼로그를 통해 알려줌.
-    if (!currentAppStatus!.isLatest()) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // 앱 업데이트가 있으면 다이얼로그를 통해 알려줌.
+      if (!currentAppStatus!.isLatest()) {
         showUpdateDialog(context);
+      }
+
+      final growViewModel = context.read<GrowViewModel>();
+      growViewModel.setCharacter().then((_) {
+        appBarTitle[1] = growViewModel.character.nickname ?? "";
       });
-    }
+    });
   }
 
   @override
@@ -55,108 +68,100 @@ class _MainScreenState extends State<MainScreen> {
       showPushNotificationPermissionDialog(context);
     });
 
-    final authController = context.read<AuthController>();
     return Scaffold(
-      drawer: mainDrawer(context, authController),
+      drawer: mainDrawer(context),
       appBar: AppBar(
-        title: appBarTitle[_screenIndex],
+        title: Center(
+            child:
+                Text(appBarTitle[_screenIndex], textAlign: TextAlign.center)),
         foregroundColor: Colors.black,
-        elevation: 0.0,
-        backgroundColor: backgroundColor,
-        iconTheme: const IconThemeData(color: Color(0xFF96CE5F)),
+        backgroundColor: appBarColors[_screenIndex],
+        iconTheme: const IconThemeData(color: Color(0xFF6A6A6A)),
+        actions: const [_GoodsQuantity()],
       ),
+      backgroundColor: backgroundColors[_screenIndex],
       body: SafeArea(
         child: bottomNavigationBarScreens[_screenIndex],
       ),
       extendBody: true,
-      bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: Colors.white, offset: Offset(-5, -5), blurRadius: 9)
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topRight: Radius.circular(30),
-            topLeft: Radius.circular(30),
-          ),
-          child: BottomNavigationBar(
-            backgroundColor: backgroundColor,
-            unselectedItemColor: Colors.grey,
-            selectedItemColor: Colors.black,
-            items: [
-              BottomNavigationBarItem(
-                label: '홈',
-                icon: Container(
-                  decoration: const BoxDecoration(boxShadow: [
-                    BoxShadow(
-                        color: Color(0xffA6B4C8),
-                        offset: Offset(3, 5),
-                        blurRadius: 7)
-                  ], shape: BoxShape.circle),
-                  child: Image.asset('assets/images/home_normal.png',
-                      width: 40, height: 40),
-                ),
-                activeIcon: Image.asset(
-                  'assets/images/home_pressed.png',
-                  width: 40,
-                  height: 40,
-                ),
-              ),
-              BottomNavigationBarItem(
-                label: '미션',
-                icon: Container(
-                  decoration: const BoxDecoration(boxShadow: [
-                    BoxShadow(
-                        color: Color(0xffA6B4C8),
-                        offset: Offset(3, 5),
-                        blurRadius: 7)
-                  ], shape: BoxShape.circle),
-                  child: Image.asset(
-                    'assets/images/mission_normal.png',
-                    width: 40,
-                    height: 40,
-                  ),
-                ),
-                activeIcon: Image.asset(
-                  'assets/images/mission_pressed.png',
-                  width: 40,
-                  height: 40,
-                ),
-              )
-            ],
-            onTap: (index) {
-              setState(() {
-                _screenIndex = index;
-              });
-            },
-            currentIndex: _screenIndex,
-          ),
-        ),
+      bottomNavigationBar: _BottomNavigationBar(
+        screenIndex: _screenIndex,
+        onTap: (index) {
+          setState(() => _screenIndex = index);
+        },
       ),
     );
   }
 
-  Drawer mainDrawer(BuildContext context, AuthController authController) {
+  Drawer mainDrawer(BuildContext context) {
     return Drawer(
       child: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            const SizedBox(height: 40),
+
+            // 이름 탭
+            Row(
+              children: [
+                const SizedBox(width: 17),
+                Image.asset('assets/images/profile_icon.png',
+                    width: 32, height: 32),
+                const SizedBox(width: 8),
+                RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w300,
+                        color: darkGreyColor),
+                    children: [
+                      TextSpan(
+                          text: context.select<AuthController, String>(
+                              (value) => value.userName),
+                          style: const TextStyle(fontWeight: FontWeight.w600)),
+                      const TextSpan(text: '님'),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (_) => ChangeUserNameDialog(
+                            onSubmit:
+                                context.read<AuthController>().changeUserName));
+                  },
+                  child: Image.asset('assets/images/edit_icon.png',
+                      width: 16, height: 16),
+                )
+              ],
+            ),
+
+            const Divider(
+              color: lightBlueColor,
+              thickness: 1,
+            ),
+
             // 미션수행 기록
             ListTile(
-              leading: const Icon(
-                Icons.history,
-                color: blackColor,
+              leading: Image.asset(
+                'assets/images/book_icon.png',
+                width: 24,
+                height: 24,
               ),
-              title: const Text('미션수행 기록'),
+              title: const Text(
+                '미션수행 기록',
+                style:
+                    TextStyle(fontWeight: FontWeight.w300, color: blackColor),
+              ),
               onTap: () {
                 // FA 로그
                 FirebaseAnalytics.instance.logEvent(name: '미션내역_조회');
+
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ChangeNotifierProvider(
-                    create: (context) => MissionHistoryController(
+                    create: (context) => MissionHistoryViewModel(
                       context.read<MissionRepositoryImpl>(),
                     ),
                     child: const MissionHistoryScreen(),
@@ -164,33 +169,103 @@ class _MainScreenState extends State<MainScreen> {
                 ));
               },
             ),
+
             // 설정
             ListTile(
-              leading: const Icon(
-                Icons.settings,
-                color: blackColor,
-              ),
+              leading: Image.asset('assets/images/settings_icon.png',
+                  width: 24, height: 24),
               title: const Text('설정'),
               onTap: () {
                 Navigator.of(context).pushNamed(SettingsScreen.routeName);
               },
             ),
-            // 개발자에 문의하기
-            ListTile(
-              leading: const Icon(
-                Icons.question_answer_rounded,
-                color: blackColor,
-              ),
-              title: const Text('의견 보내기'),
-              onTap: () async {
-                final url = Uri.parse('https://pf.kakao.com/_JLxkxob/chat');
-                if (await canLaunchUrl(url)) {
-                  launchUrl(url, mode: LaunchMode.externalApplication);
-                }
-              },
-            )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _GoodsQuantity extends StatelessWidget {
+  const _GoodsQuantity({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    int quantity =
+        context.select<AuthController, int>((value) => value.goodsQuantity);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14),
+      child: Row(
+        children: [
+          Image.asset(
+            'assets/images/fish_icon.png',
+            width: 18,
+            height: 18,
+          ),
+          const SizedBox(width: 8),
+          Text(
+            quantity.toString(),
+            style: const TextStyle(fontSize: 16, color: blackColor),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BottomNavigationBar extends StatelessWidget {
+  final int screenIndex;
+  final Function(int index) onTap;
+
+  const _BottomNavigationBar({
+    required this.screenIndex,
+    required this.onTap,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
+      ),
+      child: BottomNavigationBar(
+        backgroundColor: Colors.white,
+        unselectedItemColor: Colors.grey,
+        selectedItemColor: kBlack,
+        items: [
+          BottomNavigationBarItem(
+            label: '홈',
+            icon: Image.asset(
+              'assets/images/home_icon_normal.png',
+              width: 32,
+              height: 32,
+            ),
+            activeIcon: Image.asset(
+              'assets/images/home_icon_pressed.png',
+              width: 32,
+              height: 32,
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: '보호소',
+            icon: Image.asset(
+              'assets/images/pets_icon_normal.png',
+              width: 32,
+              height: 32,
+            ),
+            activeIcon: Image.asset(
+              'assets/images/pets_icon_pressed.png',
+              width: 32,
+              height: 32,
+            ),
+          )
+        ],
+        onTap: onTap,
+        currentIndex: screenIndex,
       ),
     );
   }

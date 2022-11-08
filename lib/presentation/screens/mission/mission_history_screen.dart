@@ -1,7 +1,7 @@
-import 'package:amond/presentation/controllers/mission_history_controller.dart';
+import 'package:amond/presentation/controllers/mission_history_view_model.dart';
 import 'package:amond/presentation/screens/mission/components/mission_history_card.dart';
+import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:amond/ui/colors.dart';
-import 'package:amond/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +33,7 @@ class MissionHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final historyController = context.watch<MissionHistoryController>();
+    final historyController = context.watch<MissionHistoryViewModel>();
 
     if (historyController.isLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -50,7 +50,7 @@ class MissionHistoryScreen extends StatelessWidget {
         shape: const Border(bottom: BorderSide(color: Color(0xffd7d7d7))),
       ),
       body: historyController.isLoading
-          ? const Center(child: PlatformBasedIndicator())
+          ? const Center(child: PlatformBasedLoadingIndicator())
           : historyController.histories.isNotEmpty
               ? ListView.builder(
                   itemCount: historyController.histories.length,

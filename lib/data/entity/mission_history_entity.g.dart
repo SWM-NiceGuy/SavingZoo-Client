@@ -15,6 +15,7 @@ MissionHistoryEntity _$MissionHistoryEntityFromJson(
       reward: json['reward'] as int,
       state: json['state'] as String,
       date: json['date'] as int,
+      reason: json['reason'] as String?,
     );
 
 Map<String, dynamic> _$MissionHistoryEntityToJson(
@@ -23,6 +24,7 @@ Map<String, dynamic> _$MissionHistoryEntityToJson(
       'missionHistoryId': instance.missionHistoryId,
       'rewardType': instance.rewardType,
       'title': instance.title,
+      'reason': instance.reason,
       'reward': instance.reward,
       'state': instance.state,
       'date': instance.date,

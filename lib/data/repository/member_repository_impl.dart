@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:amond/data/source/network/api/member_api.dart';
+import 'package:amond/domain/models/user_info.dart';
 import 'package:amond/domain/repositories/member_repository.dart';
+import 'package:amond/utils/auth/do_auth.dart';
 
 class MemberRepositoryImpl implements MemberRepository {
   MemberApi memberApi;
@@ -12,8 +14,8 @@ class MemberRepositoryImpl implements MemberRepository {
   /// DB 회원가입 함수
   ///
   /// response의 json web token을 반환
-  Future<String> login(String provider, String accessToken) async {
-    final response =  await memberApi.login(provider, accessToken);
+  Future<String> login(LoginInfo info) async {
+    final response =  await memberApi.login(info);
     final token = jsonDecode(response.body)["jwt"];
     return token;
   }
@@ -24,5 +26,16 @@ class MemberRepositoryImpl implements MemberRepository {
   /// response의 statusCode를 반환 성공하면 200을 반환
   Future<void> resign(String provider, [Map<String, String>? additional]) async {
     await memberApi.resign(provider, additional);
+  }
+  
+  @override
+  Future<UserInfo> getUserInfo() async {
+    final entity = await memberApi.getUserInfo();
+    return UserInfo.fromEntity(entity);
+  }
+  
+  @override
+  Future<void> changeUserName(String name) async {
+    await memberApi.changeUserName(name);
   }
 }

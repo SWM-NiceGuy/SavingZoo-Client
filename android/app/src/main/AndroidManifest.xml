@@ -7,7 +7,8 @@
    <application
         android:label="아몬드"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"

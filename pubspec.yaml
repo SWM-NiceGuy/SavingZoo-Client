@@ -35,18 +35,15 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   permission_handler: ^10.0.0
-  qr_code_scanner: ^1.0.1
   kakao_flutter_sdk: ^1.2.1
   shared_preferences: ^2.0.15
   provider: ^6.0.3
-  word_break_text: ^0.1.0
   lottie: ^1.4.2
   sign_in_with_apple: ^4.1.0
   firebase_auth: ^3.7.0
   firebase_core: ^1.21.1
   http: ^0.13.5
   json_annotation: ^4.6.0
-  google_fonts: ^3.0.1
   firebase_analytics: ^9.3.3
   store_redirect: ^2.0.1
   image_picker: ^0.8.5+3
@@ -56,6 +53,10 @@ dependencies:
   flutter_local_notifications: ^11.0.1
   firebase_crashlytics: ^2.8.12
   url_launcher: ^6.1.6
+  carousel_slider: ^4.1.1
+  model_viewer_plus: 
+    path: packages/model_viewer_plus.dart
+
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +71,7 @@ dev_dependencies:
   test: ^1.21.1
   json_serializable: ^6.3.1
   build_runner: ^2.2.0
+  freezed: ^2.2.0
 
 
 # For information on the generic Dart part of this file, see the
@@ -87,6 +89,8 @@ flutter:
   assets:
     - assets/images/
     - assets/lotties/
+    - assets/glb/
+    - assets/characters/otter/silhouettes/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -99,27 +103,17 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Gotham
-  #     fonts:
-  #       - asset: assets/fonts/GothamBook.ttf
-  #       - asset: assets/fonts/GothamBold.ttf
-  #         weight: 700
-  #       - asset: assets/fonts/GothamMedium.ttf
-  #         weight: 500
-  #       - asset: assets/fonts/GothamLight.ttf
-  #         weight: 300
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
+  fonts:
+    - family: AppleSDGothicNeo
+      fonts:
+        - asset: assets/fonts/AppleSDGothicNeoSB.ttf
+          weight: 600
+        - asset: assets/fonts/AppleSDGothicNeoM.ttf
+          weight: 500
+        - asset: assets/fonts/AppleSDGothicNeoR.ttf
+          weight: 400
+        - asset: assets/fonts/AppleSDGothicNeoL.ttf
+          weight: 300
+  
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
