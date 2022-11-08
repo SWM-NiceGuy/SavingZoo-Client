@@ -16,9 +16,14 @@ class MissionApi {
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $globalToken',
     });
-    final Map<String, dynamic> result =
+    final Map<String, dynamic> json =
         jsonDecode(utf8.decode(response.bodyBytes));
-    final List<dynamic> missionsList = result["missions"];
+    
+    if (kDebugMode) {
+      print('미션 리스트 응답 결과: $json\n');
+    }
+
+    final List<dynamic> missionsList = json["missions"];
     Iterable<MissionListEntity> missions =
         missionsList.map((e) => MissionListEntity.fromJson(e));
     return missions;

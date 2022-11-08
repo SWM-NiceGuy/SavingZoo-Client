@@ -60,7 +60,7 @@ class CharacterApi {
     });
     final json = jsonDecode(utf8.decode(response.bodyBytes));
     if (kDebugMode) {
-      print('캐릭터 정보 응답: $json}');
+      print('캐릭터 정보 응답: $json\n');
     }
     return CharacterEntity.fromJson(json);
   }
@@ -99,7 +99,7 @@ class CharacterApi {
 
     Map<String, dynamic> json = jsonDecode(utf8.decode(response.bodyBytes));
     if (kDebugMode) {
-      print('캐릭터 놀아주기 결과: $json');
+      print('캐릭터 놀아주기 결과: $json\n');
     }
 
     var resultPetInfo = json['petInfo'];
