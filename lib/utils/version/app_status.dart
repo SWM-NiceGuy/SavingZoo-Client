@@ -9,9 +9,8 @@ class AppStatus {
   final String latestVersion;
   final String releaseNote;
 
-  bool isLatest() {
-    currentAppStatus = this;
-    return latestVersion == appVersion;
+  bool get isLatest {
+    return latestVersion == currentAppStatus.latestVersion;
   }
 
   AppStatus({

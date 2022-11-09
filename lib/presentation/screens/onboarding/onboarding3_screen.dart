@@ -66,7 +66,7 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
           child: SafeArea(
             child: Center(
               child: SizedBox(
-                height: deviceSize.height -
+                height: 10 + deviceSize.height -
                     (MediaQuery.of(context).padding.top +
                         MediaQuery.of(context).padding.bottom +
                         kToolbarHeight),

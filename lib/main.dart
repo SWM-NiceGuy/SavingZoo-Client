@@ -13,9 +13,11 @@ import 'package:amond/presentation/screens/splash_screen.dart';
 import 'package:amond/secrets/secret.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:amond/utils/push_notification.dart';
+import 'package:amond/utils/version/app_notice.dart';
 import 'package:amond/utils/version/app_status.dart';
 
 import 'package:amond/utils/version/app_version.dart';
+import 'package:amond/utils/version/notice.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -42,11 +44,12 @@ void main() async {
   KakaoSdk.init(nativeAppKey: kakaoNativeAppKey);
 
   // 앱 버전 체크
-  AppStatus appStatus;
   try {
-    appStatus = await getAppStatus();
+    await getAppStatus();
+    await getAppNotice();
   } catch (e) {
-    appStatus = AppStatus(latestVersion: appVersion, releaseNote: '', required: false);
+    currentAppStatus = AppStatus(latestVersion: appVersion, releaseNote: '', required: false);
+    appNotice = AppNotice(isApply: false, isRequired: false, message: '');
   }
 
   // foreground 푸시 알림 설정
@@ -54,13 +57,12 @@ void main() async {
 
   runApp(MultiProvider(
     providers: globalProviders,
-    child: MyApp(appStatus: appStatus),
+    child: const MyApp(),
   ));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key, required this.appStatus}) : super(key: key);
-  final AppStatus appStatus;
+  const MyApp({Key? key}) : super(key: key);
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -81,10 +83,16 @@ class MyApp extends StatelessWidget {
       /// 앱 시작시 setToken을 통해, 자동로그인 시도
       /// 반환된 값이 [true]라면 MainScreen으로 이동
       /// 반환된 값이 [false]라면 AuthScreen으로 이동
-      home: appStatus.isLatest() || !appStatus.required
+      home: !currentAppStatus.required && !appNotice.isRequired
           ? FutureBuilder(
               future: context.read<AuthController>().setToken(),
               builder: (context, snapshot) {
+                // 로그인 중 에러가 발생
+                if (snapshot.hasError) {
+                  context.read<AuthController>().logout();
+                  return const AuthScreen();
+                }
+
                 return snapshot.hasData
                     ? snapshot.data.toString() == 'true'
                         ? const MainOrOnboardingScreen()

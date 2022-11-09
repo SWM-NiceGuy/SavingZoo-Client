@@ -2,6 +2,7 @@ import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 import 'package:amond/presentation/controllers/mission_history_view_model.dart';
+import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/presentation/screens/settings/settings_screen.dart';
@@ -9,6 +10,7 @@ import 'package:amond/presentation/widget/dialogs/change_user_name_dialog.dart';
 import 'package:amond/presentation/widget/dialogs/dialogs.dart';
 import 'package:amond/utils/push_notification.dart';
 import 'package:amond/utils/version/app_version.dart';
+import 'package:amond/utils/version/notice.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:amond/presentation/screens/grow/grow_screen.dart';
 import 'package:amond/ui/colors.dart';
@@ -50,14 +52,24 @@ class _MainScreenState extends State<MainScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // 앱 업데이트가 있으면 다이얼로그를 통해 알려줌.
-      if (!currentAppStatus!.isLatest()) {
+      if (!currentAppStatus.isLatest) {
         showUpdateDialog(context);
       }
 
-      final growViewModel = context.read<GrowViewModel>();
-      growViewModel.setCharacter().then((_) {
-        appBarTitle[1] = growViewModel.character.nickname ?? "";
-      });
+      if (appNotice.isApply) {
+        showNoticeDialog(context);
+      }
+
+      // 데이터를 불러오는 중에 오류가 발생하면 로그인 실패로 간주
+      try {
+        final growViewModel = context.read<GrowViewModel>();
+        growViewModel.setCharacter().then((_) {
+          appBarTitle[1] = growViewModel.character.nickname ?? "";
+        });
+      } catch (error) {
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            AuthScreen.routeName, (Route<dynamic> route) => false);
+      }
     });
   }
 
