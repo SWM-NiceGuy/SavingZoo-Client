@@ -108,22 +108,6 @@ class _MainScreenState extends State<MainScreen> {
                 Image.asset('assets/images/profile_icon.png',
                     width: 32, height: 32),
                 const SizedBox(width: 8),
-                RichText(
-                  text: TextSpan(
-                    style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w300,
-                        color: darkGreyColor),
-                    children: [
-                      TextSpan(
-                          text: context.select<AuthController, String>(
-                              (value) => value.userName),
-                          style: const TextStyle(fontWeight: FontWeight.w600)),
-                      const TextSpan(text: '님'),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 8),
                 GestureDetector(
                   onTap: () {
                     showDialog(
@@ -132,9 +116,30 @@ class _MainScreenState extends State<MainScreen> {
                             onSubmit:
                                 context.read<AuthController>().changeUserName));
                   },
-                  child: Image.asset('assets/images/edit_icon.png',
-                      width: 16, height: 16),
-                )
+                  child: Row(
+                    children: [
+                      RichText(
+                        text: TextSpan(
+                          style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w300,
+                              color: darkGreyColor),
+                          children: [
+                            TextSpan(
+                                text: context.select<AuthController, String>(
+                                    (value) => value.userName),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w600)),
+                            const TextSpan(text: '님'),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Image.asset('assets/images/edit_icon.png',
+                          width: 16, height: 16)
+                    ],
+                  ),
+                ),
               ],
             ),
 

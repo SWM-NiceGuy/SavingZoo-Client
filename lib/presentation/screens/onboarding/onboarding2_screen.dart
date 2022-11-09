@@ -43,7 +43,7 @@ class Onboarding2Screen extends StatelessWidget {
                   text: const TextSpan(
                     style: TextStyle(color: greyColor, fontSize: 16),
                     children: [
-                      TextSpan(text: '기존 생활습관 그대로'),
+                      TextSpan(text: '기존 생활습관 그대로 '),
                       TextSpan(
                         text: '겸사겸사 할 수 있는 \n환경 보호미션들',
                         style: TextStyle(

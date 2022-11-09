@@ -149,7 +149,7 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
                       const SizedBox(height: 12),
                       if (_indicateNameAlert)
                         const Text(
-                          '2-8자로 설정해주세요',
+                          '공백없이 2-8자로 설정해주세요',
                           textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.red, fontSize: 16),
                         ),
@@ -202,6 +202,10 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
 
   /// 이름 유효성 검사
   bool _nameValidate(String name) {
+    if (name.contains(' ')) {
+      return false;
+    }
+
     if (name.length > 8 || name.length < 2) {
       return false;
     }

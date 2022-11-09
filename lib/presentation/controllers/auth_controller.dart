@@ -35,24 +35,26 @@ class AuthController with ChangeNotifier {
   /// 실패하면 [false]를 반환
   Future<bool> setToken() async {
     final prefs = await this.prefs;
-  try {
-    _token = prefs.getString("jwt");
-    _loginType = prefs.getString('loginType');
+    try {
+      _token = prefs.getString("jwt");
+      _loginType = prefs.getString('loginType');
 
-    // 전역으로 토큰 설정
-    globalToken = _token;
-    if (kDebugMode) {
-      print('유저 jwt: $_token');
-    }
+      // 전역으로 토큰 설정
+      globalToken = _token;
+      if (kDebugMode) {
+        print('유저 jwt: $_token');
+      }
 
-    // 토큰이 없다면 [false] 반환
-    if (_token == null) {
-      return false;
+      // 토큰이 없다면 [false] 반환
+      if (_token == null) {
+        return false;
+      }
+      await setUserName();
+      await setGoodsQuantity();
+      
+    } catch (error) {
+      rethrow;
     }
-    
-  } catch (error) {
-    rethrow;
-  }
     notifyListeners();
     return true;
   }
@@ -69,7 +71,6 @@ class AuthController with ChangeNotifier {
       _loginType = info.provider;
       await setToken();
 
-
       await setUserName();
       await setGoodsQuantity();
     } catch (error) {
@@ -84,15 +85,15 @@ class AuthController with ChangeNotifier {
   Future<void> logout() async {
     final prefs = await this.prefs;
     try {
-        await prefs.remove('jwt');
-        await prefs.remove('loginType');
-        _loginType = null;
-        globalToken = null;
-      } catch (error) {
-        // print('로그아웃 실패 $error');
-        rethrow;
-      }
+      await prefs.remove('jwt');
+      await prefs.remove('loginType');
+      _loginType = null;
+      globalToken = null;
+    } catch (error) {
+      // print('로그아웃 실패 $error');
+      rethrow;
     }
+  }
 
   /// 회원 탈퇴 함수
   ///
@@ -109,8 +110,7 @@ class AuthController with ChangeNotifier {
       _loginType = null;
       globalToken = null;
       prefs.clear();
-    }
-    catch (error) {
+    } catch (error) {
       rethrow;
     }
   }

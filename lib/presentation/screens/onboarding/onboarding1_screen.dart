@@ -47,7 +47,7 @@ class Onboarding1Screen extends StatelessWidget {
                           color: textBlueColor200,
                         ),
                       ),
-                      TextSpan(text: '기후 변화로 인해 갈 곳을 잃은\n멸종위기 동물들이 맡겨지는 곳이에요')
+                      TextSpan(text: '는 기후 변화로 인해 갈 곳을 잃은\n멸종위기 동물들이 맡겨지는 곳이에요')
                     ],
                   ),
                 ),

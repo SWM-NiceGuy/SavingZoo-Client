@@ -35,7 +35,7 @@ void main() async {
   FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(!kDebugMode);
 
   // 로컬 데이터 삭제
-  SharedPreferences.getInstance().then((value) => value.clear());
+  // SharedPreferences.getInstance().then((value) => value.clear());
 
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
