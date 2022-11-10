@@ -36,8 +36,13 @@ void main() async {
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
   FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(!kDebugMode);
 
-  // 로컬 데이터 삭제
-  // SharedPreferences.getInstance().then((value) => value.clear());
+  // 첫 실행 시 로컬 데이터 clear
+  SharedPreferences.getInstance().then((prefs) {
+    if (prefs.getBool('2.0.0 first open') == null) {
+      prefs.clear();
+      prefs.setBool('2.0.0 first open', true);
+    }
+  });
 
   // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
