@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:amond/data/entity/character_entity.dart';
+import 'package:amond/data/entity/grow_history_entity.dart';
 import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/auth/auth_info.dart';
 import 'package:flutter/foundation.dart';
@@ -143,6 +144,22 @@ class CharacterApi {
     return json['reward'];
   }
 
+  Future<GrowHistoryEntity> getGrowHistory() async {
+    final url = Uri.parse("$baseUrl/user/pet/diary");
 
+     final response = await http.get(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $globalToken',
+      },
+    );
+
+    final json = jsonDecode(utf8.decode(response.bodyBytes));
+    final entity = GrowHistoryEntity.fromJson(json);
+    
+    return entity;
+  }
 
 }

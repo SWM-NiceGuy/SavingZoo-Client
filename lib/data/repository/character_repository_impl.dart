@@ -59,9 +59,13 @@ class CharacterRepositoryImpl implements CharacterRepository {
   }
 
   @override
-  Future<GrowHistory> getGrowHistory() {
-    // TODO: implement getGrowHistory
-    throw UnimplementedError();
+  Future<GrowHistory> getGrowHistory() async {
+    final entity = await characterApi.getGrowHistory();
+
+    // stage 순서대로 정렬
+    entity.stages.sort((s1, s2) => s1.stage - s2.stage);
+    
+    return GrowHistory.fromEntity(entity);
   }
   
   @override
