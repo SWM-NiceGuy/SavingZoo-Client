@@ -8,13 +8,15 @@ class LevelupDialog extends StatelessWidget {
       required this.level,
       required this.name,
       this.isStageUpgrade = false,
-      this.imageUrl})
+      required this.stage,
+      this.species,})
       : super(key: key);
 
   final int level;
   final String name;
   final bool isStageUpgrade;
-  final String? imageUrl;
+  final int stage;
+  final String? species;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class LevelupDialog extends StatelessWidget {
                 // 중앙 이미지
                 isStageUpgrade
                     ? Image.asset(
-                        imageUrl ?? 'assets/characters/otter/silhouettes/2.png',
+                        'assets/characters/$species/silhouettes/$stage.png',
                         width: 150,
                         height: 180,
                         fit: BoxFit.cover,

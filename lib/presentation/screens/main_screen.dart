@@ -6,8 +6,10 @@ import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/presentation/screens/settings/settings_screen.dart';
+import 'package:amond/presentation/widget/dialogs/beta_reward_dialog.dart';
 import 'package:amond/presentation/widget/dialogs/change_user_name_dialog.dart';
 import 'package:amond/presentation/widget/dialogs/dialogs.dart';
+import 'package:amond/utils/beta_reward_check.dart';
 import 'package:amond/utils/push_notification.dart';
 import 'package:amond/utils/version/app_version.dart';
 import 'package:amond/utils/version/notice.dart';
@@ -51,14 +53,33 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // 앱 업데이트가 있으면 다이얼로그를 통해 알려줌.
+      // 앱 업데이트가 있으면 다이얼로그를 보여줌
       if (!currentAppStatus.isLatest) {
         showUpdateDialog(context);
       }
 
+      // 앱 공지사항이 있으면 다이얼로그를 보여줌
       if (appNotice.isApply) {
         showNoticeDialog(context);
       }
+
+      // 기존유저라면 베타유저 보상을 요청한다
+      if (!context.read<AuthController>().isNewUser) {
+        requestRewardIfNotChecked().then((result) {
+          if (result['getReward']) {
+            // 보상을 받으면 다이얼로그를 띄운다
+            showDialog(
+          context: context,
+          builder: (_) => BetaRewardDialog(
+              reward: result['reward'],
+              onPop: () {
+                context.read<AuthController>().setGoodsQuantity();
+              }));
+          }
+        });
+      }
+
+  
 
       // 데이터를 불러오는 중에 오류가 발생하면 로그인 실패로 간주
       try {

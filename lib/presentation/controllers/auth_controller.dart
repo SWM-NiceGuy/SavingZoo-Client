@@ -29,6 +29,9 @@ class AuthController with ChangeNotifier {
 
   bool get isTokenExists => _token != null;
 
+  bool? _isNewUser;
+  bool get isNewUser => _isNewUser ?? false;
+
   /// 앱 시작시 토큰 설정 (자동로그인)
   ///
   /// 토큰 설정이 성공하면 [true]를 반환
@@ -51,7 +54,6 @@ class AuthController with ChangeNotifier {
       }
       await setUserName();
       await setGoodsQuantity();
-      
     } catch (error) {
       rethrow;
     }
@@ -59,11 +61,20 @@ class AuthController with ChangeNotifier {
     return true;
   }
 
+  /// 앱에 로그인(회원가입) 시도
   Future<void> login(LoginInfo info) async {
     final prefs = await this.prefs;
     try {
       // 로그인을 시도하여 서버에서 토큰을 받아온다.
-      final jwt = await _memberUseCases.login(info);
+      final result = await _memberUseCases.login(info);
+      final jwt = result['token'];
+
+      // 신규 유저이면
+      if (result['statusCode'] == 201) {
+        _isNewUser = true;
+      } else {
+        _isNewUser = false;
+      }
 
       // 토큰, 로그인 타입을 SharedPreferences에 저장
       await prefs.setString('jwt', jwt);

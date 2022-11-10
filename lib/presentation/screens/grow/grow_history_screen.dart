@@ -59,12 +59,7 @@ class GrowHistoryWidget extends StatelessWidget {
                 SizedBox(
                   width: deviceSize.width * 0.9,
                   height: deviceSize.height * 0.4,
-                  child: ModelViewer(
-                    src: 'assets/glb/cat.glb',
-                    cameraControls: true,
-                    loading: Loading.auto,
-                    ar: false,
-                  ),
+                  child: FittedBox(child: Image.asset(viewModel.currentIdxStage.growState ? 'assets/images/apple_icon.png' : 'assets/characters/${viewModel.history.species}/silhouettes/${viewModel.index+1}.png'))
                 ),
                 // 캐릭터 왼쪽 화살표
                 Positioned(

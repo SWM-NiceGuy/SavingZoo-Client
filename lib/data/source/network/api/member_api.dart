@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:http/http.dart' as http;
 
 class MemberApi {
-  Future<http.Response> login(LoginInfo info) async {
+  Future<Map<String,dynamic>> login(LoginInfo info) async {
     final url = Uri.parse('$baseUrl/auth/login');
     final response = await http.post(
       url,
@@ -18,7 +18,14 @@ class MemberApi {
         'Accept': 'application/json',
       },
     ).timeout(const Duration(seconds: 6));
-    return response;
+    
+    if (kDebugMode) {
+      print('로그인 응답: ${response.body} \n(code:${response.statusCode})');
+    }
+
+    final token = jsonDecode(response.body)["jwt"];
+
+    return {'token':token, 'statusCode': response.statusCode};
   }
 
   Future<http.Response> resign(String provider,

@@ -13,11 +13,12 @@ class MemberRepositoryImpl implements MemberRepository {
   @override
   /// DB 회원가입 함수
   ///
-  /// response의 json web token을 반환
-  Future<String> login(LoginInfo info) async {
+  /// response의 json web token 및 status code 반환
+  /// 
+  /// status code가 201이면 신규유저 200이면 기존유저
+  Future<Map<String, dynamic>> login(LoginInfo info) async {
     final response =  await memberApi.login(info);
-    final token = jsonDecode(response.body)["jwt"];
-    return token;
+    return response;
   }
   
   @override

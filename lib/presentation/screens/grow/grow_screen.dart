@@ -51,6 +51,7 @@ class _GrowScreenState extends State<GrowScreen> {
               builder: (_) => LevelupDialog(
                     level: viewModel.character.level,
                     name: viewModel.character.nickname ?? '',
+                    stage: viewModel.character.currentStage,
                   ));
         },
         stageUp: () {
@@ -60,7 +61,7 @@ class _GrowScreenState extends State<GrowScreen> {
                     level: viewModel.character.level,
                     name: viewModel.character.nickname ?? '',
                     isStageUpgrade: true,
-                    imageUrl: null,
+                    stage: viewModel.character.currentStage,
                   ));
         },
       );

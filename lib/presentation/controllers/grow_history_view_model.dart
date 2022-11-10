@@ -15,12 +15,15 @@ class GrowHistoryViewModel with ChangeNotifier {
   var _isLoading = true;
   bool get isLoading => _isLoading;
 
+  GrowStage get currentIdxStage => _growHistory.stages[index];
+
   Future<void> fetchData() async {
 
     // _growHistory = await _characterRepository.getGrowHistory();
 
     _growHistory = GrowHistory(
       petName: '냐옹이',
+      species: 'otter',
       birth: DateTime.fromMillisecondsSinceEpoch(1666939721000),
       stages: [
         GrowStage(

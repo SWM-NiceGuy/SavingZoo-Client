@@ -2,11 +2,13 @@ import 'package:amond/domain/models/grow_stage.dart';
 
 class GrowHistory {
   final String petName;
+  final String species;
   final DateTime birth;
   final List<GrowStage> stages;
 
   const GrowHistory({
     required this.petName,
+    required this.species,
     required this.stages,
     required this.birth,
   });

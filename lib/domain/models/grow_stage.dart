@@ -6,6 +6,8 @@
 // 			birthday: "2022-10-18" // "2022년 10월 18일" or TIMESTAMP?
 // 		},
 
+import 'package:amond/data/entity/grow_stage_entity.dart';
+
 class GrowStage {
   final bool growState;
   final String? description;
@@ -22,4 +24,16 @@ class GrowStage {
     required this.height,
     this.grownDate,
   });
+
+    factory GrowStage.fromEntity(GrowStageEntity entity) =>
+      _$GrowStageFromEntity(entity);
+
+  static GrowStage _$GrowStageFromEntity(GrowStageEntity entity) => GrowStage(
+        growState: entity.growState,
+        description: entity.description,
+        weight: entity.weight,
+        height: entity.height,
+        grownDate: DateTime.fromMillisecondsSinceEpoch(entity.grownDate),
+        level: entity.level,
+      );
 }

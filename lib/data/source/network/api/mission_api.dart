@@ -19,9 +19,9 @@ class MissionApi {
     final Map<String, dynamic> json =
         jsonDecode(utf8.decode(response.bodyBytes));
     
-    if (kDebugMode) {
-      print('미션 리스트 응답 결과: $json\n');
-    }
+    // if (kDebugMode) {
+    //   print('미션 리스트 응답 결과: $json\n\n');
+    // }
 
     final List<dynamic> missionsList = json["missions"];
     Iterable<MissionListEntity> missions =

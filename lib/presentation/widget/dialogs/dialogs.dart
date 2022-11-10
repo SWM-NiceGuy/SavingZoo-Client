@@ -1,10 +1,7 @@
-import 'package:amond/presentation/controllers/name_validation.dart';
-import 'package:amond/presentation/screens/grow/components/character_name_input.dart';
 import 'package:amond/utils/version/app_version.dart';
 import 'package:amond/utils/version/notice.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:store_redirect/store_redirect.dart';
 

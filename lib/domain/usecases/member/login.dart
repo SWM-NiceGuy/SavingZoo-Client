@@ -5,8 +5,8 @@ class Login {
   MemberRepository memberRepository;
   Login(this.memberRepository);
 
-  Future<String> call(LoginInfo info) async {
-    final token = await memberRepository.login(info);
-    return token;
+  Future<Map<String, dynamic>> call(LoginInfo info) async {
+    final result = await memberRepository.login(info);
+    return result;
   }
 }
