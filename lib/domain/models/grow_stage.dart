@@ -9,6 +9,7 @@
 import 'package:amond/data/entity/grow_stage_entity.dart';
 
 class GrowStage {
+  final int stage;
   final bool growState;
   final String? description;
   final String weight;
@@ -17,6 +18,7 @@ class GrowStage {
   final int level;
 
   GrowStage({
+    required this.stage,
     required this.growState,
     required this.level,
     this.description,
@@ -29,6 +31,7 @@ class GrowStage {
       _$GrowStageFromEntity(entity);
 
   static GrowStage _$GrowStageFromEntity(GrowStageEntity entity) => GrowStage(
+        stage: entity.stage,
         growState: entity.growState,
         description: entity.description,
         weight: entity.weight,

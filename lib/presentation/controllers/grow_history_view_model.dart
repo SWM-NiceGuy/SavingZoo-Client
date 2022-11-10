@@ -18,7 +18,6 @@ class GrowHistoryViewModel with ChangeNotifier {
   GrowStage get currentIdxStage => _growHistory.stages[index];
 
   Future<void> fetchData() async {
-
     // _growHistory = await _characterRepository.getGrowHistory();
 
     _growHistory = GrowHistory(
@@ -27,18 +26,21 @@ class GrowHistoryViewModel with ChangeNotifier {
       birth: DateTime.fromMillisecondsSinceEpoch(1666939721000),
       stages: [
         GrowStage(
+            stage: 1,
             level: 1,
             growState: true,
             weight: '3kg',
             height: '4cm',
             grownDate: DateTime.fromMillisecondsSinceEpoch(1667269570000)),
         GrowStage(
+            stage: 2,
             level: 15,
             growState: true,
             weight: '5kg',
             height: '7cm',
             grownDate: DateTime.fromMillisecondsSinceEpoch(1669269570000)),
         GrowStage(
+            stage: 3,
             level: 30,
             growState: false,
             weight: '7kg',
@@ -61,6 +63,4 @@ class GrowHistoryViewModel with ChangeNotifier {
 
     notifyListeners();
   }
-
-
 }

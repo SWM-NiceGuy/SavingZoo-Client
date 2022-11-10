@@ -13,12 +13,14 @@ class GrowStageEntity {
 
   bool growState;
   String description;
+  int stage;
   int level;
   String weight;
   String height;
   int grownDate;
 
   GrowStageEntity({
+    required this.stage,
     required this.growState,
     required this.description,
     required this.level,

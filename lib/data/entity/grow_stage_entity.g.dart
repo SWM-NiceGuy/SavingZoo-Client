@@ -8,6 +8,7 @@ part of 'grow_stage_entity.dart';
 
 GrowStageEntity _$GrowStageEntityFromJson(Map<String, dynamic> json) =>
     GrowStageEntity(
+      stage: json['stage'] as int,
       growState: json['growState'] as bool,
       description: json['description'] as String,
       level: json['level'] as int,
@@ -20,6 +21,7 @@ Map<String, dynamic> _$GrowStageEntityToJson(GrowStageEntity instance) =>
     <String, dynamic>{
       'growState': instance.growState,
       'description': instance.description,
+      'stage': instance.stage,
       'level': instance.level,
       'weight': instance.weight,
       'height': instance.height,
