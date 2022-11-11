@@ -82,8 +82,8 @@ class AuthController with ChangeNotifier {
       _loginType = info.provider;
       await setToken();
 
-      await setUserName();
-      await setGoodsQuantity();
+      // await setUserName();
+      // await setGoodsQuantity();
     } catch (error) {
       // print(error);
       rethrow;

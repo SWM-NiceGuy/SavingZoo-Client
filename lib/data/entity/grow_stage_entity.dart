@@ -13,6 +13,7 @@ class GrowStageEntity {
 
   bool growState;
   String description;
+  String? imageUrl;
   int stage;
   int level;
   String weight;
@@ -27,6 +28,7 @@ class GrowStageEntity {
     required this.weight,
     required this.height,
     required this.grownDate,
+    this.imageUrl,
   });
 
   factory GrowStageEntity.fromJson(Map<String, dynamic> json) =>

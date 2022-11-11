@@ -15,6 +15,7 @@ class GrowStage {
   final String weight;
   final String height;
   final DateTime? grownDate;
+  final String? imageUrl;
   final int level;
 
   GrowStage({
@@ -25,6 +26,7 @@ class GrowStage {
     required this.weight,
     required this.height,
     this.grownDate,
+    this.imageUrl,
   });
 
     factory GrowStage.fromEntity(GrowStageEntity entity) =>
@@ -38,5 +40,6 @@ class GrowStage {
         height: entity.height,
         grownDate: DateTime.fromMillisecondsSinceEpoch(entity.grownDate),
         level: entity.level,
+        imageUrl: entity.imageUrl,
       );
 }

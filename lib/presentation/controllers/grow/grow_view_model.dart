@@ -5,6 +5,7 @@ import 'package:amond/domain/models/character.dart';
 import 'package:amond/domain/repositories/character_repository.dart';
 import 'package:amond/presentation/controllers/grow/grow_ui_event.dart';
 import 'package:amond/presentation/screens/grow/components/level_widget.dart';
+import 'package:amond/presentation/widget/dialogs/levelup_dialog.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,11 +34,13 @@ class GrowViewModel with ChangeNotifier {
 
   bool get hasName => character.nickname != null;
 
-  final int fadeDuration = 1000; // Fade 애니메이션 지속시간
+  static const int fadeDuration = 1000; // Fade 애니메이션 지속시간
   bool avatarIsVisible = true; // 아바타 보임 유무
 
   bool isHeartVisible = false; // 하트 애니메이션 보임 유무
   bool levelUpEffect = false;
+
+  static const int levelUpEffectDuration = 1000;
 
   bool playButtonEnabled = true;
 
@@ -88,12 +91,14 @@ class GrowViewModel with ChangeNotifier {
     await Future.delayed(Duration(milliseconds: fadeDuration));
 
     avatarIsVisible = true;
+    notifyListeners();
+  }
+
+  /// 레벨업 이펙트 한버 활성화
+  Future<void> activateLevelUpEffect() async {
     levelUpEffect = true;
     notifyListeners();
-
-    await Future.delayed(const Duration(milliseconds: 1000));
-    levelUpEffect = false;
-    notifyListeners();
+    // await Future.delayed(const Duration(milliseconds: levelUpEffectDuration));
   }
 
   /// 캐릭터 데이터를 불러오고 Grow Screen 화면을 설정

@@ -62,6 +62,7 @@ class _GrowScreenState extends State<GrowScreen> {
                     name: viewModel.character.nickname ?? '',
                     isStageUpgrade: true,
                     stage: viewModel.character.currentStage,
+                    species: viewModel.character.species,
                   ));
         },
       );
@@ -139,8 +140,6 @@ class _GrowScreenWidget extends StatelessWidget {
                   children: const [
                     // 캐릭터 이미지
                     CharacterImageWidget(),
-                    // 최대 레벨 별빛 효과
-                    StarfallEffect(),
                     // 하트 버튼을 누르면 하트 표시
                     HeartEffect(),
                     // 레벨업 시 레벨업 효과

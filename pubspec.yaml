@@ -47,7 +47,8 @@ dependencies:
   firebase_analytics: ^9.3.3
   store_redirect: ^2.0.1
   image_picker: ^0.8.5+3
-  flutter_animation_progress_bar: ^2.2.1
+  flutter_animation_progress_bar: 
+    path: /Users/kimnamju/development/Flutter-Animation-Progress-Bar
   firebase_messaging: ^13.0.4
   flutter_dialogs: ^3.0.0
   flutter_local_notifications: ^11.0.1
@@ -91,6 +92,7 @@ flutter:
     - assets/lotties/
     - assets/glb/
     - assets/characters/otter/silhouettes/
+    - assets/characters/otter/normal/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

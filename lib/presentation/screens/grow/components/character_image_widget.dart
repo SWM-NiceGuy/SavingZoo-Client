@@ -14,10 +14,12 @@ class CharacterImageWidget extends StatelessWidget {
         context.select<GrowViewModel, bool>((value) => value.avatarIsVisible);
     final imageUrl = context
         .select<GrowViewModel, String>((value) => value.character.imageUrl);
+    // final species = context.select<GrowViewModel, String>((value) => value.character.species);
+    // final stage = context.select<GrowViewModel, int>((value) => value.character.currentStage);
 
     return AnimatedOpacity(
       opacity: avatarIsVisible ? 1.0 : 0.0,
-      duration: Duration(milliseconds: context.read<GrowViewModel>().fadeDuration),
+      duration: const Duration(milliseconds: GrowViewModel.fadeDuration),
       child: GestureDetector(
         onTap: () {
           // FA 로그

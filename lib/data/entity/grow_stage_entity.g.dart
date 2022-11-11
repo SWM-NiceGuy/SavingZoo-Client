@@ -15,12 +15,14 @@ GrowStageEntity _$GrowStageEntityFromJson(Map<String, dynamic> json) =>
       weight: json['weight'] as String,
       height: json['height'] as String,
       grownDate: json['grownDate'] as int,
+      imageUrl: json['imageUrl'] as String?,
     );
 
 Map<String, dynamic> _$GrowStageEntityToJson(GrowStageEntity instance) =>
     <String, dynamic>{
       'growState': instance.growState,
       'description': instance.description,
+      'imageUrl': instance.imageUrl,
       'stage': instance.stage,
       'level': instance.level,
       'weight': instance.weight,
