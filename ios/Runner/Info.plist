@@ -75,5 +75,22 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>fb532896891558867</string>
+      </array>
+      </dict>
+    </array>
+    <key>FacebookAppID</key>
+    <string>532896891558867</string>
+    <key>FacebookDisplayName</key>
+    <string>아몬드</string>
+    <key>FacebookAutoLogAppEventsEnabled</key>
+    <true/>
+    <key>FacebookAdvertiserIDCollectionEnabled</key>
+    <true/>
 </dict>
 </plist>
