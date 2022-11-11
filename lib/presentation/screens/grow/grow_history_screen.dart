@@ -43,7 +43,8 @@ class GrowHistoryWidget extends StatelessWidget {
             : Column(
                 children: [
                   Text(
-                    '${viewModel.history.petName} 자연으로 무사히 돌아갈 수 있도록\n잘 돌봐주세요!',
+                    viewModel.currentIdxStage.description ??
+                        '${viewModel.history.petName}이(가) 자연으로 무사히 돌아갈 수 있도록\n잘 돌봐주세요!',
                     style: const TextStyle(
                       fontSize: 14,
                       color: greyColor,
@@ -77,12 +78,19 @@ class GrowHistoryWidget extends StatelessWidget {
                       Positioned(
                           left: 0,
                           child: GestureDetector(
+                            behavior: HitTestBehavior.translucent,
                             onTap: () {
                               viewModel.changeIndex(forward: false);
                             },
-                            child: const Icon(
-                              Icons.arrow_back_ios_rounded,
-                              color: Color(0xffa0a0a0),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: const [
+                                SizedBox(width: 40, height: 40),
+                                Icon(
+                                  Icons.arrow_back_ios_rounded,
+                                  color: Color(0xffa0a0a0),
+                                ),
+                              ],
                             ),
                           )),
 
@@ -90,12 +98,19 @@ class GrowHistoryWidget extends StatelessWidget {
                       Positioned(
                         right: 0,
                         child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
                           onTap: () {
                             viewModel.changeIndex();
                           },
-                          child: const Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            color: Color(0xffa0a0a0),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: const [
+                              SizedBox(width: 40, height: 40),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: Color(0xffa0a0a0),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -133,14 +148,13 @@ class GrowHistoryWidget extends StatelessWidget {
                             // 이름
                             Text(viewModel.history.petName,
                                 style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w500)),
+                                    fontSize: 20, fontWeight: FontWeight.w500)),
                             const SizedBox(width: 8),
                           ],
                         ),
-                    
+
                         const SizedBox(height: 8),
-                    
+
                         // 레벨
                         RichText(
                           text: TextSpan(
@@ -158,12 +172,12 @@ class GrowHistoryWidget extends StatelessWidget {
                             ],
                           ),
                         ),
-                    
+
                         // 캐릭터 정보 (몸무게, 키 등등)
                         Expanded(
                           child: Padding(
-                            padding:
-                                const EdgeInsets.only(left: 50, right: 40, top: 5),
+                            padding: const EdgeInsets.only(
+                                left: 50, right: 40, top: 5),
                             child: SingleChildScrollView(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,

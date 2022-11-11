@@ -72,8 +72,8 @@ class LevelupDialog extends StatelessWidget {
                 ),
                 Text(
                   isStageUpgrade
-                      ? '$name가 새로운 모습으로 성장했어요!'
-                      : '$name가 한층 더 건강해졌어요!',
+                      ? '$name(이)가 새로운 모습으로 성장했어요!'
+                      : '$name(이)가 한층 더 건강해졌어요!',
                   style: const TextStyle(color: darkGreyColor, fontSize: 16),
                 ),
 

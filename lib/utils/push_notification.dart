@@ -32,6 +32,8 @@ Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
   await showDialog(
       context: context,
       builder: (context) => const PushNotificationPermissionDialog());
+        // foreground 푸시 알림 설정
+  // await setUpForegroundNotification();
 
   var permissionSettings = await FirebaseMessaging.instance.requestPermission(
     alert: true,
