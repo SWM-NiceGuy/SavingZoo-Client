@@ -1,16 +1,18 @@
+import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 import 'package:amond/presentation/widget/main_button.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LevelupDialog extends StatelessWidget {
-  const LevelupDialog(
-      {Key? key,
-      required this.level,
-      required this.name,
-      this.isStageUpgrade = false,
-      required this.stage,
-      this.species,})
-      : super(key: key);
+  const LevelupDialog({
+    Key? key,
+    required this.level,
+    required this.name,
+    this.isStageUpgrade = false,
+    required this.stage,
+    this.species,
+  }) : super(key: key);
 
   final int level;
   final String name;
@@ -20,8 +22,13 @@ class LevelupDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final deviceSize = MediaQuery.of(context).size;
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (isStageUpgrade) {
+        context.read<GrowViewModel>().fadeCharacter(true);
+      }
+    });
 
     return Dialog(
       insetPadding: const EdgeInsets.symmetric(horizontal: 20),
@@ -70,12 +77,17 @@ class LevelupDialog extends StatelessWidget {
                   style: const TextStyle(color: darkGreyColor, fontSize: 16),
                 ),
 
-
                 const SizedBox(height: 29),
 
                 // 확인 버튼
                 MainButton(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      if (isStageUpgrade) {
+                        context.read<GrowViewModel>().activateLevelUpEffect();
+                        context.read<GrowViewModel>().fadeCharacter(false);
+                      }
+                    },
                     width: 149,
                     height: 56,
                     child: const Text('확인'))

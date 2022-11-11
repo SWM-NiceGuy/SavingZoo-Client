@@ -14,7 +14,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/screens/main_screen.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthScreen extends StatefulWidget {

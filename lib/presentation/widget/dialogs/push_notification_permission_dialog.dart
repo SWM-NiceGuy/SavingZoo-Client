@@ -24,9 +24,9 @@ class PushNotificationPermissionDialog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 // 상단 텍스트
-                Text(
+                const Text(
                   '알림을 허용해주세요',
-                  style: const TextStyle(fontSize: 20, color: textBlueColor200),
+                  style: TextStyle(fontSize: 20, color: textBlueColor200),
                 ),
                 const SizedBox(height: 34),
 

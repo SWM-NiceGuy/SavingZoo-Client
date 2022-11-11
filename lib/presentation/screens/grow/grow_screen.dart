@@ -1,15 +1,13 @@
 import 'dart:async';
 
-import 'package:amond/di/provider_setup.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
-import 'package:amond/presentation/controllers/mission_view_model.dart';
 
-import 'package:amond/presentation/screens/auth/auth_screen.dart';
+
 import 'package:amond/presentation/screens/grow/components/character_image_widget.dart';
+import 'package:amond/presentation/screens/grow/components/effects/fish_effect.dart';
 import 'package:amond/presentation/screens/grow/components/effects/heart_effect.dart';
-import 'package:amond/presentation/screens/grow/components/effects/level_up_effect.dart';
-import 'package:amond/presentation/screens/grow/components/effects/starfall_effect.dart';
+import 'package:amond/presentation/screens/grow/components/effects/stage_up_effect.dart';
 import 'package:amond/presentation/screens/grow/components/feed_button.dart';
 import 'package:amond/presentation/screens/grow/components/level_widget.dart';
 
@@ -18,11 +16,9 @@ import 'package:amond/presentation/screens/grow/grow_history_screen.dart';
 import 'package:amond/presentation/screens/grow/memorial_screen.dart';
 import 'package:amond/presentation/screens/mission/util/check_mission_result.dart';
 import 'package:amond/presentation/widget/dialogs/levelup_dialog.dart';
-import 'package:amond/presentation/widget/dialogs/mission_complete_dialog.dart';
 
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialogs/flutter_dialogs.dart';
 
 import 'package:provider/provider.dart';
 
@@ -136,14 +132,20 @@ class _GrowScreenWidget extends StatelessWidget {
               const SizedBox(height: 24),
               Expanded(
                 child: Stack(
+                  clipBehavior: Clip.none,
                   alignment: Alignment.center,
                   children: const [
+                    // 레벨업 시 레벨업 효과
+                    Positioned(top:-100,child: StageUpEffect()),
                     // 캐릭터 이미지
                     CharacterImageWidget(),
                     // 하트 버튼을 누르면 하트 표시
-                    HeartEffect(),
-                    // 레벨업 시 레벨업 효과
-                    LevelUpEffect(),
+                    Positioned(top: -100,child: HeartEffect()),
+
+                    // 물고기 이펙트
+                    FishEffect(),
+                    
+
                   ],
                 ),
               ),
@@ -208,7 +210,7 @@ class _GrowScreenWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: FeedButton(
-                      onClick: () async {
+                      onClick: !growController.canFeed ? null : () async {
                         await growController.feed().then((_) {
                           context.read<AuthController>().setGoodsQuantity();
                         });

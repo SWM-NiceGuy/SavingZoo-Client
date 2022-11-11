@@ -4,7 +4,7 @@ import 'package:amond/domain/repositories/character_repository.dart';
 import 'package:flutter/foundation.dart';
 
 class GrowHistoryViewModel with ChangeNotifier {
-  CharacterRepository _characterRepository;
+  final CharacterRepository _characterRepository;
 
   GrowHistoryViewModel(this._characterRepository);
 

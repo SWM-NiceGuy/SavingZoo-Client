@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FeedButton extends StatelessWidget {
-  final VoidCallback onClick;
+  final VoidCallback? onClick;
 
   const FeedButton({
     Key? key,
@@ -31,8 +31,8 @@ class FeedButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(20.0),
       child: InkWell(
         borderRadius: BorderRadius.circular(20.0),
-        splashColor: kBlue.withOpacity(0.15),
-        highlightColor: kBlue.withOpacity(0.1),
+        splashColor: onClick == null ? kCharacterActionButtonColor :  kBlue.withOpacity(0.15),
+        highlightColor: onClick == null ? kCharacterActionButtonColor : kBlue.withOpacity(0.1),
         onTap: currentGoodsQuantity > 0 ? onClick : null,
         child: Padding(
           padding: const EdgeInsets.all(16.0),

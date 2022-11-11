@@ -3,20 +3,16 @@ import 'dart:io';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/settings_view_model.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
-import 'package:amond/presentation/screens/settings/components/settings_alert_container.dart';
-import 'package:amond/presentation/screens/settings/notificaiton_settings.dart';
+import 'package:amond/presentation/screens/settings/notification_settings.dart';
 import 'package:amond/presentation/screens/settings/support_settings.dart';
 import 'package:amond/presentation/screens/settings/user_info_settings.dart';
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:amond/ui/text_styles.dart';
-import 'package:amond/utils/auth/do_auth.dart';
 import 'package:amond/presentation/widget/show_platform_based_dialog.dart';
 import 'package:amond/utils/version/app_version.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk_story.dart';
 import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatelessWidget {

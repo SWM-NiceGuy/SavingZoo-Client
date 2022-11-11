@@ -5,7 +5,7 @@ import 'package:amond/utils/version/app_status.dart';
 import 'package:http/http.dart' as http;
 
 // TODO: 앱 배포하기 전 버전 설정
-const String appVersion = '1.2.2';
+const String appVersion = '2.0.0';
 late AppStatus currentAppStatus;
 
 const String appStoreUrl =

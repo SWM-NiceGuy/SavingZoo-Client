@@ -1,14 +1,13 @@
 import 'dart:async';
-import 'dart:convert';
+
 
 import 'package:amond/domain/models/character.dart';
 import 'package:amond/domain/repositories/character_repository.dart';
 import 'package:amond/presentation/controllers/grow/grow_ui_event.dart';
 import 'package:amond/presentation/screens/grow/components/level_widget.dart';
-import 'package:amond/presentation/widget/dialogs/levelup_dialog.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class GrowViewModel with ChangeNotifier {
   final CharacterRepository _characterRepository;
@@ -28,28 +27,35 @@ class GrowViewModel with ChangeNotifier {
   bool _isLoading = true;
   bool get isLoading => _isLoading;
 
+  bool canFeed = true;
+
   bool isMissionClear = false;
 
   bool isNewUser = false;
 
   bool get hasName => character.nickname != null;
 
-  static const int fadeDuration = 1000; // Fade 애니메이션 지속시간
+  static const int fadeDuration = 600; // Fade 애니메이션 지속시간
   bool avatarIsVisible = true; // 아바타 보임 유무
 
   bool isHeartVisible = false; // 하트 애니메이션 보임 유무
   bool levelUpEffect = false;
+  bool stageUpEffect = false;
+  bool fishEffect = false;
 
-  static const int levelUpEffectDuration = 1000;
+  static const int levelUpEffectDuration = 2000;
+  static const int fishEffectDuration = 2000;
 
   bool playButtonEnabled = true;
+
+  static const int feedDelayDuration = 2000;
 
   int? increasedExp;
 
   int remainedPlayTime = 0;
   bool get canPlay => remainedPlayTime <= 0;
 
-  final int _heartVisibleTime = 6;
+  static const int heartEffectDuration = 1400;
 
   /// 캐릭터의 경험치를 증가시킨다.
   Future<void> increaseExp() async {
@@ -85,20 +91,35 @@ class GrowViewModel with ChangeNotifier {
     }
 
     _character = updatedCharacter;
-    // 캐릭터 fade 애니메이션
-    avatarIsVisible = false;
-    notifyListeners();
-    await Future.delayed(Duration(milliseconds: fadeDuration));
-
-    avatarIsVisible = true;
     notifyListeners();
   }
 
-  /// 레벨업 이펙트 한버 활성화
+  Future<void> fadeCharacter(bool value) async {
+    // 캐릭터 fade 애니메이션
+    avatarIsVisible = !value;
+    notifyListeners();
+  }
+
+  /// 레벨업 이펙트 한번 활성화
   Future<void> activateLevelUpEffect() async {
     levelUpEffect = true;
     notifyListeners();
-    // await Future.delayed(const Duration(milliseconds: levelUpEffectDuration));
+    Future.delayed(const Duration(milliseconds: levelUpEffectDuration))
+        .then((value) {
+      levelUpEffect = false;
+      notifyListeners();
+    });
+  }
+
+  /// 스테이지업 이펙트 한번 활성화
+  Future<void> activateStageUpEffect() async {
+    stageUpEffect = true;
+    notifyListeners();
+    Future.delayed(const Duration(milliseconds: levelUpEffectDuration))
+        .then((value) {
+      stageUpEffect = false;
+      notifyListeners();
+    });
   }
 
   /// 캐릭터 데이터를 불러오고 Grow Screen 화면을 설정
@@ -165,12 +186,40 @@ class GrowViewModel with ChangeNotifier {
 
   /// 캐릭터 먹이주기
   Future<void> feed() async {
+    if (!canFeed) {
+      return;
+    }
+    canFeed = false;
+    fishEffect = true;
+    Future.delayed(const Duration(milliseconds: feedDelayDuration), () {
+      fishEffect = false;
+      if (_mounted) {
+        notifyListeners();
+      }
+    });
+    
+    notifyListeners();
+
+    Future.delayed(const Duration(milliseconds: feedDelayDuration)).then((value) {
+      canFeed = true;
+      notifyListeners();
+    });
+
     await _characterRepository.feed();
     increaseExp();
   }
 
   /// 하트 버튼 누를 시 하트 효과
   Future<void> playWithCharacter() async {
+
+    isHeartVisible = true;
+    Future.delayed(const Duration(milliseconds: heartEffectDuration), () {
+      isHeartVisible = false;
+      if (_mounted) {
+        notifyListeners();
+      }
+    });
+
     // 놀아주고 난 후 캐릭터 API 응답
     Character? resultCharacter =
         await _characterRepository.playWithCharacter(_character.id);
@@ -193,14 +242,6 @@ class GrowViewModel with ChangeNotifier {
 
     FirebaseAnalytics.instance
         .logEvent(name: '하트버튼_터치', parameters: {'type': '하트 안보이는 중 누름'});
-
-    isHeartVisible = true;
-    Future.delayed(Duration(seconds: _heartVisibleTime), () {
-      isHeartVisible = false;
-      if (_mounted) {
-        notifyListeners();
-      }
-    });
   }
 
   Future<void> setCharacterName(String nickname) async {

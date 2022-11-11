@@ -4,7 +4,6 @@ import 'package:amond/presentation/screens/grow/components/grow_info_row.dart';
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:model_viewer_plus/model_viewer_plus.dart';
 import 'package:provider/provider.dart';
 
 class GrowHistoryScreen extends StatelessWidget {

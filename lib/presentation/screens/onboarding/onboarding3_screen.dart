@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:amond/domain/repositories/character_repository.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 import 'package:amond/presentation/screens/auth/components/apple_login_container.dart';

@@ -3,19 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
-class HeartEffect extends StatelessWidget {
-  const HeartEffect({Key? key}) : super(key: key);
+class FishEffect extends StatelessWidget {
+  const FishEffect({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
 
     final isHeartVisible =
-        context.select<GrowViewModel, bool>((value) => value.isHeartVisible);
+        context.select<GrowViewModel, bool>((value) => value.fishEffect);
         
     return isHeartVisible
         ? Lottie.asset(
-            'assets/lotties/lottie_hearts.json',
+            'assets/lotties/fish_effect.json',
             frameRate: FrameRate.max,
             repeat: false,
             fit: BoxFit.cover,

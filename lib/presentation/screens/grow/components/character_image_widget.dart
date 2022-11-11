@@ -18,6 +18,7 @@ class CharacterImageWidget extends StatelessWidget {
     // final stage = context.select<GrowViewModel, int>((value) => value.character.currentStage);
 
     return AnimatedOpacity(
+      curve: Curves.easeInQuint,
       opacity: avatarIsVisible ? 1.0 : 0.0,
       duration: const Duration(milliseconds: GrowViewModel.fadeDuration),
       child: GestureDetector(

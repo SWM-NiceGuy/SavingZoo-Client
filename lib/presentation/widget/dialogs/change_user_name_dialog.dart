@@ -80,7 +80,7 @@ class _ChangeUserNameDialogState extends State<ChangeUserNameDialog> {
                   child: Text('2 ~ 8자 사이로 입력해주세요.',
                       style: TextStyle(
                           color:
-                              _indicateAlert ? Colors.red : Color(0xffA6A6A6),
+                              _indicateAlert ? Colors.red : const Color(0xffA6A6A6),
                           fontSize: 16)),
                 ),
 

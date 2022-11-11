@@ -55,8 +55,6 @@ dependencies:
   firebase_crashlytics: ^2.8.12
   url_launcher: ^6.1.6
   carousel_slider: ^4.1.1
-  model_viewer_plus: 
-    path: packages/model_viewer_plus.dart
 
 
 dev_dependencies:

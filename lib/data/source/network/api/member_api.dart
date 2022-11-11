@@ -70,7 +70,7 @@ class MemberApi {
 
   Future<void> changeUserName(String name) async {
     final url = Uri.parse('$baseUrl/user/info');
-    final response = await http.post(
+    await http.post(
       url,
       headers: {
         'Authorization': 'Bearer $globalToken',
