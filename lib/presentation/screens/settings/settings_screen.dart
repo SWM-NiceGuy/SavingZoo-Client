@@ -102,7 +102,6 @@ class _SettingsScreenWidgetState extends State<SettingsScreenWidget> {
                             if (!isAccepted) return;
                             try {
                               context.read<AuthController>().logout().then((_) {
-                                clearViewModels(context);
                                 Navigator.of(context).popUntil(
                                   ModalRoute.withName('/'),
                                 );
