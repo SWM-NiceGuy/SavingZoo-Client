@@ -4,6 +4,7 @@ import 'package:amond/presentation/screens/mission/components/mission_detail_bot
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
 
 import 'package:amond/ui/colors.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,14 @@ class MissionDetailScreen extends StatelessWidget {
                   const SizedBox(height: 24.0),
                   ImageSlider(
                     images: viewModel.mission.exampleImageUrls
-                        .map((url) => Image.network(url, fit: BoxFit.cover))
+                        .map((url) => CachedNetworkImage(
+                            imageUrl: url,
+                            placeholder: (_, __) => const Center(
+                                  child: PlatformBasedLoadingIndicator(),
+                                ),
+                                fadeOutDuration: Duration.zero,
+                                fadeInDuration: Duration.zero,
+                            fit: BoxFit.cover))
                         .toList(),
                     width: width * 0.85,
                     height: width * 0.7,

@@ -120,4 +120,11 @@ class MissionViewModel with ChangeNotifier {
   Future<void> confirmResult(List<int> missionIds) async {
     await _missionRepository.confirmResult(missionIds);
   }
+
+  void clear() {
+    _basicMissions.clear();
+    _intermediateMissions.clear();
+    _advancedMissions.clear();
+    _categories.clear();
+  }
 }

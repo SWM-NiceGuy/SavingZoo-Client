@@ -1,5 +1,7 @@
 import 'package:amond/domain/models/mission_list.dart';
 import 'package:amond/domain/models/mission_state.dart';
+import 'package:amond/presentation/widget/platform_based_indicator.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class MissionCard extends StatelessWidget {
@@ -106,22 +108,25 @@ class _IconContainer extends StatelessWidget {
       );
     }
 
-    return Image.network(
-      iconUrl,
+    return CachedNetworkImage(
+      imageUrl: iconUrl,
       height: 44,
       fit: BoxFit.cover,
-      loadingBuilder: (_, child, loadingProgress) {
-        if (loadingProgress == null) {
-          return child;
-        }
+      placeholder: (_, __) => const Center(
+        child: PlatformBasedLoadingIndicator(),
+      ),
+      // loadingBuilder: (_, child, loadingProgress) {
+      //   if (loadingProgress == null) {
+      //     return child;
+      //   }
 
-        return Image.asset(
-          'assets/images/img_placeholder.gif',
-          height: 44,
-          width: 44,
-          fit: BoxFit.cover,
-        );
-      },
+      //   return Image.asset(
+      //     'assets/images/img_placeholder.gif',
+      //     height: 44,
+      //     width: 44,
+      //     fit: BoxFit.cover,
+      //   );
+      // },
     );
   }
 }

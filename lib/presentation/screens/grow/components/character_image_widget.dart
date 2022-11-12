@@ -1,4 +1,5 @@
 import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,8 +27,8 @@ class CharacterImageWidget extends StatelessWidget {
           // FA 로그
           FirebaseAnalytics.instance.logEvent(name: '캐릭터_터치');
         },
-        child: Image.network(
-          imageUrl,
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
         ),
       ),
     );

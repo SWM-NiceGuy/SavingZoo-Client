@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../ui/colors.dart';
 
 class ImageSlider extends StatefulWidget {
-  final List<Image> images;
+  final List<Widget> images;
   final double width;
   final double height;
 

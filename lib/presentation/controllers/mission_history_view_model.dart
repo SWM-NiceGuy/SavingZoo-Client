@@ -8,7 +8,7 @@ class MissionHistoryViewModel with ChangeNotifier {
 
   MissionHistoryViewModel(this._missionRepository);
 
-  late List<MissionHistory> _histories;
+  List<MissionHistory> _histories = [];
   List<MissionHistory> get histories => _histories;
 
   bool _isLoading = true;
@@ -21,5 +21,10 @@ class MissionHistoryViewModel with ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+  }
+
+  void clear() {
+    _histories = [];
+    _isLoading = true;
   }
 }

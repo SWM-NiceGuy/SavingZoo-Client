@@ -55,6 +55,7 @@ dependencies:
   firebase_crashlytics: ^2.8.12
   url_launcher: ^6.1.6
   carousel_slider: ^4.1.1
+  cached_network_image: ^3.2.1
 
 
 dev_dependencies:

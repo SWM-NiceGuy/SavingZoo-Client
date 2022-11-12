@@ -14,12 +14,14 @@ import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 
 import 'package:amond/presentation/controllers/main_view_model.dart';
+import 'package:amond/presentation/controllers/mission_history_view_model.dart';
 import 'package:amond/presentation/controllers/mission_view_model.dart';
 import 'package:amond/presentation/controllers/settings_view_model.dart';
 
 import 'package:amond/utils/auth/do_apple_auth.dart';
 import 'package:amond/utils/auth/do_auth.dart';
 import 'package:amond/utils/auth/do_kakao_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -112,3 +114,8 @@ List<SingleChildWidget> viewModels = [
     },
   )
 ];
+
+void clearViewModels(BuildContext context) {
+  context.read<MissionViewModel>().clear();
+  context.read<MissionHistoryViewModel>().clear();
+}
