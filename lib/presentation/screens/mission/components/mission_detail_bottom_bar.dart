@@ -29,6 +29,10 @@ class MissionDetailBottomBar extends StatelessWidget {
         Provider.of<MissionDetailViewModel>(context, listen: false);
 
     Future<void> _onButtonClick() async {
+      // 제출 중이면 클릭 방지
+      if (!viewModel.canOpenCamera) {
+        return;
+      }
       // 미션을 제출했으면 동작 취소
       if (viewModel.mission.state == MissionState.wait ||
           viewModel.mission.state == MissionState.completed) {
@@ -46,6 +50,8 @@ class MissionDetailBottomBar extends StatelessWidget {
 
           return;
         }
+
+        viewModel.canOpenCamera = false;
 
         // 카메라 권한이 확인되면
         // FA 로그
@@ -68,8 +74,11 @@ class MissionDetailBottomBar extends StatelessWidget {
             missionId: viewModel.missionId,
             missionDetail: viewModel.mission,
           );
+          viewModel.canOpenCamera = true;
           return;
         }
+
+        viewModel.canOpenCamera = true;
 
         // 사진을 제출 했을때
         // FA 로그

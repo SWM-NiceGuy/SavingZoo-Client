@@ -21,6 +21,9 @@ class MissionDetailViewModel with ChangeNotifier {
   var _isSubmitting = false;
   bool get isSubmitting => _isSubmitting;
 
+  bool canOpenCamera = true;
+  
+
   /// 미션 상세 정보를 불러온다.
   Future<void> fetchData() async {
     _missionDetail = await _missionRepository.getMissionDetail(missionId);
