@@ -34,7 +34,7 @@ class BetaRewardDialog extends StatelessWidget {
                 children: [
                   // 상단 텍스트
                   const Text(
-                    '기존 아몬드 유저 보상',
+                    '기존 지켜주 유저 보상',
                     style: TextStyle(fontSize: 20, color: textBlueColor200),
                   ),
                   const SizedBox(height: 4),

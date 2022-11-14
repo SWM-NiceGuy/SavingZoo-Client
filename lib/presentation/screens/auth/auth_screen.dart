@@ -43,8 +43,9 @@ class _AuthScreenState extends State<AuthScreen> {
                   width: 150,
                   fit: BoxFit.cover,
                 ),
+                const SizedBox(height: 20),
                 const Text(
-                  'Amond',
+                  '지켜ZOO',
                   style: TextStyle(color: blackColor, fontSize: 32),
                 ),
                 const Spacer(),

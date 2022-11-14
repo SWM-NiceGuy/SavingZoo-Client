@@ -62,135 +62,127 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
           title: const Text('3/3', style: TextStyle(color: greyColor)),
         ),
         body: SingleChildScrollView(
-          child: SafeArea(
-            child: Center(
-              child: SizedBox(
-                height: 10 + deviceSize.height -
-                    (MediaQuery.of(context).padding.top +
-                        MediaQuery.of(context).padding.bottom +
-                        kToolbarHeight),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Spacer(),
-                      _isNameSet
-                          ? RichText(
-                              textAlign: TextAlign.center,
-                              text: TextSpan(
-                                children: [
-                                  const TextSpan(
-                                    text: '로그인을 통해\n',
-                                  ),
-                                  TextSpan(
-                                    text: _controller.text,
-                                    style: const TextStyle(
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  const TextSpan(text: '와 함께해주세요')
-                                ],
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _isNameSet
+                      ? RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            children: [
+                              const TextSpan(
+                                text: '로그인을 통해\n',
+                              ),
+                              TextSpan(
+                                text: _controller.text,
                                 style: const TextStyle(
-                                  color: darkGreyColor,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              maxLines: 3,
-                            )
-                          : const Text(
-                              '보살핌이 필요한 수달이\n보호소에 찾아왔어요!',
-                              style: TextStyle(
-                                color: darkGreyColor,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                              ),
-                              textAlign: TextAlign.center,
+                              const TextSpan(text: '와 함께해주세요')
+                            ],
+                            style: const TextStyle(
+                              color: darkGreyColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
                             ),
-                      const Spacer(),
-                      const SizedBox(height: 70),
-                      Image.asset(
-                        'assets/characters/otter/greet/1.gif',
-                        width: deviceSize.width * 0.6,
-                        fit: BoxFit.cover,
-                      ),
-                      const SizedBox(height: 50),
-                      if (!_isNameSet)
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 24),
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: lightGreyColor),
-                            borderRadius: BorderRadius.circular(18),
                           ),
-                          child: TextField(
-                            controller: _controller,
-                            decoration:
-                                const InputDecoration(border: InputBorder.none),
-                            onChanged: (value) {
-                              if (_nameValidate(value)) {
-                                setState(() {
-                                  _isNameValidate = true;
-                                  _indicateNameAlert = false;
-                                });
-                              } else {
-                                setState(() {
-                                  _isNameValidate = false;
-                                  _indicateNameAlert = true;
-                                });
-                              }
-                            },
+                          maxLines: 3,
+                        )
+                      : const Text(
+                          '보살핌이 필요한 수달이\n보호소에 찾아왔어요!',
+                          style: TextStyle(
+                            color: darkGreyColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
                           ),
-                        ),
-                      const SizedBox(height: 12),
-                      if (_indicateNameAlert)
-                        const Text(
-                          '공백없이 2-8자로 설정해주세요',
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.red, fontSize: 16),
                         ),
-                      if (!_isNameSet)
-                        const Text(
-                          '사육사님이 돌봐줄 동물의\n이름을 지어주세요!',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: greyColor, fontSize: 16),
-                        ),
-                      if (_isNameSet)
-                        _loginColumn(context.read<AuthController>(), context),
-                      const Spacer(),
-                      if (!_isNameSet)
-                        // 이름을 설정하는 버튼
-                        MainButton(
-                            width: deviceSize.width * 0.8,
-                            height: 60,
-                            // onPressed: () => Navigator.of(context).push(MaterialPageRoute(
-                            //     builder: (_) => const ())),
-                            onPressed: !_isNameValidate
-                                ? null
-                                : () async {
-                                    // 로그인이 되어 있지 않으면
-                                    if (!_isLogined) {
-                                      setState(() {
-                                        _isNameSet = true;
-                                      });
-                                    } else {
-                                      // 로그인이 되어 있으면 이름을 설정하고 Main Screen으로 이동하는 로직
-                                      await context
-                                          .read<GrowViewModel>()
-                                          .setCharacterName(_controller.text);
-                                      _navigateToMainScreen();
-                                    }
-                                  },
-                            child: const Text(
-                              '시작하기',
-                              style: TextStyle(fontSize: 16),
-                            )),
-                    ],
+                  // const Spacer(),
+                  const SizedBox(height: 40),
+                  Image.asset(
+                    'assets/characters/otter/greet/1.gif',
+                    width: deviceSize.width * 0.6,
+                    fit: BoxFit.cover,
                   ),
-                ),
+                  const SizedBox(height: 50),
+                  if (!_isNameSet)
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 24),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: lightGreyColor),
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                      child: TextField(
+                        controller: _controller,
+                        decoration:
+                            const InputDecoration(border: InputBorder.none),
+                        onChanged: (value) {
+                          if (_nameValidate(value)) {
+                            setState(() {
+                              _isNameValidate = true;
+                              _indicateNameAlert = false;
+                            });
+                          } else {
+                            setState(() {
+                              _isNameValidate = false;
+                              _indicateNameAlert = true;
+                            });
+                          }
+                        },
+                      ),
+                    ),
+                  const SizedBox(height: 12),
+                  if (_indicateNameAlert)
+                    const Text(
+                      '공백없이 2-8자로 설정해주세요',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.red, fontSize: 16),
+                    ),
+                  if (!_isNameSet)
+                    const Text(
+                      '사육사님이 돌봐줄 동물의\n이름을 지어주세요!',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: greyColor, fontSize: 16),
+                    ),
+                  if (_isNameSet)
+                    _loginColumn(context.read<AuthController>(), context),
+                  // const Spacer(),
+                  const SizedBox(height: 100),
+                  if (!_isNameSet)
+                    // 이름을 설정하는 버튼
+                    MainButton(
+                        width: deviceSize.width * 0.8,
+                        height: 60,
+                        // onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (_) => const ())),
+                        onPressed: !_isNameValidate
+                            ? null
+                            : () async {
+                                // 로그인이 되어 있지 않으면
+                                if (!_isLogined) {
+                                  setState(() {
+                                    _isNameSet = true;
+                                  });
+                                } else {
+                                  // 로그인이 되어 있으면 이름을 설정하고 Main Screen으로 이동하는 로직
+                                  await context
+                                      .read<GrowViewModel>()
+                                      .setCharacterName(_controller.text);
+                                  _navigateToMainScreen();
+                                }
+                              },
+                        child: const Text(
+                          '시작하기',
+                          style: TextStyle(fontSize: 16),
+                        )),
+                ],
               ),
             ),
           ),

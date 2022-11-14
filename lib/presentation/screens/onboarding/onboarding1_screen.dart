@@ -42,7 +42,7 @@ class Onboarding1Screen extends StatelessWidget {
                     style: TextStyle(color: greyColor, fontSize: 16),
                     children: [
                       TextSpan(
-                        text: '아몬드 임시보호소',
+                        text: '지켜주 임시보호소',
                         style: TextStyle(
                           color: textBlueColor200,
                         ),
