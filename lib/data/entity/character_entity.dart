@@ -6,10 +6,11 @@ part 'character_entity.g.dart';
 class CharacterEntity {
 
   final int petId;
-  final String name;
+  final String species;
   String? nickname;
   final String image;
   final int currentLevel;
+  final int currentStage;
   final int currentExp;
   final int maxExp;
   final int? remainedPlayTime;
@@ -18,9 +19,10 @@ class CharacterEntity {
 
   CharacterEntity({
     required this.petId,
-    required this.name,
+    required this.species,
     this.nickname,
     required this.image,
+    required this.currentStage,
     required this.currentLevel,
     required this.currentExp,
     required this.maxExp,

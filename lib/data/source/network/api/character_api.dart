@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:amond/data/entity/character_entity.dart';
+import 'package:amond/data/entity/grow_history_entity.dart';
 import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/auth/auth_info.dart';
 import 'package:flutter/foundation.dart';
@@ -59,7 +60,7 @@ class CharacterApi {
     });
     final json = jsonDecode(utf8.decode(response.bodyBytes));
     if (kDebugMode) {
-      print('캐릭터 정보 응답: $json}');
+      print('캐릭터 정보 응답: $json\n');
     }
     return CharacterEntity.fromJson(json);
   }
@@ -98,7 +99,7 @@ class CharacterApi {
 
     Map<String, dynamic> json = jsonDecode(utf8.decode(response.bodyBytes));
     if (kDebugMode) {
-      print('캐릭터 놀아주기 결과: $json');
+      print('캐릭터 놀아주기 결과: $json\n');
     }
 
     var resultPetInfo = json['petInfo'];
@@ -108,4 +109,57 @@ class CharacterApi {
 
     return CharacterEntity.fromJson(resultPetInfo);
   }
+
+  // Future<CharacterSilhouetteImagesEntity> getCharacterSilhouettes() async {
+  //   final url = Uri.parse("$baseUrl/user/pet/silhouette");
+
+  //   final response = await http.get(
+  //     url,
+  //     headers: {
+  //       'Content-type': 'application/json',
+  //       'Accept': 'application/json',
+  //       'Authorization': 'Bearer $globalToken',
+  //     },
+  //   );
+  //   final json = jsonDecode(response.body);
+  //   final entity = CharacterSilhouetteImagesEntity.fromJson(json);
+
+  //   return entity;
+  // }
+
+  Future<int> feedCharacter() async {
+     final url = Uri.parse("$baseUrl/user/pet/feed");
+
+     final response = await http.get(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $globalToken',
+      },
+    );
+
+
+    final json = jsonDecode(response.body);
+    return json['reward'];
+  }
+
+  Future<GrowHistoryEntity> getGrowHistory() async {
+    final url = Uri.parse("$baseUrl/user/pet/diary");
+
+     final response = await http.get(
+      url,
+      headers: {
+        'Content-type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $globalToken',
+      },
+    );
+
+    final json = jsonDecode(utf8.decode(response.bodyBytes));
+    final entity = GrowHistoryEntity.fromJson(json);
+    
+    return entity;
+  }
+
 }

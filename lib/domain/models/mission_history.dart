@@ -7,6 +7,7 @@ class MissionHistory {
   String type;
   String missionName;
   int reward;
+  String? descriptionWhyRejected;
 
   MissionHistory({
     required this.state,
@@ -14,6 +15,7 @@ class MissionHistory {
     required this.type,
     required this.missionName,
     required this.reward,
+    this.descriptionWhyRejected,
   });
 
   factory MissionHistory.fromEntity(MissionHistoryEntity entity) =>
@@ -29,5 +31,6 @@ class MissionHistory {
         type: entity.rewardType,
         missionName: entity.title,
         reward: entity.reward,
+        descriptionWhyRejected: entity.reason,
       );
 }

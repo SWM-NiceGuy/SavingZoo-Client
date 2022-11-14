@@ -1,201 +1,241 @@
-import 'package:amond/data/repository/character_repository_impl.dart';
-import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/controllers/grow_controller.dart';
+import 'dart:async';
 
-import 'package:amond/presentation/screens/auth/auth_screen.dart';
+import 'package:amond/presentation/controllers/auth_controller.dart';
+import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
+
 import 'package:amond/presentation/screens/grow/components/character_image_widget.dart';
-import 'package:amond/presentation/screens/grow/components/comment_box.dart';
+import 'package:amond/presentation/screens/grow/components/effects/fish_effect.dart';
 import 'package:amond/presentation/screens/grow/components/effects/heart_effect.dart';
-import 'package:amond/presentation/screens/grow/components/effects/level_up_effect.dart';
-import 'package:amond/presentation/screens/grow/components/effects/starfall_effect.dart';
+import 'package:amond/presentation/screens/grow/components/effects/stage_up_effect.dart';
+import 'package:amond/presentation/screens/grow/components/feed_button.dart';
 import 'package:amond/presentation/screens/grow/components/level_widget.dart';
 
-import 'package:amond/presentation/screens/grow/components/play_timer.dart';
-import 'package:amond/presentation/screens/grow/components/shadow_button.dart';
-import 'package:amond/utils/dialogs/dialogs.dart';
-import 'package:amond/widget/platform_based_indicator.dart';
+import 'package:amond/presentation/screens/grow/components/play_button.dart';
+import 'package:amond/presentation/screens/grow/grow_history_screen.dart';
+import 'package:amond/presentation/screens/grow/memorial_screen.dart';
+import 'package:amond/presentation/screens/mission/util/check_mission_result.dart';
+import 'package:amond/presentation/widget/dialogs/levelup_dialog.dart';
+
+import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dialogs/flutter_dialogs.dart';
 
 import 'package:provider/provider.dart';
 
-class GrowScreen extends StatelessWidget {
+class GrowScreen extends StatefulWidget {
   const GrowScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) =>
-          GrowController(context.read<CharacterRepositoryImpl>()),
-      child: const GrowScreenWidget(),
-    );
-  }
+  State<GrowScreen> createState() => _GrowScreenState();
 }
 
-class GrowScreenWidget extends StatelessWidget {
-  static const screenMargin = 24.0;
+class _GrowScreenState extends State<GrowScreen> {
+  StreamSubscription? _uiEventSubscription;
 
-  const GrowScreenWidget({
-    Key? key,
-  }) : super(key: key);
+  @override
+  void initState() {
+    super.initState();
+
+    final viewModel = context.read<GrowViewModel>();
+
+    // 뷰모델로 부터 레벨업 이벤트를 받으면 레벨업 다이얼로그 보여주기
+    _uiEventSubscription = viewModel.eventStream.listen((event) {
+      event.when(
+        levelUp: () {
+          showDialog(
+              context: context,
+              builder: (_) => LevelupDialog(
+                    level: viewModel.character.level,
+                    name: viewModel.character.nickname ?? '',
+                    stage: viewModel.character.currentStage,
+                  ));
+        },
+        stageUp: () {
+          showDialog(
+              context: context,
+              builder: (_) => LevelupDialog(
+                    level: viewModel.character.level,
+                    name: viewModel.character.nickname ?? '',
+                    isStageUpgrade: true,
+                    stage: viewModel.character.currentStage,
+                    species: viewModel.character.species,
+                  ));
+        },
+      );
+    });
+
+    // 캐릭터 불러오기
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<GrowViewModel>().fetchData();
+      context.read<AuthController>().setGoodsQuantity();
+    });
+
+    // 미션 인증 결과 확인하기
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await checkMissionResult(context);
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _uiEventSubscription?.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // final growController = Provider.of<GrowController>(context, listen: false);
-    final growController = context.watch<GrowController>();
+    return const _GrowScreenWidget();
+  }
+}
 
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+class _GrowScreenWidget extends StatelessWidget {
+  const _GrowScreenWidget({Key? key}) : super(key: key);
 
-    final commentBoxHeight = height * 0.12;
-    final buttonHeight = height * 0.08;
+  @override
+  Widget build(BuildContext context) {
+    final growController = context.watch<GrowViewModel>();
 
     // 데이터가 불러와 있지 않을때 데이터 불러오기
-    if (growController.isLoading) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        growController.fetchData().onError((error, stackTrace) {
-          context.read<AuthController>().logout();
-          showPlatformDialog(
-            context: context,
-            builder: (context) => BasicDialogAlert(
-              title: const Text("로그인 실패"),
-              content: const Text('다시 로그인 해주세요'),
-              actions: <Widget>[
-                BasicDialogAction(
-                  title: const Text("확인"),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.of(context)
-                        .pushReplacementNamed(AuthScreen.routeName);
-                  },
-                ),
-              ],
-            ),
-          );
-        });
-      });
-    }
-
-    // 캐릭터의 이름이 정해져 있지 않으면 이름 설정 팝업을 띄운다.
-    if (growController.isNewUser) {
-      growController.isNewUser = false;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        showCharacterNamingDialog(context, growController.setCharacterName,
-            growController.character.imageUrl);
-      });
-    }
-
-    // 완료한 미션이 있으면 미션 완료 팝업을 띄운다.
-    if (growController.isMissionClear) {
-      growController.isMissionClear = false;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        showMissionCompleteDialog(context, () async {
-          await growController.increaseExp(growController.increasedExp!);
-        }, growController.increasedExp!);
-      });
-    }
+    // if (growController.isLoading) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //     growController.fetchData().onError((error, stackTrace) {
+    //       context.read<AuthController>().logout();
+    //       showPlatformDialog(
+    //         context: context,
+    //         builder: (context) => BasicDialogAlert(
+    //           title: const Text("로그인 실패"),
+    //           content: const Text('다시 로그인 해주세요'),
+    //           actions: <Widget>[
+    //             BasicDialogAction(
+    //               title: const Text("확인"),
+    //               onPressed: () {
+    //                 Navigator.pop(context);
+    //                 Navigator.of(context)
+    //                     .pushReplacementNamed(AuthScreen.routeName);
+    //               },
+    //             ),
+    //           ],
+    //         ),
+    //       );
+    //     });
+    //   });
+    // }
 
     return growController.isLoading
         ? const Center(
-            child: PlatformBasedIndicator(),
+            child: PlatformBasedLoadingIndicator(),
           )
         : Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // 레벨 위젯
               const LevelWidget(),
-              // 캐릭터 이름
               const SizedBox(height: 24),
-              Text(growController.character.nickname ?? "",
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.w500)),
-              Text('(${growController.character.name})',
-                  style: const TextStyle(color: Colors.grey)),
               Expanded(
                 child: Stack(
+                  clipBehavior: Clip.none,
                   alignment: Alignment.center,
                   children: const [
+                    // 레벨업 시 레벨업 효과
+                    Positioned(top: -100, child: StageUpEffect()),
                     // 캐릭터 이미지
                     CharacterImageWidget(),
-                    // 최대 레벨 별빛 효과
-                    StarfallEffect(),
                     // 하트 버튼을 누르면 하트 표시
-                    HeartEffect(),
-                    // 레벨업 시 레벨업 효과
-                    LevelUpEffect(),
+                    Positioned(top: -100, child: HeartEffect()),
+
+                    // 물고기 이펙트
+                    FishEffect(),
                   ],
                 ),
               ),
               Column(
                 children: [
-                  CommentBox(
-                    comment: growController.comment,
-                    width: width * 2 / 3,
-                    height: commentBoxHeight,
-                    // height: 100.0,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: screenMargin,
-                      vertical: screenMargin / 1.5,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 24),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Stack(
-                                clipBehavior: Clip.none,
-                                alignment: Alignment.center,
-                                children: [
-                                  ShadowButton(
-                                    width: buttonHeight,
-                                    height: buttonHeight,
-                                    padding: EdgeInsets.zero,
-                                    onPress: growController.playButtonEnabled
-                                        ? growController.playWithCharacter
-                                        : null,
-                                    child: Center(
-                                      child: Image.asset(
-                                        'assets/images/heart_icon.png',
-                                        width: buttonHeight / 2,
-                                        height: buttonHeight / 2,
-                                        fit: BoxFit.fitHeight,
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: -45,
-                                    child: PlayTimer(
-                                      time: growController.remainedPlayTime,
-                                      width: buttonHeight,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              ShadowButton(
-                                width: buttonHeight,
-                                height: buttonHeight,
-                                padding: EdgeInsets.zero,
-                                onPress: growController.changeComment,
-                                child: Center(
-                                  child: Image.asset(
-                                    'assets/images/comment_icon.png',
-                                    width: buttonHeight / 2,
-                                    height: buttonHeight / 2,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                        ],
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      // 성장일기
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => const GrowHistoryScreen()));
+                        },
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              'assets/images/grow_history_icon.png',
+                              width: 35,
+                              height: 35,
+                            ),
+                            const SizedBox(height: 7),
+                            const Text(
+                              '성장 일기',
+                              style: TextStyle(
+                                  fontSize: 12, color: Color(0xff505459)),
+                            )
+                          ],
+                        ),
                       ),
+
+                      const SizedBox(width: 40),
+
+                      // 추억 저장소
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => const MemorialScreen()));
+                        },
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              'assets/images/photo_frame_icon.png',
+                              width: 38,
+                              height: 38,
+                            ),
+                            const SizedBox(height: 7),
+                            const Text(
+                              '추억 저장소',
+                              style: TextStyle(
+                                  fontSize: 12, color: Color(0xff505459)),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+
+                  // 먹이 주기
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                    child: FeedButton(
+                      onClick: !growController.canFeedOrPlay
+                          ? null
+                          : () async {
+                              await growController.feed().then((_) {
+                                growController.animateFeed();
+                                context
+                                    .read<AuthController>()
+                                    .setGoodsQuantity();
+                              });
+                            },
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 16.0),
+
+                  // 놀아 주기
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                    child: PlayButton(
+                      remainingSeconds: growController.remainedPlayTime,
+                      onClick: !growController.canFeedOrPlay
+                          ? () {}
+                          : () {
+                              growController.animatePlay();
+                              growController.playWithCharacter();
+                            },
+                    ),
+                  ),
+                  const SizedBox(height: 24.0),
                 ],
               ),
             ],

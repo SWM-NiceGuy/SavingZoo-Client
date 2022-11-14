@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/auth/auth_info.dart';
-import 'package:amond/utils/push_notification_permission_dialog.dart';
+import 'package:amond/presentation/widget/dialogs/push_notification_permission_dialog.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +32,8 @@ Future<void> showPushNotificationPermissionDialog(BuildContext context) async {
   await showDialog(
       context: context,
       builder: (context) => const PushNotificationPermissionDialog());
+        // foreground 푸시 알림 설정
+  // await setUpForegroundNotification();
 
   var permissionSettings = await FirebaseMessaging.instance.requestPermission(
     alert: true,

@@ -19,6 +19,7 @@ class MissionDetailEntity {
   final String submitGuide;
   final int reward;
   final String state;
+  final String submitImageUrl;
 
   MissionDetailEntity({
     required this.name,
@@ -28,6 +29,7 @@ class MissionDetailEntity {
     required this.submitGuide,
     required this.reward,
     required this.state,
+    required this.submitImageUrl,
   });
 
 

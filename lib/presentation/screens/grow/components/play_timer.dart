@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:amond/presentation/controllers/grow_controller.dart';
+import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,19 +16,20 @@ class PlayTimer extends StatefulWidget {
 }
 
 class _PlayTimerState extends State<PlayTimer> {
-  late int _time;
-  Timer? _timer;
 
   String format(int t) {
     Duration d = Duration(seconds: t);
     return d.toString().split('.').first.padLeft(8, "0");
   }
+  
+  late int remainingSeconds;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _time = widget.time;
-    if (_time != 0) {
+    remainingSeconds = widget.time;
+    if (remainingSeconds != 0) {
       _startTimer();
     }
   }
@@ -39,15 +40,15 @@ class _PlayTimerState extends State<PlayTimer> {
     if (_timer?.isActive ?? false) {
       return;
     }
-    _time = widget.time;
-    if (_time != 0) {
+    remainingSeconds = widget.time;
+    if (remainingSeconds != 0) {
       _startTimer();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return _time > 0
+    return remainingSeconds > 0
         ? Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             width: widget.width + 20,
@@ -58,7 +59,7 @@ class _PlayTimerState extends State<PlayTimer> {
             child: Center(
               child: FittedBox(
                 child: Text(
-                  format(_time),
+                  format(remainingSeconds),
                   style: const TextStyle(color: Colors.white),
                 ),
               ),
@@ -72,15 +73,15 @@ class _PlayTimerState extends State<PlayTimer> {
     _timer = Timer.periodic(
       oneSec,
       (Timer timer) {
-        if (_time == 1) {
+        if (remainingSeconds == 1) {
           setState(() {
             timer.cancel();
-            _time--;
+            remainingSeconds--;
           });
-          context.read<GrowController>().togglePlayButton(isActive: true);
+          context.read<GrowViewModel>().clearPlayTime();
         } else {
           setState(() {
-            _time--;
+            remainingSeconds--;
           });
         }
       },

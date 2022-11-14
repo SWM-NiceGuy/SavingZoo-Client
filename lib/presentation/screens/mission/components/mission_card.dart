@@ -1,129 +1,181 @@
-import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/domain/models/mission_list.dart';
 import 'package:amond/domain/models/mission_state.dart';
-import 'package:amond/presentation/controllers/mission_controller.dart';
-import 'package:amond/presentation/controllers/mission_detail_controller.dart';
-import 'package:amond/presentation/screens/mission/mission_detail_screen.dart';
-import 'package:amond/ui/colors.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:amond/presentation/widget/platform_based_indicator.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class MissionCard extends StatelessWidget {
+  final MissionList mission;
+  final VoidCallback onClick;
+
   const MissionCard({
     required this.mission,
+    required this.onClick,
     Key? key,
   }) : super(key: key);
 
-  final MissionList mission;
-
   @override
   build(BuildContext context) {
-    final deviceSize = MediaQuery.of(context).size;
-
     return GestureDetector(
-      // 미션카드 터치시 미션 상세 페이지로 이동
-      onTap: () {
-        // FA 로그
-        FirebaseAnalytics.instance.logEvent(name: '미션카드_터치', parameters: {
-          '미션id': mission.id,
-          '미션이름': mission.name,
-          '상태': mission.state.toString(),
-        });
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            // MissionDetailController를 여기서 주입
-            builder: (context) =>
-                ChangeNotifierProvider<MissionDetailController>(
-              create: (_) => MissionDetailController(
-                  context.read<MissionRepositoryImpl>(),
-                  missionId: mission.id),
-              child: const MissionDetailScreen(),
-            ),
-          ),
-        ).then((_) {
-          context.read<MissionController>().fetchMissions();
-        });
-      },
+      onTap: onClick,
       child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          padding: const EdgeInsets.all(12.0),
           decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-              color: backgroundColor,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.25),
-                  blurRadius: 6,
-                  offset: const Offset(4, 4),
-                ),
-                BoxShadow(
-                  color: Colors.white.withOpacity(0.8),
-                  blurRadius: 6,
-                  offset: const Offset(-4, -4),
-                )
-              ]),
-          child: Column(
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // 미션 아이콘 (아마 사진이 될 것)
-                  mission.iconUrl == ""
-                      ? const Icon(
-                          Icons.water_drop,
-                          size: 48,
-                          color: Colors.blue,
-                        )
-                      : Image.network(
-                          mission.iconUrl,
-                          height: 40,
-                          fit: BoxFit.cover,
-                          loadingBuilder: (_, child, loadingProgress) {
-                            if (loadingProgress == null) {
-                              return child;
-                            }
-                            return Image.asset(
-                              'assets/images/img_placeholder.gif',
-                              height: 40,
-                              width: 40,
-                              fit: BoxFit.cover,
-                            );
-                          },
-                        ),
-                  const SizedBox(width: 24),
-                  SizedBox(
-                    width: deviceSize.width * 0.5,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // 미션 내용 및 경험치
-                      children: [
-                        Text(
-                          mission.name,
-                          style: const TextStyle(
-                              fontSize: 20, overflow: TextOverflow.ellipsis),
-                        ),
-                        Text(
-                          '+ ${mission.reward}XP',
-                          style: const TextStyle(
-                              fontSize: 20, overflow: TextOverflow.ellipsis),
-                        )
-                      ],
-                    ),
-                  ),
-                  const Spacer(),
-                  // 미션 성공 여부
-                  if (mission.state == MissionState.wait)
-                    Image.asset("assets/images/grey_check_icon.png",
-                        width: 40, height: 40),
-                  if (mission.state == MissionState.completed)
-                    Image.asset("assets/images/check_icon.png",
-                        width: 40, height: 40),
-                ],
+            borderRadius: const BorderRadius.all(Radius.circular(16)),
+            color: Colors.white.withOpacity(0.6),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFF86B2E5).withOpacity(0.25),
+                blurRadius: 15,
+                offset: const Offset(0, 4),
               ),
+            ],
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              _IconContainer(iconUrl: mission.iconUrl),
+              const SizedBox(width: 20),
+              Flexible(
+                fit: FlexFit.tight,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  // 미션 내용 및 경험치
+                  children: [
+                    Text(
+                      mission.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF505459),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(height: 4.0),
+                    Text(
+                      '#${mission.category}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF969BA2),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              // 미션 성공 여부
+              _MissionStateLabel(missionState: mission.state),
             ],
           )),
     );
+  }
+}
+
+/// 흰색 배경과 아이콘이 합쳐진 컴포넌트
+class _IconContainer extends StatelessWidget {
+  final String iconUrl;
+
+  const _IconContainer({
+    Key? key,
+    required this.iconUrl,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 68.0,
+      height: 68.0,
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(14.0)),
+        color: Colors.white,
+      ),
+      child: Center(
+        child: buildIcon(),
+      ),
+    );
+  }
+
+  Widget buildIcon() {
+    if (iconUrl.isEmpty) {
+      return Image.asset(
+        'assets/images/img_placeholder.gif',
+        height: 44,
+        width: 44,
+        fit: BoxFit.cover,
+      );
+    }
+
+    return CachedNetworkImage(
+      imageUrl: iconUrl,
+      height: 44,
+      fit: BoxFit.cover,
+      placeholder: (_, __) => const Center(
+        child: PlatformBasedLoadingIndicator(),
+      ),
+      // loadingBuilder: (_, child, loadingProgress) {
+      //   if (loadingProgress == null) {
+      //     return child;
+      //   }
+
+      //   return Image.asset(
+      //     'assets/images/img_placeholder.gif',
+      //     height: 44,
+      //     width: 44,
+      //     fit: BoxFit.cover,
+      //   );
+      // },
+    );
+  }
+}
+
+class _MissionStateLabel extends StatelessWidget {
+  final MissionState missionState;
+
+  const _MissionStateLabel({
+    Key? key,
+    required this.missionState,
+  }) : super(key: key);
+
+  Color get backgroundColor => getBgColor(missionState);
+  String get labelText => getLabelText(missionState);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16.0),
+        color: backgroundColor,
+      ),
+      child: Text(
+        labelText,
+        style: const TextStyle(fontSize: 12.0, color: Colors.white),
+      ),
+    );
+  }
+
+  Color getBgColor(MissionState missionState) {
+    switch (missionState) {
+      case MissionState.wait:
+        return const Color(0xFFD1D4D9);
+      case MissionState.completed:
+        return const Color(0xFFAAC7F3);
+      default:
+        return Colors.transparent;
+    }
+  }
+
+  String getLabelText(MissionState missionState) {
+    switch (missionState) {
+      case MissionState.wait:
+        return '대기중';
+      case MissionState.completed:
+        return '성공';
+      default:
+        return '';
+    }
   }
 }

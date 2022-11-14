@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:amond/data/entity/mission_detail_entity.dart';
 import 'package:amond/data/entity/mission_history_entity.dart';
 import 'package:amond/data/entity/mission_list_entity.dart';
+import 'package:amond/data/entity/mission_result_entity.dart';
 import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/auth/auth_info.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:http/http.dart' as http;
 
 class MissionApi {
@@ -14,9 +16,14 @@ class MissionApi {
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer $globalToken',
     });
-    final Map<String, dynamic> result =
+    final Map<String, dynamic> json =
         jsonDecode(utf8.decode(response.bodyBytes));
-    final List<dynamic> missionsList = result["missions"];
+    
+    if (kDebugMode) {
+      print('미션 리스트 응답 결과: $json\n\n');
+    }
+
+    final List<dynamic> missionsList = json["missions"];
     Iterable<MissionListEntity> missions =
         missionsList.map((e) => MissionListEntity.fromJson(e));
     return missions;
@@ -82,8 +89,42 @@ class MissionApi {
     });
     final Map<String, dynamic> result =
         jsonDecode(utf8.decode(response.bodyBytes));
-    
+
     List historiesJson = result['missionHistories'];
     return historiesJson.map((e) => MissionHistoryEntity.fromJson(e)).toList();
+  }
+
+  Future<MissionResultEntity> getMissionResult() async {
+    final url = Uri.parse('$baseUrl/user/mission/check');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer $globalToken',
+    });
+
+    final Map<String, dynamic> json =
+        jsonDecode(utf8.decode(response.bodyBytes));
+    final missionResult = MissionResultEntity.fromJson(json);
+
+    return missionResult;
+  }
+
+  Future<void> confirmResult(List<int> missionIds) async {
+    try {
+      final url = Uri.parse('$baseUrl/user/mission/reward');
+      await http.post(
+        url,
+        headers: {
+          'Content-type': 'application/json',
+          'Authorization': 'Bearer $globalToken',
+        },
+        body: jsonEncode({
+          "missions": missionIds,
+        }),
+      );
+      // print(response.body);
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
   }
 }

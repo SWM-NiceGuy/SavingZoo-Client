@@ -17,6 +17,7 @@ MissionDetailEntity _$MissionDetailEntityFromJson(Map<String, dynamic> json) =>
       submitGuide: json['submitGuide'] as String,
       reward: json['reward'] as int,
       state: json['state'] as String,
+      submitImageUrl: json['submitImageUrl'] as String,
     );
 
 Map<String, dynamic> _$MissionDetailEntityToJson(
@@ -29,4 +30,5 @@ Map<String, dynamic> _$MissionDetailEntityToJson(
       'submitGuide': instance.submitGuide,
       'reward': instance.reward,
       'state': instance.state,
+      'submitImageUrl': instance.submitImageUrl,
     };

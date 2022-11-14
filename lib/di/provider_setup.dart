@@ -4,16 +4,24 @@ import 'package:amond/data/repository/mission_repository_impl.dart';
 import 'package:amond/data/source/network/api/character_api.dart';
 import 'package:amond/data/source/network/api/member_api.dart';
 import 'package:amond/data/source/network/api/mission_api.dart';
+import 'package:amond/domain/usecases/member/change_user_name.dart';
+import 'package:amond/domain/usecases/member/get_goods_quantity.dart';
+import 'package:amond/domain/usecases/member/get_user_name.dart';
 import 'package:amond/domain/usecases/member/member_use_cases.dart';
 import 'package:amond/domain/usecases/member/resign.dart';
 import 'package:amond/domain/usecases/member/login.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
+import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 
 import 'package:amond/presentation/controllers/main_view_model.dart';
+import 'package:amond/presentation/controllers/mission_history_view_model.dart';
+import 'package:amond/presentation/controllers/mission_view_model.dart';
+import 'package:amond/presentation/controllers/settings_view_model.dart';
 
 import 'package:amond/utils/auth/do_apple_auth.dart';
 import 'package:amond/utils/auth/do_auth.dart';
 import 'package:amond/utils/auth/do_kakao_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -42,6 +50,9 @@ List<SingleChildWidget> dependentModels = [
     update: (_, repository, __) => MemberUseCases(
       resign: Resign(repository),
       login: Login(repository),
+      getUserName: GetUserName(repository),
+      changeUserName: ChangeUserName(repository),
+      getGoodsQuantity: GetGoodsQuantity(repository),
     ),
   ),
   // ProxyProvider<CharacterRepositoryImpl, CharacterUseCases>(
@@ -58,6 +69,20 @@ List<SingleChildWidget> viewModels = [
   // AuthController
   ChangeNotifierProvider<AuthController>(
     create: (_) => AuthController(_.read<MemberUseCases>()),
+  ),
+
+  ChangeNotifierProvider<SettingsViewModel>(
+    create: (_) => SettingsViewModel(),
+  ),
+
+  // MissionViewModel
+  ChangeNotifierProvider(
+    create: (_) => MissionViewModel(_.read<MissionRepositoryImpl>()),
+  ),
+
+  // GrowViewModel
+  ChangeNotifierProvider(
+    create: (_) => GrowViewModel(_.read<CharacterRepositoryImpl>()),
   ),
 
   // MainViewModel
@@ -89,3 +114,8 @@ List<SingleChildWidget> viewModels = [
     },
   )
 ];
+
+void clearViewModels(BuildContext context) {
+  context.read<MissionViewModel>().clear();
+  context.read<MissionHistoryViewModel>().clear();
+}

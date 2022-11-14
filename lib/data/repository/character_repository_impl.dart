@@ -1,5 +1,6 @@
 import 'package:amond/data/source/network/api/character_api.dart';
 import 'package:amond/domain/models/character.dart';
+import 'package:amond/domain/models/grow_history.dart';
 import 'package:amond/domain/repositories/character_repository.dart';
 
 class CharacterRepositoryImpl implements CharacterRepository {
@@ -55,5 +56,21 @@ class CharacterRepositoryImpl implements CharacterRepository {
     }
 
     return Character.fromEntity(resultCharacterEntity);
+  }
+
+  @override
+  Future<GrowHistory> getGrowHistory() async {
+    final entity = await characterApi.getGrowHistory();
+
+    // stage 순서대로 정렬
+    entity.stages.sort((s1, s2) => s1.stage - s2.stage);
+    
+    return GrowHistory.fromEntity(entity);
+  }
+  
+  @override
+  Future<int> feed() async {
+    final remainReward = await characterApi.feedCharacter();
+    return remainReward;
   }
 }

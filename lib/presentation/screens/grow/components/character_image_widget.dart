@@ -1,4 +1,4 @@
-import 'package:amond/presentation/controllers/grow_controller.dart';
+import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,21 +11,40 @@ class CharacterImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final avatarIsVisible =
-        context.select<GrowController, bool>((value) => value.avatarIsVisible);
-    final imageUrl = context
-        .select<GrowController, String>((value) => value.character.imageUrl);
+        context.select<GrowViewModel, bool>((value) => value.avatarIsVisible);
+    // final imageUrl = context
+    //     .select<GrowViewModel, String>((value) => value.character.imageUrl);
+    final species = context.select<GrowViewModel, String>((value) => value.character.species);
+    final stage = context.select<GrowViewModel, int>((value) => value.character.currentStage);
+    final feedAnimationPlaying = context.select<GrowViewModel, bool>((value) => value.feedAnimationPlaying);
+    final playAnimationPlaying = context.select<GrowViewModel, bool>((value) => value.playAnimationPlaying);
+
+    String stateString() {
+      if (feedAnimationPlaying) {
+        return 'feed';
+      } else if (playAnimationPlaying) {
+        return 'greet';
+      } else {
+        return 'normal';
+      }
+    }
+
 
     return AnimatedOpacity(
+      curve: Curves.easeInQuint,
       opacity: avatarIsVisible ? 1.0 : 0.0,
-      duration: Duration(milliseconds: context.read<GrowController>().fadeDuration),
+      duration: const Duration(milliseconds: GrowViewModel.fadeDuration),
       child: GestureDetector(
         onTap: () {
           // FA 로그
           FirebaseAnalytics.instance.logEvent(name: '캐릭터_터치');
         },
-        child: Image.network(
-          imageUrl,
-        ),
+        // child: CachedNetworkImage(
+        //   imageUrl: imageUrl,
+        // ),
+        child: stateString() == 'normal' 
+        ? Image.asset('assets/characters/$species/${stateString()}/$stage.png', fit: BoxFit.cover,)
+        :Image.asset('assets/characters/$species/${stateString()}/$stage.gif', fit: BoxFit.cover,)
       ),
     );
   }

@@ -1,6 +1,7 @@
-import 'package:amond/presentation/controllers/grow_controller.dart';
-import 'package:amond/presentation/screens/grow/components/level_system.dart';
+import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
+import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:provider/provider.dart';
 
 class LevelWidget extends StatelessWidget {
@@ -8,29 +9,100 @@ class LevelWidget extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  @override
+  Widget build(BuildContext context) {
+    final character = context.watch<GrowViewModel>().character;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 8.0, 24, 0.0),
+      child: _LevelSystem(
+        height: 12.0,
+        level: character.level,
+        currentExp: character.currentExp,
+        maxExp: character.maxExp,
+        percentage: character.expPct,
+      ),
+    );
+  }
+}
+
+class _LevelSystem extends StatelessWidget {
+  final double height;
+  final int level;
+  final int currentExp;
+  final int maxExp;
+  final double percentage;
+
+  const _LevelSystem({
+    required this.height,
+    required this.level,
+    required this.currentExp,
+    required this.maxExp,
+    required this.percentage,
+    Key? key,
+  }) : super(key: key);
+
+  final levelTextStyle = const TextStyle(
+    fontSize: 36.0,
+    fontWeight: FontWeight.w500,
+    color: kBlue,
+  );
+  final bodyTextStyle = const TextStyle(
+    fontSize: 14.0,
+    fontWeight: FontWeight.w600,
+    color: kBlue,
+  );
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-
-    context.select<GrowController, int>((value) => value.character.currentExp);
-    final character = Provider.of<GrowController>(context, listen: false).character;
-
-    return Column(
+    return Row(
+      mainAxisSize: MainAxisSize.max,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-              24, 8.0, 24, 0.0),
-          child: LevelSystem(
-            width: width,
-            height: 12.0,
-            level: character.level,
-            currentExp: character.currentExp,
-            maxExp: character.maxExp,
-            percentage: character.expPct,
+        Text(level.toString(), style: levelTextStyle),
+        const SizedBox(width: 12.0),
+        Flexible(
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Text('Level', style: bodyTextStyle),
+                  Text('$currentExp / $maxExp', style: bodyTextStyle),
+                ],
+              ),
+              const SizedBox(height: 5.0),
+              ExpBar(height: height, percentage: percentage),
+            ],
           ),
         ),
       ],
+    );
+  }
+}
+
+class ExpBar extends StatelessWidget {
+  final double height;
+  final double percentage;
+
+  static const int expAnimationDuration = 500;
+
+  const ExpBar({
+    Key? key,
+    required this.percentage,
+    required this.height,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FAProgressBar(
+      size: height,
+      currentValue: percentage * 100,
+      maxValue: 100,
+      backgroundColor: kExpBarDefaultColor,
+      progressColor: kExpBarFillColor,
+      animatedDuration: const Duration(milliseconds: expAnimationDuration),
+      borderRadius: BorderRadius.circular(height / 2),
     );
   }
 }

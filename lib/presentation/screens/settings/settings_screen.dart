@@ -1,14 +1,17 @@
 import 'dart:io';
 
+import 'package:amond/di/provider_setup.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
-import 'package:amond/presentation/controllers/settings_controller.dart';
+import 'package:amond/presentation/controllers/settings_view_model.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';
-import 'package:amond/presentation/screens/settings/components/settings_alert_container.dart';
+import 'package:amond/presentation/screens/settings/notification_settings.dart';
+import 'package:amond/presentation/screens/settings/support_settings.dart';
+import 'package:amond/presentation/screens/settings/user_info_settings.dart';
+import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:amond/ui/colors.dart';
-import 'package:amond/utils/auth/do_auth.dart';
-import 'package:amond/utils/show_platform_based_dialog.dart';
-import 'package:amond/widget/platform_based_indicator.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:amond/ui/text_styles.dart';
+import 'package:amond/presentation/widget/show_platform_based_dialog.dart';
+import 'package:amond/utils/version/app_version.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +24,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => SettingsController(),
+      create: (context) => SettingsViewModel(),
       child: const SettingsScreenWidget(),
     );
   }
@@ -37,11 +40,11 @@ class SettingsScreenWidget extends StatefulWidget {
 class _SettingsScreenWidgetState extends State<SettingsScreenWidget> {
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<SettingsController>();
+    final controller = context.watch<SettingsViewModel>();
 
-    if (controller.isLoading) {
+    if (controller.isNotificationLoading) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        controller.fetchData();
+        controller.fetchNotificationData();
       });
     }
 
@@ -50,49 +53,49 @@ class _SettingsScreenWidgetState extends State<SettingsScreenWidget> {
         title: const Text('설정'),
         elevation: 0,
         foregroundColor: blackColor,
-        shape: const Border(bottom: BorderSide(color: Color(0xffd7d7d7))),
       ),
-      body: controller.isLoading
-          ? const Center(child: PlatformBasedIndicator())
+      body: controller.isNotificationLoading
+          ? const Center(child: PlatformBasedLoadingIndicator())
           : SafeArea(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 기기 푸시알림이 켜져 있지 않으면 컨테이너를 보여준다.
-                  if (!controller.isDevicePushNotificationGranted)
-                    const SettingsAlertContainer(
-                        content: '푸시 알림을 받으려면 기기에서 알림을 허용해주세요'),
-                  // 미션 푸시 알림 설정
-                  SwitchListTile(
-                    activeColor: const Color(0xffA3C908),
-                    title: const Text('알림 ON / OFF'),
-                    subtitle: const Text(
-                      '미션 수행 결과에 대한 알림을 받을 수 있어요',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                    value: controller.isPushNotificationGranted,
-                    onChanged: controller.isDevicePushNotificationGranted
-                        ? (bool value) {
-                            // FA 로그
-                            FirebaseAnalytics.instance.logEvent(
-                                name: '푸시알림_설정',
-                                parameters: {'결과': value ? '켬' : '끔'});
-
-                            controller.togglePushNotification(value);
-                          }
-                        : null,
-                    secondary: const Icon(
-                      Icons.notifications,
-                      color: Color(0xff343434),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: Text(
+                      '개인 설정',
+                      style: TextStyle(color: blackColor, fontSize: 18),
                     ),
                   ),
-                  const Spacer(),
-                  // 로그 아웃
+                  const SizedBox(height: 10),
                   ListTile(
-                      leading: const Icon(
-                        Icons.logout,
-                        color: Color(0xff343434),
-                      ),
-                      title: const Text('로그아웃'),
+                    minLeadingWidth: 0,
+                    horizontalTitleGap: 14,
+                    leading: Image.asset('assets/images/person_icon.png',
+                        width: 24, height: 24),
+                    title: const Text('회원 정보 수정', style: settingsTextStyle),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const UserInfoSettings()));
+                    },
+                  ),
+                  ListTile(
+                    minLeadingWidth: 0,
+                    horizontalTitleGap: 14,
+                    leading: Image.asset('assets/images/alert_icon.png',
+                        width: 24, height: 24),
+                    title: const Text('알림 설정', style: settingsTextStyle),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const NotificationSettings()));
+                    },
+                  ),
+                  ListTile(
+                      minLeadingWidth: 0,
+                      horizontalTitleGap: 14,
+                      leading: Image.asset('assets/images/lock_icon.png',
+                          width: 24, height: 24),
+                      title: const Text('로그아웃', style: settingsTextStyle),
                       onTap: () async {
                         _checkDialog(context, '로그아웃을 진행합니다').then(
                           (isAccepted) {
@@ -112,41 +115,42 @@ class _SettingsScreenWidgetState extends State<SettingsScreenWidget> {
                           },
                         );
                       }),
-                  // 계정 탈퇴
-                  ListTile(
-                    leading: const Icon(
-                      Icons.delete_forever,
-                      color: Color(0xff343434),
+                  const Divider(
+                    thickness: 0.2,
+                    indent: 20,
+                    endIndent: 20,
+                    color: greyColor,
+                  ),
+
+                  const SizedBox(height: 24),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15),
+                    child: Text(
+                      '서비스',
+                      style: TextStyle(color: blackColor, fontSize: 18),
                     ),
-                    title: const Text('AMOND 계정 탈퇴'),
-                    onTap: () async {
-                      FirebaseAnalytics.instance.logEvent(name: '회원탈퇴_터치');
-
-                      _checkDialog(context, 'AMOND 계정 탈퇴',
-                              'AMOND 계정을 탈퇴하면 저장된 데이터들을 복구할 수 없습니다, 진행하시겠습니까?')
-                          .then((isAccepted) {
-                        if (!isAccepted) return;
-
-                        FirebaseAnalytics.instance.logEvent(name: '회원탈퇴');
-                        try {
-                          context
-                              .read<DoAuth>()
-                              .resign()
-                              .then((resignResponse) {
-                            context.read<AuthController>().resign(resignResponse).then((_) {
-                              Navigator.of(context)
-                                  .popUntil(ModalRoute.withName('/'));
-                              Navigator.of(context)
-                                  .pushReplacementNamed(AuthScreen.routeName);
-                            });
-                          });
-                        } catch (error) {
-                          showPlatformBasedDialog(
-                              context, '회원탈퇴에 실패했습니다.', '다시 시도해주세요.');
-                        }
-                      });
+                  ),
+                  ListTile(
+                    minLeadingWidth: 0,
+                    horizontalTitleGap: 14,
+                    leading: Image.asset('assets/images/person_call_icon.png',
+                        width: 24, height: 24),
+                    title: const Text('고객 센터', style: settingsTextStyle),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => const SupportSettings()));
                     },
-                  )
+                  ),
+                  ListTile(
+                    minLeadingWidth: 0,
+                    horizontalTitleGap: 14,
+                    leading: Image.asset('assets/images/version_icon.png',
+                        width: 24, height: 24),
+                    title: const Text('버전 정보 $appVersion', style: settingsTextStyle),
+                    onTap: () {
+                     
+                    },
+                  ),
                 ],
               ),
             ),
