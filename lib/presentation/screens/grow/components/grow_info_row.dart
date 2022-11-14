@@ -13,6 +13,8 @@ class GrowInfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final deviceSize = MediaQuery.of(context).size;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -20,7 +22,7 @@ class GrowInfoRow extends StatelessWidget {
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
         Container(
           alignment: Alignment.centerLeft,
-          width: 200,
+          width: deviceSize.width * 0.5,
           height: 30,
           padding: const EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(

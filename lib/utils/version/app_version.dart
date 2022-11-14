@@ -14,10 +14,13 @@ const String playStoreUrl =
     "https://play.google.com/store/apps/details?id=com.amond.amondApp";
 
 Future<AppStatus> getAppStatus() async {
-  final url = Uri.parse('$baseUrl/check/$appVersion');
+  final url = Uri.parse('https://api.amondfarm.com/v1/check/$appVersion');
 
   final res = await http.get(url);
   currentAppStatus = AppStatus.fromJson(jsonDecode(utf8.decode(res.bodyBytes)));
+
+  baseUrl = currentAppStatus.apiUrl;
+  
   return currentAppStatus;
 }
 

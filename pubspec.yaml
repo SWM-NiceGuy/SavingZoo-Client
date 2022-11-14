@@ -56,6 +56,7 @@ dependencies:
   url_launcher: ^6.1.6
   carousel_slider: ^4.1.1
   cached_network_image: ^3.2.1
+  in_app_review: ^2.0.4
 
 
 dev_dependencies:
@@ -92,6 +93,8 @@ flutter:
     - assets/glb/
     - assets/characters/otter/silhouettes/
     - assets/characters/otter/normal/
+    - assets/characters/otter/feed/
+    - assets/characters/otter/greet/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

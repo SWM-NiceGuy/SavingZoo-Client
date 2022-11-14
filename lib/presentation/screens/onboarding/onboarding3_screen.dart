@@ -113,7 +113,7 @@ class _Onboarding3ScreenState extends State<Onboarding3Screen> {
                       const Spacer(),
                       const SizedBox(height: 70),
                       Image.asset(
-                        'assets/characters/otter/normal/1.png',
+                        'assets/characters/otter/normal/1.gif',
                         width: deviceSize.width * 0.6,
                         fit: BoxFit.cover,
                       ),

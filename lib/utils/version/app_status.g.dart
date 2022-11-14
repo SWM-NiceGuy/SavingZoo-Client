@@ -10,10 +10,12 @@ AppStatus _$AppStatusFromJson(Map<String, dynamic> json) => AppStatus(
       latestVersion: json['latestVersion'] as String,
       releaseNote: json['releaseNote'] as String,
       required: json['required'] as bool,
+      apiUrl: json['apiUrl'] as String,
     );
 
 Map<String, dynamic> _$AppStatusToJson(AppStatus instance) => <String, dynamic>{
       'required': instance.required,
       'latestVersion': instance.latestVersion,
       'releaseNote': instance.releaseNote,
+      'apiUrl': instance.apiUrl,
     };

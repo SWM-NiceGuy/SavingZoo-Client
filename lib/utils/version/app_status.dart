@@ -8,15 +8,17 @@ class AppStatus {
   final bool required;
   final String latestVersion;
   final String releaseNote;
+  final String apiUrl;
 
   bool get isLatest {
-    return latestVersion == currentAppStatus.latestVersion;
+    return latestVersion == appVersion;
   }
 
   AppStatus({
     required this.latestVersion,
     required this.releaseNote,
     required this.required,
+    required this.apiUrl,
   });
 
   factory AppStatus.fromJson(Map<String, dynamic> json) =>

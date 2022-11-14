@@ -60,7 +60,7 @@ class MissionDetailScreen extends StatelessWidget {
                                 ),
                                 fadeOutDuration: Duration.zero,
                                 fadeInDuration: Duration.zero,
-                            fit: BoxFit.cover))
+                            fit: BoxFit.cover, width: double.infinity,))
                         .toList(),
                     width: width * 0.85,
                     height: width * 0.7,
@@ -102,7 +102,8 @@ class MissionDetailScreen extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 16.0),
-                        Text(viewModel.mission.submitGuide)
+                        Text(viewModel.mission.submitGuide),
+                        const SizedBox(height: 42,)
                       ],
                     ),
                   )

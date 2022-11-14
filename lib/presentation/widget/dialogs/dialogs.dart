@@ -60,7 +60,7 @@ Future<dynamic> showNoticeDialog(BuildContext context) async {
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 12),
-              Text(appNotice.message),
+              Text(appNotice.message ?? ''),
             ],
           ),
           actions: <Widget>[

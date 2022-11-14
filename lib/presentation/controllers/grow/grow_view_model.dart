@@ -43,6 +43,12 @@ class GrowViewModel with ChangeNotifier {
   bool stageUpEffect = false;
   bool fishEffect = false;
 
+  static const int feedAnimationDuration = 3000;
+  static const int playAnimationDuration = 4000;
+
+  bool feedAnimationPlaying = false;
+  bool playAnimationPlaying = false;
+
   static const int levelUpEffectDuration = 2000;
   static const int fishEffectDuration = 2000;
 
@@ -253,6 +259,24 @@ class GrowViewModel with ChangeNotifier {
   void clearPlayTime() {
     remainedPlayTime = 0;
     notifyListeners();
+  }
+
+  Future<void> animateFeed() async {
+    feedAnimationPlaying = true;
+    notifyListeners();
+    Future.delayed(const Duration(milliseconds: feedAnimationDuration)).then((_) {
+      feedAnimationPlaying = false;
+      notifyListeners();
+    });
+  }
+
+    Future<void> animatePlay() async {
+    playAnimationPlaying = true;
+    notifyListeners();
+    Future.delayed(const Duration(milliseconds: playAnimationDuration)).then((_) {
+      playAnimationPlaying = false;
+      notifyListeners();
+    });
   }
 
   @override

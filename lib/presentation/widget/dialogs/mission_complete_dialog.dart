@@ -96,30 +96,40 @@ class MissionCompleteDialog extends StatelessWidget {
             ),
             const _Divider(),
             const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Row(
-                  children: [
-                    const Text('   총 ',
-                        style: TextStyle(fontSize: 18, color: blackColor)),
-                    Image.asset('assets/images/fish_icon.png',
-                        width: 25, height: 25),
-                    Text(' ${result.totalReward} 획득',
-                        style:
-                            const TextStyle(fontSize: 18, color: blackColor)),
-                  ],
-                ),
-                MainButton(
-                  onPressed: () {
-                    onPop.call();
-                    Navigator.of(context).pop();
-                  },
-                  height: 56,
-                  width: 149,
-                  child: const Text('받기'),
-                )
-              ],
+            if (result.totalReward > 0)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Row(
+                    children: [
+                      const Text('   총 ',
+                          style: TextStyle(fontSize: 18, color: blackColor)),
+                      Image.asset('assets/images/fish_icon.png',
+                          width: 25, height: 25),
+                      Text(' ${result.totalReward} 획득',
+                          style:
+                              const TextStyle(fontSize: 18, color: blackColor)),
+                    ],
+                  ),
+                  MainButton(
+                    onPressed: () {
+                      onPop.call();
+                      Navigator.of(context).pop();
+                    },
+                    height: 56,
+                    width: 149,
+                    child: const Text('받기'),
+                  )
+                ],
+              ),
+            MainButton(
+              onPressed: () {
+                onPop.call();
+                Navigator.of(context).pop();
+              },
+              height: 56,
+              width: 149,
+              child: const Text('확인'),
             ),
             const SizedBox(height: 13),
           ],

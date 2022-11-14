@@ -66,8 +66,8 @@ class GrowHistoryWidget extends StatelessWidget {
                                 //     'assets/characters/${viewModel.history.species}/normal/${viewModel.index + 1}.png',
                                 //     width: deviceSize.width * 0.6,
                                 //   )
-                                ? CachedNetworkImage(
-                                    imageUrl: viewModel.currentIdxStage.imageUrl!,
+                                ? Image.asset(
+                                    'assets/characters/${viewModel.history.species}/normal/${viewModel.index + 1}.gif',
                                     width: deviceSize.width * 0.6,
                                   )
                                 : Image.asset(

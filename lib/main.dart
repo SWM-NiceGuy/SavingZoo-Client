@@ -23,6 +23,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_common.dart';
 import 'package:provider/provider.dart';
@@ -30,6 +31,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+  ]);
 
   await Firebase.initializeApp();
 
@@ -55,7 +61,7 @@ void main() async {
     await getAppStatus();
     await getAppNotice();
   } catch (e) {
-    currentAppStatus = AppStatus(latestVersion: appVersion, releaseNote: '', required: false);
+    currentAppStatus = AppStatus(latestVersion: appVersion, releaseNote: '', required: false, apiUrl: '');
     appNotice = AppNotice(isApply: false, isRequired: false, message: '');
   }
 
@@ -90,7 +96,7 @@ class MyApp extends StatelessWidget {
       /// 앱 시작시 setToken을 통해, 자동로그인 시도
       /// 반환된 값이 [true]라면 MainScreen으로 이동
       /// 반환된 값이 [false]라면 AuthScreen으로 이동
-      home: !currentAppStatus.required && !appNotice.isRequired
+      home: !currentAppStatus.required && !(appNotice.isRequired ?? false)
           ? FutureBuilder(
               future: context.read<AuthController>().setToken(),
               builder: (context, snapshot) {

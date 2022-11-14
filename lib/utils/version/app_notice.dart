@@ -9,11 +9,11 @@ class AppNotice {
   // "message": "서버 점검이 11/9 11:00~13:00 까지 예정되어 있습니다."
 
   bool isApply;
-  bool isRequired;
-  String message;
+  bool? isRequired;
+  String? message;
 
   AppNotice(
-      {required this.isApply, required this.isRequired, required this.message});
+      {required this.isApply, this.isRequired, this.message});
 
   factory AppNotice.fromJson(Map<String, dynamic> json) =>
       _$AppNoticeFromJson(json);

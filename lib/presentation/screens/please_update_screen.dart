@@ -72,7 +72,7 @@ class PleaseUpdateScreen extends StatelessWidget {
                       title: const Text("공지사항"),
                       content: Column(
                         children: [
-                          Text(appNotice.message),
+                          Text(appNotice.message ?? ''),
                         ],
                       ),
                       actions: [
@@ -91,7 +91,7 @@ class PleaseUpdateScreen extends StatelessWidget {
                         content: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(appNotice.message),
+                            Text(appNotice.message ?? ''),
                           ],
                         ),
                         actions: [

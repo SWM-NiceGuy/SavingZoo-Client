@@ -8,8 +8,8 @@ part of 'app_notice.dart';
 
 AppNotice _$AppNoticeFromJson(Map<String, dynamic> json) => AppNotice(
       isApply: json['isApply'] as bool,
-      isRequired: json['isRequired'] as bool,
-      message: json['message'] as String,
+      isRequired: json['isRequired'] as bool?,
+      message: json['message'] as String?,
     );
 
 Map<String, dynamic> _$AppNoticeToJson(AppNotice instance) => <String, dynamic>{

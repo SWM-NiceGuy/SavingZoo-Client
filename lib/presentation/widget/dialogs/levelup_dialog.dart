@@ -2,6 +2,7 @@ import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 import 'package:amond/presentation/widget/main_button.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
 
 class LevelupDialog extends StatelessWidget {
@@ -86,6 +87,12 @@ class LevelupDialog extends StatelessWidget {
                       if (isStageUpgrade) {
                         context.read<GrowViewModel>().activateLevelUpEffect();
                         context.read<GrowViewModel>().fadeCharacter(false);
+                      }
+                      // 앱 리뷰 띄우기
+                      if (level == 3) {
+                        InAppReview.instance.isAvailable().then((_) {
+                          InAppReview.instance.requestReview();
+                        });
                       }
                     },
                     width: 149,

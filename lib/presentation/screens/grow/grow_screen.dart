@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/grow/grow_view_model.dart';
 
-
 import 'package:amond/presentation/screens/grow/components/character_image_widget.dart';
 import 'package:amond/presentation/screens/grow/components/effects/fish_effect.dart';
 import 'package:amond/presentation/screens/grow/components/effects/heart_effect.dart';
@@ -136,16 +135,14 @@ class _GrowScreenWidget extends StatelessWidget {
                   alignment: Alignment.center,
                   children: const [
                     // 레벨업 시 레벨업 효과
-                    Positioned(top:-100,child: StageUpEffect()),
+                    Positioned(top: -100, child: StageUpEffect()),
                     // 캐릭터 이미지
                     CharacterImageWidget(),
                     // 하트 버튼을 누르면 하트 표시
-                    Positioned(top: -100,child: HeartEffect()),
+                    Positioned(top: -100, child: HeartEffect()),
 
                     // 물고기 이펙트
                     FishEffect(),
-                    
-
                   ],
                 ),
               ),
@@ -210,11 +207,16 @@ class _GrowScreenWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: FeedButton(
-                      onClick: !growController.canFeed ? null : () async {
-                        await growController.feed().then((_) {
-                          context.read<AuthController>().setGoodsQuantity();
-                        });
-                      },
+                      onClick: !growController.canFeed
+                          ? null
+                          : () async {
+                              await growController.feed().then((_) {
+                                growController.animateFeed();
+                                context
+                                    .read<AuthController>()
+                                    .setGoodsQuantity();
+                              });
+                            },
                     ),
                   ),
                   const SizedBox(height: 16.0),
@@ -224,7 +226,10 @@ class _GrowScreenWidget extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: PlayButton(
                       remainingSeconds: growController.remainedPlayTime,
-                      onClick: growController.playWithCharacter,
+                      onClick: () {
+                        growController.animatePlay();
+                        growController.playWithCharacter();
+                      },
                     ),
                   ),
                   const SizedBox(height: 24.0),
