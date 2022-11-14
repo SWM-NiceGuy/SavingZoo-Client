@@ -87,7 +87,6 @@ class LevelupDialog extends StatelessWidget {
                       if (isStageUpgrade) {
                         context.read<GrowViewModel>().activateLevelUpEffect();
                         context.read<GrowViewModel>().fadeCharacter(false);
-                        context.read<GrowViewModel>().animatePlay();
                       }
                       // 앱 리뷰 띄우기
                       if (level == 3) {

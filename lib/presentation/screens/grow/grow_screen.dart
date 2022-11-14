@@ -66,6 +66,7 @@ class _GrowScreenState extends State<GrowScreen> {
     // 캐릭터 불러오기
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<GrowViewModel>().fetchData();
+      context.read<AuthController>().setGoodsQuantity();
     });
 
     // 미션 인증 결과 확인하기
@@ -207,7 +208,7 @@ class _GrowScreenWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: FeedButton(
-                      onClick: !growController.canFeed
+                      onClick: !growController.canFeedOrPlay
                           ? null
                           : () async {
                               await growController.feed().then((_) {
@@ -226,10 +227,12 @@ class _GrowScreenWidget extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 32.0),
                     child: PlayButton(
                       remainingSeconds: growController.remainedPlayTime,
-                      onClick: () {
-                        growController.animatePlay();
-                        growController.playWithCharacter();
-                      },
+                      onClick: !growController.canFeedOrPlay
+                          ? () {}
+                          : () {
+                              growController.animatePlay();
+                              growController.playWithCharacter();
+                            },
                     ),
                   ),
                   const SizedBox(height: 24.0),

@@ -1,13 +1,11 @@
 import 'dart:async';
 
-
 import 'package:amond/domain/models/character.dart';
 import 'package:amond/domain/repositories/character_repository.dart';
 import 'package:amond/presentation/controllers/grow/grow_ui_event.dart';
 import 'package:amond/presentation/screens/grow/components/level_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-
 
 class GrowViewModel with ChangeNotifier {
   final CharacterRepository _characterRepository;
@@ -27,7 +25,7 @@ class GrowViewModel with ChangeNotifier {
   bool _isLoading = true;
   bool get isLoading => _isLoading;
 
-  bool canFeed = true;
+  bool canFeedOrPlay = true;
 
   bool isMissionClear = false;
 
@@ -54,7 +52,7 @@ class GrowViewModel with ChangeNotifier {
 
   bool playButtonEnabled = true;
 
-  static const int feedDelayDuration = 2000;
+  static const int actionDelayDuration = 3000;
 
   int? increasedExp;
 
@@ -192,23 +190,23 @@ class GrowViewModel with ChangeNotifier {
 
   /// 캐릭터 먹이주기
   Future<void> feed() async {
-    if (!canFeed) {
+    if (!canFeedOrPlay) {
       return;
     }
-    canFeed = false;
+    canFeedOrPlay = false;
     fishEffect = true;
-    Future.delayed(const Duration(milliseconds: feedDelayDuration), () {
+    Future.delayed(const Duration(milliseconds: actionDelayDuration), () {
       fishEffect = false;
       if (_mounted) {
         notifyListeners();
       }
     });
-    
+
     notifyListeners();
 
-    Future.delayed(const Duration(milliseconds: feedDelayDuration)).then((value) {
-      canFeed = true;
-      notifyListeners();
+    Future.delayed(const Duration(milliseconds: actionDelayDuration))
+        .then((value) {
+      canFeedOrPlay = true;
     });
 
     await _characterRepository.feed();
@@ -217,6 +215,14 @@ class GrowViewModel with ChangeNotifier {
 
   /// 하트 버튼 누를 시 하트 효과
   Future<void> playWithCharacter() async {
+    if (!canFeedOrPlay) {
+      return;
+    }
+    canFeedOrPlay = false;
+    Future.delayed(const Duration(milliseconds: actionDelayDuration))
+        .then((value) {
+      canFeedOrPlay = true;
+    });
 
     isHeartVisible = true;
     Future.delayed(const Duration(milliseconds: heartEffectDuration), () {
@@ -264,16 +270,18 @@ class GrowViewModel with ChangeNotifier {
   Future<void> animateFeed() async {
     feedAnimationPlaying = true;
     notifyListeners();
-    Future.delayed(const Duration(milliseconds: feedAnimationDuration)).then((_) {
+    Future.delayed(const Duration(milliseconds: feedAnimationDuration))
+        .then((_) {
       feedAnimationPlaying = false;
       notifyListeners();
     });
   }
 
-    Future<void> animatePlay() async {
+  Future<void> animatePlay() async {
     playAnimationPlaying = true;
     notifyListeners();
-    Future.delayed(const Duration(milliseconds: playAnimationDuration)).then((_) {
+    Future.delayed(const Duration(milliseconds: playAnimationDuration))
+        .then((_) {
       playAnimationPlaying = false;
       notifyListeners();
     });
