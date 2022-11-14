@@ -42,7 +42,9 @@ class CharacterImageWidget extends StatelessWidget {
         // child: CachedNetworkImage(
         //   imageUrl: imageUrl,
         // ),
-        child: Image.asset('assets/characters/$species/${stateString()}/$stage.gif', fit: BoxFit.cover,)
+        child: stateString() == 'normal' 
+        ? Image.asset('assets/characters/$species/${stateString()}/$stage.png', fit: BoxFit.cover,)
+        :Image.asset('assets/characters/$species/${stateString()}/$stage.gif', fit: BoxFit.cover,)
       ),
     );
   }

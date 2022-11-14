@@ -122,6 +122,7 @@ class MissionCompleteDialog extends StatelessWidget {
                   )
                 ],
               ),
+            if (result.totalReward == 0)
             MainButton(
               onPressed: () {
                 onPop.call();
