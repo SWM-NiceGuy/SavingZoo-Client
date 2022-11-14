@@ -43,7 +43,7 @@ class BetaRewardDialog extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.all(24.0),
                     child: Text(
-                      '아몬드가 멸종위기 동물 임시보호소로 새롭게\n개편되었습니다!',
+                      '아몬드가 지켜주 멸종위기 동물 임시보호소로 \n새롭게 개편되었습니다!',
                       style: TextStyle(fontSize: 16, color: darkGreyColor),
                       textAlign: TextAlign.center,
                     ),
