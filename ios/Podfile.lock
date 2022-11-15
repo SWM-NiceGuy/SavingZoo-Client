@@ -1,11 +1,4 @@
 PODS:
-  - FBAEMKit (14.1.0):
-    - FBSDKCoreKit_Basics (= 14.1.0)
-  - FBAudienceNetwork (6.12.0)
-  - FBSDKCoreKit (14.1.0):
-    - FBAEMKit (= 14.1.0)
-    - FBSDKCoreKit_Basics (= 14.1.0)
-  - FBSDKCoreKit_Basics (14.1.0)
   - Firebase/Analytics (9.5.0):
     - Firebase/Core
   - Firebase/Auth (9.5.0):
