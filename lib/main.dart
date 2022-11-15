@@ -24,6 +24,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_meta_sdk/flutter_meta_sdk.dart';
 
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk_common.dart';
 import 'package:provider/provider.dart';
@@ -41,6 +42,8 @@ void main() async {
 
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
   FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(!kDebugMode);
+  
+  await FlutterMetaSdk().logEvent(name: 'iOS test');
 
   // (await SharedPreferences.getInstance()).clear();
 

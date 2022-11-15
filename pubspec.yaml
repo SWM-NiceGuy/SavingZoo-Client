@@ -47,8 +47,9 @@ dependencies:
   firebase_analytics: ^9.3.3
   store_redirect: ^2.0.1
   image_picker: ^0.8.5+3
-  flutter_animation_progress_bar: 
-    path: /Users/kimnamju/development/Flutter-Animation-Progress-Bar
+  flutter_animation_progress_bar:
+    git: 
+      url: https://github.com/calculus12/Flutter-Animation-Progress-Bar
   firebase_messaging: ^13.0.4
   flutter_dialogs: ^3.0.0
   flutter_local_notifications: ^11.0.1
@@ -57,6 +58,8 @@ dependencies:
   carousel_slider: ^4.1.1
   cached_network_image: ^3.2.1
   in_app_review: ^2.0.4
+  flutter_meta_sdk: ^1.0.2
+  webview_flutter: ^3.0.4
 
 
 dev_dependencies:

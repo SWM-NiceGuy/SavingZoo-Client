@@ -36,9 +36,16 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>kakao4afbe08d4fd4f73b985c41917a871659</string>
+				<string>fb532896891558867</string>
 			</array>
 		</dict>
 	</array>
+	<key>FacebookAppID</key>
+	<string>532896891558867</string>
+	<key>FacebookClientToken</key>
+	<string>9d8e9176b104da289ac98730fdf21bb5</string>
+	<key>FacebookDisplayName</key>
+	<string>아몬드</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>KAKAO_APP_KEY</key>
