@@ -3,7 +3,6 @@ import 'package:amond/presentation/controllers/grow_history_view_model.dart';
 import 'package:amond/presentation/screens/grow/components/grow_info_row.dart';
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:amond/ui/colors.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

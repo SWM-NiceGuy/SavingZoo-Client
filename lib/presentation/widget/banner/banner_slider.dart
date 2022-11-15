@@ -1,4 +1,4 @@
-import 'package:amond/domain/models/banner_info.dart';
+
 import 'package:amond/presentation/controllers/banner_view_model.dart';
 import 'package:amond/presentation/widget/banner/web_view_screen.dart';
 import 'package:amond/presentation/widget/platform_based_indicator.dart';

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:amond/di/provider_setup.dart';
 import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/controllers/settings_view_model.dart';
 import 'package:amond/presentation/screens/auth/auth_screen.dart';

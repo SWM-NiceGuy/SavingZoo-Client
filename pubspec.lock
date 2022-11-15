@@ -449,13 +449,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.0.0"
-  flutter_meta_sdk:
-    dependency: "direct main"
-    description:
-      name: flutter_meta_sdk
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.2"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:

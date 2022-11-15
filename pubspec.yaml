@@ -58,7 +58,6 @@ dependencies:
   carousel_slider: ^4.1.1
   cached_network_image: ^3.2.1
   in_app_review: ^2.0.4
-  flutter_meta_sdk: ^1.0.2
   webview_flutter: ^3.0.4
 
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:amond/data/entity/banner_info_entity.dart';
 import 'package:amond/data/source/network/base_url.dart';
 import 'package:amond/utils/auth/auth_info.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:http/http.dart' as http;
 
 class BannerApi {
@@ -14,7 +15,9 @@ class BannerApi {
     });
     final Map<String, dynamic> json =
         jsonDecode(utf8.decode(response.bodyBytes));
+  if (kDebugMode) {
   print(json);
+  }
     return (json['banners'] as List)
         .map((e) => BannerInfoEntity.fromJson(e))
         .toList();
