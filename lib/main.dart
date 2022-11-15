@@ -42,8 +42,6 @@ void main() async {
 
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
   FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(!kDebugMode);
-  
-  await FlutterMetaSdk().logEvent(name: 'iOS test');
 
   // (await SharedPreferences.getInstance()).clear();
 

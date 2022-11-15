@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:amond/presentation/widget/platform_based_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -14,8 +15,10 @@ class WebViewScreen extends StatefulWidget {
 }
 
 class _WebViewScreenState extends State<WebViewScreen> {
-   final Completer<WebViewController> _controller =
+  final Completer<WebViewController> _controller =
       Completer<WebViewController>();
+
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -30,12 +33,26 @@ class _WebViewScreenState extends State<WebViewScreen> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
       ),
-      body: WebView(
-        initialUrl: widget.initialUrl,
-        javascriptMode: JavascriptMode.unrestricted,
-        onWebViewCreated: (WebViewController webViewController) {
-          _controller.complete(webViewController);
-        }
+      body: Stack(
+        children: [
+          WebView(
+            initialUrl: widget.initialUrl,
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (WebViewController webViewController) {
+              _controller.complete(webViewController);
+            },
+            onPageFinished: (finish) {
+              setState(() {
+                _isLoading = false;
+              });
+            },
+          ),
+          _isLoading
+              ? const Center(
+                  child: PlatformBasedLoadingIndicator(),
+                )
+              : Stack(),
+        ],
       ),
     );
   }

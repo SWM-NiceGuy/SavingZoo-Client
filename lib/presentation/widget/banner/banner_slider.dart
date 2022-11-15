@@ -2,6 +2,7 @@ import 'package:amond/domain/models/banner_info.dart';
 import 'package:amond/presentation/controllers/banner_view_model.dart';
 import 'package:amond/presentation/widget/banner/web_view_screen.dart';
 import 'package:amond/presentation/widget/platform_based_indicator.dart';
+import 'package:amond/ui/colors.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
@@ -81,6 +82,7 @@ class _BannerSliderState extends State<BannerSlider> {
                 options: CarouselOptions(
                   viewportFraction: 1.0,
                   autoPlay: viewModel.infos.length > 1 ? true : false,
+                  autoPlayInterval: const Duration(seconds: 6),
                   enlargeCenterPage: true,
                   aspectRatio: 4.0 / 1,
                   onPageChanged: (index, reason) {
@@ -107,7 +109,7 @@ class _BannerSliderState extends State<BannerSlider> {
                           color: (Theme.of(context).brightness ==
                                       Brightness.dark
                                   ? Colors.white
-                                  : Colors.black)
+                                  : textBlueColor200)
                               .withOpacity(_current == entry.key ? 0.9 : 0.4)),
                     ),
                   );

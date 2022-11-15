@@ -71,7 +71,12 @@ class _MissionScreenState extends State<MissionScreen> {
               ],
             ),
           ),
-          const BannerSlider(),
+          // 배너
+          const Padding(
+            padding: EdgeInsets.only(left: 12, right: 12, top: 12),
+            child: BannerSlider(),
+          ),
+          // 카테고리
           _CategorySection(
             categories: viewModel.categories,
             selectedCategory: viewModel.selectedCategory,
