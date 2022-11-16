@@ -162,7 +162,7 @@ class _GrowScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             Image.asset(
-                              'assets/images/grow_history_icon.png',
+                              'assets/images/diary_icon.png',
                               width: 35,
                               height: 35,
                             ),
@@ -187,7 +187,7 @@ class _GrowScreenWidget extends StatelessWidget {
                         child: Column(
                           children: [
                             Image.asset(
-                              'assets/images/photo_frame_icon.png',
+                              'assets/images/frame_icon.png',
                               width: 38,
                               height: 38,
                             ),

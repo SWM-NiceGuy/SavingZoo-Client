@@ -6,6 +6,7 @@ import 'package:amond/presentation/controllers/auth_controller.dart';
 import 'package:amond/presentation/screens/mission/util/check_mission_result.dart';
 
 import 'package:amond/presentation/screens/mission/util/time_util.dart';
+import 'package:amond/presentation/widget/banner/banner_slider.dart';
 import 'package:amond/ui/colors.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:provider/provider.dart';
@@ -70,6 +71,12 @@ class _MissionScreenState extends State<MissionScreen> {
               ],
             ),
           ),
+          // 배너
+          const Padding(
+            padding: EdgeInsets.only(left: 12, right: 12, top: 12),
+            child: BannerSlider(),
+          ),
+          // 카테고리
           _CategorySection(
             categories: viewModel.categories,
             selectedCategory: viewModel.selectedCategory,
