@@ -6,6 +6,7 @@ import 'package:amond/presentation/screens/auth/auth_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_history_screen.dart';
 import 'package:amond/presentation/screens/mission/mission_screen.dart';
 import 'package:amond/presentation/screens/settings/settings_screen.dart';
+import 'package:amond/presentation/screens/store/store_screen.dart';
 import 'package:amond/presentation/widget/dialogs/beta_reward_dialog.dart';
 import 'package:amond/presentation/widget/dialogs/change_user_name_dialog.dart';
 import 'package:amond/presentation/widget/dialogs/dialogs.dart';
@@ -30,20 +31,23 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   List<Widget> bottomNavigationBarScreens = [
+    StoreScreen(),
     const MissionScreen(),
     const GrowScreen(),
   ];
 
   var _screenIndex = 0;
 
-  late List<String> appBarTitle = ["", ""];
+  late List<String> appBarTitle = ["스토어", "", ""];
 
   List<Color> appBarColors = [
+    kMissionScreenAppBarColor,
     kMissionScreenAppBarColor,
     Colors.white,
   ];
 
   List<Color> backgroundColors = [
+    kMissionScreenBgColor,
     kMissionScreenBgColor,
     Colors.white,
   ];
@@ -85,7 +89,7 @@ class _MainScreenState extends State<MainScreen> {
       try {
         final growViewModel = context.read<GrowViewModel>();
         growViewModel.setCharacter().then((_) {
-          appBarTitle[1] = growViewModel.character.nickname ?? "";
+          appBarTitle[2] = growViewModel.character.nickname ?? "";
         });
       } catch (error) {
         Navigator.of(context).pushNamedAndRemoveUntil(
@@ -277,6 +281,11 @@ class _BottomNavigationBar extends StatelessWidget {
         items: [
           BottomNavigationBarItem(
             label: '홈',
+            icon: Icon(Icons.storefront_rounded ,size: 34, color: Colors.grey.shade300,),
+            activeIcon: Icon(Icons.storefront_rounded ,size: 34, color: blueColor100,),
+          ),
+          BottomNavigationBarItem(
+            label: '미션',
             icon: Image.asset(
               'assets/images/home_icon_normal.png',
               width: 32,
