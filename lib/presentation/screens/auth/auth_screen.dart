@@ -111,6 +111,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           child: const KakaoLoginContainer(),
                         ),
                         const SizedBox(height: 18),
+                        if (!Platform.isIOS)
                         GestureDetector(
                           child: const Text(
                             '로그인 없이 이용해보기',
