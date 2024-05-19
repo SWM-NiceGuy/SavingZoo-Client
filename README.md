@@ -21,3 +21,5 @@
 - <strong>appleAuthPemKey</strong>
 
 정의 필요
+
+c.f. 3D model rendering: https://github.com/calculus12/flutter_3d_model_rendering
